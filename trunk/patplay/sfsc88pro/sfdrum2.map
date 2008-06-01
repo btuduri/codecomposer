@@ -1,0 +1,19 @@
+# The configuration file of reproducing the VSC 3.0
+# Ver.6.4.1 2002/05/19 Presented by SYUUHOU.
+
+
+drumset 2
+#extension copydrumset 0
+35 release/kick1.pat note=36 strip=tail amp=120
+36 release/kick2.pat note=37 strip=tail amp=120
+38 GUS/snare1.pat note=37 amp=90
+39 GUS/claps.pat note=42 pan=-25 amp=65
+40 GUS/gsdrum00/snare1.pat note=36 amp=90
+42 GUS/power/hihatcl.pat note=46 pan=30 amp=54
+44 GUS/power/h-hihatp.pat note=44 strip=tail pan=30 amp=48
+46 gusperc/hihatop.pat note=60 pan=50 amp=162
+49 GUS/cymcrsh2.pat note=56 pan=50 amp=144
+51 gusperc/cymride1.pat note=60 pan=-30 amp=162
+53 GUS/gsdrum00/cymride1.pat note=45 pan=-30 amp=54
+59 gusperc/cymride1.pat note=61 pan=-30 amp=120
+

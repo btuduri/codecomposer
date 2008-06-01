@@ -1,0 +1,9 @@
+# The configuration file of reproducing the VSC 3.0
+# Ver.6.4.1 2002/05/19 Presented by SYUUHOU.
+
+
+bank 18
+25 GUS/acguitar.pat amp=78
+30 GUS/odguitar.pat amp=96
+27 release/jazzgtr.pat amp=54
+

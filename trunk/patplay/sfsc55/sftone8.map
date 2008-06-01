@@ -1,0 +1,17 @@
+# The configuration file of reproducing the VSC 3.0
+# Ver.6.4.1 2002/05/19 Presented by SYUUHOU.
+
+
+bank 8
+24 release/nyguitar.pat amp=66
+25 release/12string.pat amp=66
+26 GUS/acguitar.pat amp=60
+27 GUS/cleangtr.pat amp=48
+28 wowpats/mutegtr.pat amp=78
+29 wowpats/distgtr.pat amp=66
+30 GUS/odguitar.pat amp=60
+31 GUS/gtrharm.pat amp=42
+53 GUS/rockorg.pat amp=60
+55 release/orchhit.pat amp=44
+118 GUS/gsdrum25/808tomh2.pat pan=0 amp=144
+
