@@ -1,8 +1,0 @@
-# The configuration file of reproducing the VSC 3.0
-# Ver.6.4.1 2002/05/19 Presented by SYUUHOU.
-
-
-drumset 56
-76 GUS/sfx/dog2.pat note=60 strip=tail amp=144
-85 GUS/sfx/cat1.pat note=63 amp=18
-
