@@ -1,0 +1,9 @@
+# The configuration file of reproducing the VSC 3.0
+# Ver.6.4.1 2002/05/19 Presented by SYUUHOU.
+
+
+bank 6
+81 wowpats/recorder.pat amp=102
+#122 mazpat/FX/WIND3A.PAT keep=env amp=25
+122 mazpat/FX/WIND3A.PAT tune=-7 keep=env amp=25
+

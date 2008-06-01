@@ -1,0 +1,132 @@
+# The configuration file of reproducing the VSC 3.0
+# Ver.6.4.1 2002/05/19 Presented by SYUUHOU.
+
+
+0 GUS/acpiano.pat amp=60
+1 GUS/acpiano.pat amp=84
+2 GUS/britepno.pat amp=96
+3 GUS/honky.pat strip=env amp=102
+4 GUS/epiano1.pat amp=96
+5 GUS/epiano2.pat amp=72
+6 GUS/hrpschrd.pat pan=0 amp=42
+7 GUS/clavinet.pat strip=env amp=24
+8 GUS/celeste.pat amp=108
+9 GUS/glocken.pat amp=72
+10 GUS/musicbox.pat amp=90
+11 GUS/vibes.pat amp=102
+12 GUS/marimba.pat pan=0 amp=78
+13 release/xylophon.pat amp=84
+14 GUS/tubebell.pat pan=0 amp=84
+15 GUS/santur.pat amp=60
+16 GUS/homeorg.pat amp=72
+17 GUS/percorg.pat amp=114
+18 GUS/rockorg.pat amp=90
+19 wowpats/rockorg.pat amp=72
+20 GUS/accordn.pat amp=66
+21 GUS/accordn.pat amp=66
+22 GUS/harmonca.pat amp=54
+23 GUS/accordn.pat amp=66
+24 GUS/nyguitar.pat amp=330
+25 GUS/cleangtr.pat amp=84
+26 GUS/jazzgtr.pat amp=96
+27 wowpats/cleangtr.pat amp=78
+28 wowpats/mutegtr.pat amp=102
+29 wowpats/distgtr.pat amp=84
+30 GUS/odguitar.pat amp=66
+31 GUS/gtrharm.pat amp=60
+32 GUS/acbass.pat amp=120
+33 GUS/fngrbass.pat amp=90
+34 GUS/pickbass.pat strip=env amp=90
+35 GUS/fretless.pat strip=env amp=60
+36 GUS/slapbas1.pat amp=108
+37 GUS/slapbas2.pat amp=78
+38 GUS/synbass1.pat amp=60
+39 GUS/fretless.pat strip=env amp=72
+40 GUS/violin.pat amp=78
+41 release/viola.pat amp=84
+42 GUS/cello.pat amp=78
+43 GUS/contraba.pat amp=78
+44 GUS/tremstr.pat amp=78
+45 GUS/pizzcato.pat amp=102
+46 release/harp.pat amp=96
+47 roland/C2TIMPNI.PAT amp=108
+48 GUS/synstr2.pat amp=72
+49 GUS/slowstr.pat amp=90
+50 GUS/synstr1.pat amp=90
+51 GUS/synstr1.pat amp=90
+52 GUS/choir.pat pan=0 amp=78
+53 release/voicedoo.pat amp=84
+54 GUS/voices.pat amp=84
+55 release/orchhit.pat amp=100
+56 GUS/trumpet.pat amp=84
+57 GUS/trombone.pat amp=84
+58 GUS/tuba.pat amp=78
+59 GUS/mutetrum.pat amp=54
+60 GUS/frenchrn.pat amp=120
+61 GUS/hitbrass.pat amp=102
+62 GUS/synbras1.pat amp=84
+63 GUS/synbras2.pat amp=96
+64 wowpats/sprnosax.pat amp=84
+65 GUS/altosax.pat amp=66
+66 GUS/tenorsax.pat amp=96
+67 GUS/barisax.pat amp=90
+68 GUS/oboe.pat amp=84
+69 GUS/englhorn.pat amp=78
+70 GUS/bassoon.pat amp=138
+71 release/clarinet.pat amp=96
+72 GUS/piccolo.pat amp=108
+73 release/flute.pat amp=114
+74 GUS/recorder.pat amp=66
+75 GUS/woodflut.pat amp=84
+76 release/bottleit.pat amp=96
+77 GUS/shakazul.pat amp=150
+78 GUS/whistle.pat amp=96
+79 GUS/ocarina.pat amp=96
+80 GUS/sqrwave.pat amp=114
+81 GUS/sawwave.pat amp=102
+82 GUS/calliope.pat amp=84
+83 GUS/chiflead.pat amp=180
+84 GUS/charang.pat amp=54
+85 GUS/voxlead.pat amp=156
+86 GUS/lead5th.pat amp=72
+87 GUS/basslead.pat amp=132
+88 GUS/fantasia.pat amp=96
+89 GUS/warmpad.pat amp=84
+90 GUS/polysyn.pat amp=114
+91 GUS/ghostie.pat amp=156
+92 GUS/bowglass.pat amp=102
+93 GUS/metalpad.pat amp=114
+94 GUS/halopad.pat amp=126
+95 GUS/sweeper.pat amp=84
+96 release/rain.pat strip=tail amp=90
+97 GUS/soundtrk.pat amp=96
+98 release/crystal.pat amp=120
+99 GUS/atmosphr.pat amp=120
+100 release/britenss.pat strip=tail amp=105
+101 GUS/unicorn.pat amp=78
+102 GUS/echovox.pat amp=120
+103 GUS/startrak.pat amp=150
+104 GUS/sitar.pat amp=84
+105 GUS/banjo.pat strip=tail amp=138
+106 GUS/shamisen.pat strip=tail amp=66
+107 GUS/koto.pat amp=150
+108 GUS/kalimba.pat amp=120
+109 GUS/bagpipes.pat pan=0 amp=96
+110 GUS/fiddle.pat amp=90
+111 GUS/shannai.pat amp=84
+112 release/tinbell.pat amp=96
+113 GUS/agogo.pat amp=102
+114 release/steeldrm.pat amp=72
+115 roland/C3WODBLK.PAT amp=120
+116 roland/C3TAIKO.PAT amp=114
+117 roland/C3MELTOM.PAT amp=90
+118 roland/C3SNTDRM.PAT amp=95
+119 GUS/revcym.pat amp=90
+120 GUS/sfx/fretnoyz.pat strip=tail amp=48
+121 GUS/fx-blow.pat strip=loop amp=6
+122 GUS/seashore.pat amp=108
+123 GUS/sfx/birdtwee.pat amp=42
+124 release/telephon.pat amp=54
+125 GUS/helicptr.pat amp=108
+126 GUS/applause.pat amp=108
+127 release/gunshot.pat amp=96

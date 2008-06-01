@@ -1,0 +1,9 @@
+# The configuration file of reproducing the VSC 3.0
+# Ver.6.4.1 2002/05/19 Presented by SYUUHOU.
+
+
+bank 24
+24 GUS/nyguitar.pat amp=312
+30 GUS/odguitar.pat amp=42
+31 GUS/celeste.pat strip=tail amp=48
+

@@ -1,0 +1,12 @@
+# The configuration file of reproducing the VSC 3.0
+# Ver.6.4.1 2002/05/19 Presented by SYUUHOU.
+
+
+bank 5
+#122 GUS/sfx/bubbling.pat amp=95
+122 GUS/sfx/bubbling.pat tune=-0.4 amp=100
+#123 GUS/sfx/dog2.pat amp=195
+123 GUS/sfx/dog2.pat tune=-31 amp=195
+#124 GUS/sfx/windchim.pat strip=tail amp=108
+124 GUS/sfx/windchim.pat tune=-5 strip=tail amp=102
+

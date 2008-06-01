@@ -1,0 +1,50 @@
+# The configuration file of reproducing the VSC 3.0
+# Ver.6.4.1 2002/05/19 Presented by SYUUHOU.
+
+
+drumset 48
+#extension copydrumset 0
+26 GUS/castinet.pat note=95 pan=10 amp=96
+27 GUS/power/hihatcl.pat note=44 pan=30 amp=48
+28 GUS/power/h-hihatp.pat strip=tail note=44 pan=30 amp=48
+29 gusperc/hihatop.pat note=60 pan=50 amp=144
+30 GUS/gsdrum00/cymride1.pat note=45 pan=-30 amp=54
+35 release/kick1.pat strip=tail pan=-100 amp=120
+36 roland/C2TIMPNI.PAT note=30 pan=-100 amp=72
+38 GUS/power/h-snare.pat note=38 strip=tail pan=-30 amp=90
+39 GUS/castinet.pat note=82 strip=tail amp=65
+40 GUS/gsdrum00/snare1.pat note=38 pan=-30 amp=60
+41 roland/C2TIMPNI.PAT pan=-50 amp=102
+42 roland/C2TIMPNI.PAT pan=-50 amp=102
+43 roland/C2TIMPNI.PAT pan=-50 amp=102
+44 roland/C2TIMPNI.PAT pan=-50 amp=102
+45 roland/C2TIMPNI.PAT pan=-50 amp=102
+46 roland/C2TIMPNI.PAT pan=-50 amp=102
+47 roland/C2TIMPNI.PAT pan=-50 amp=102
+48 roland/C2TIMPNI.PAT pan=-50 amp=102
+49 roland/C2TIMPNI.PAT pan=-50 amp=102
+50 roland/C2TIMPNI.PAT pan=-50 amp=102
+51 roland/C2TIMPNI.PAT pan=-50 amp=102
+52 roland/C2TIMPNI.PAT pan=-50 amp=102
+53 roland/C2TIMPNI.PAT pan=-50 amp=102
+57 GUS/gsdrum00/cymsplsh.pat note=46 pan=-50 amp=102
+59 GUS/gsdrum00/cymcrsh1.pat pan=-50 amp=102
+88 GUS/applause.pat note=64 keep=env keep=loop amp=150
+97 GUS/applause.pat note=64 keep=env keep=loop amp=150
+98 GUS/applause.pat note=69 keep=env keep=loop amp=150
+99 roland/C2TIMPNI.PAT note=39 pan=-50 amp=102
+100 roland/C2TIMPNI.PAT note=40 pan=-50 amp=102
+101 roland/C2TIMPNI.PAT note=41 pan=-50 amp=102
+102 roland/C2TIMPNI.PAT note=42 pan=-50 amp=102
+103 roland/C2TIMPNI.PAT note=43 pan=-50 amp=102
+104 roland/C2TIMPNI.PAT note=44 pan=-50 amp=102
+105 roland/C2TIMPNI.PAT note=45 pan=-50 amp=102
+106 roland/C2TIMPNI.PAT note=46 pan=-50 amp=102
+107 roland/C2TIMPNI.PAT note=47 pan=-50 amp=102
+108 roland/C2TIMPNI.PAT note=48 pan=-50 amp=102
+109 roland/C2TIMPNI.PAT note=49 pan=-50 amp=102
+110 roland/C2TIMPNI.PAT note=50 pan=-50 amp=102
+111 roland/C2TIMPNI.PAT note=51 pan=-50 amp=102
+112 roland/C2TIMPNI.PAT note=52 pan=-50 amp=102
+113 roland/C2TIMPNI.PAT note=53 pan=-50 amp=102
+
