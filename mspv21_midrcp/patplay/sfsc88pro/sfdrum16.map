@@ -1,0 +1,15 @@
+# The configuration file of reproducing the VSC 3.0
+# Ver.6.4.1 2002/05/19 Presented by SYUUHOU.
+
+
+drumset 16
+#extension copydrumset 0
+36 GUS/power/powrkic2.pat strip=tail amp=120
+38 GUS/power/gatesd2.pat amp=120
+41 GUS/gsdrum08/roomlow2.pat note=40 strip=tail amp=84
+43 GUS/gsdrum08/roomlow1.pat note=42 strip=tail amp=84
+45 GUS/gsdrum08/roommid2.pat note=44 strip=tail amp=84
+47 GUS/gsdrum08/roommid1.pat note=46 strip=tail amp=84
+48 GUS/gsdrum08/roomhi2.pat note=47 strip=tail amp=84
+50 GUS/gsdrum08/roomhi1.pat note=49 strip=tail amp=84
+

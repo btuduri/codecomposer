@@ -1,0 +1,12 @@
+# The configuration file of reproducing the VSC 3.0
+# Ver.6.4.1 2002/05/19 Presented by SYUUHOU.
+
+
+bank 4
+27 release/cleangtr.pat amp=72
+30 GUS/odguitar.pat amp=54
+#122 mazpat/FX/WATER1.PAT amp=90
+122 mazpat/FX/WATER1.PAT tune=+2.4 amp=90
+#123 GUS/sfx/cat1.pat amp=30
+123 GUS/sfx/cat1.pat tune=+3 amp=30
+

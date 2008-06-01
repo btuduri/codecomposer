@@ -1,0 +1,17 @@
+# The configuration file of reproducing the VSC 3.0
+# Ver.6.4.1 2002/05/19 Presented by SYUUHOU.
+
+
+bank 1
+26 release/jazzgtr.pat amp=78
+27 GUS/nyguitar.pat amp=204
+28 release/mutegtr.pat amp=78
+29 GUS/distgtr.pat amp=84
+30 GUS/odguitar.pat amp=66
+81 GUS/sawwave.pat amp=30
+87 GUS/sawwave.pat amp=90
+#122 GUS/sfx/rain1.pat amp=25
+122 GUS/applause.pat tune=+10.207 amp=55
+123 GUS/sfx/dog2.pat amp=150
+126 release/laugh.pat pan=0 amp=60
+

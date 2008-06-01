@@ -1,0 +1,77 @@
+# The configuration file of reproducing the VSC 3.0
+# Ver.6.4.1 2002/05/19 Presented by SYUUHOU.
+
+
+drumset 25
+#extension copydrumset 0
+0 GUS/power/powrkic0.pat note=36 amp=72
+1 GUS/kick2.pat note=36 amp=90
+2 GUS/gsdrum25/78kick.pat note=35 amp=108
+3 GUS/gsdrum25/78kick.pat note=34 amp=108
+4 GUS/gsdrum25/78kick.pat note=22 amp=150
+5 GUS/gsdrum25/909kick.pat note=37 amp=180
+6 GUS/gsdrum25/808kick.pat note=36 amp=132
+7 GUS/gsdrum25/78kick.pat note=34 amp=150
+8 GUS/gsdrum25/808kick.pat note=36 amp=180
+9 GUS/gsdrum25/909kick.pat note=37 amp=120
+10 GUS/kick2.pat note=36 amp=114
+11 GUS/power/powrkic1.pat note=36 amp=108
+12 GUS/gsdrum25/909kick.pat note=37 amp=180
+13 GUS/gsdrum25/909kick.pat note=36 amp=180
+14 wowpats/realtom1.pat note=40 pan=0 amp=90
+15 GUS/gsdrum25/909kick.pat note=38 amp=180
+16 orchhit-patch/orchhit.pat note=60 amp=54
+35 GUS/gsdrum25/808kick.pat note=36 amp=108
+36 GUS/gsdrum25/78kick.pat note=34 amp=150
+37 GUS/gsdrum25/808stick.pat note=38 pan=-10 amp=72
+38 GUS/gsdrum25/808snare.pat note=32 amp=120
+40 GUS/gsdrum25/808snar2.pat note=43 amp=120
+41 GUS/gsdrum25/808toml2.pat amp=120
+42 GUS/gsdrum25/808hhc.pat pan=30 amp=138
+43 GUS/gsdrum25/808toml1.pat amp=120
+44 GUS/gsdrum25/808hhc.pat pan=30 amp=120
+45 GUS/gsdrum25/808tomm2.pat amp=120
+46 GUS/gsdrum25/808hho.pat note=43 pan=50 amp=144
+47 GUS/gsdrum25/808tomm1.pat amp=120
+48 GUS/gsdrum25/808tomh2.pat amp=120
+49 GUS/gsdrum25/808crsh1.pat note=28 strip=tail pan=50 amp=72
+50 GUS/gsdrum25/808tomh1.pat amp=120
+56 GUS/gsdrum25/808cowbl.pat pan=30 amp=72
+62 GUS/gsdrum25/808tomh1.pat note=59 pan=-50 amp=120
+63 GUS/gsdrum25/808tomh1.pat note=51 pan=-30 amp=120
+64 GUS/gsdrum25/808tomh2.pat note=47 pan=-20 amp=120
+70 GUS/maracas.pat note=71 pan=-50 amp=48
+75 GUS/clave.pat note=77 pan=30 amp=90
+88 GUS/applause.pat note=69 keep=env keep=loop amp=150
+97 release/orchhit.pat note=60 amp=144
+98 orchhit-patch/orchhit.pat note=59 amp=54
+99 orchhit-patch/orchhit.pat note=57 amp=72
+100 release/orchhit.pat note=60 amp=108
+101 orchhit-patch/orchhit.pat note=57 amp=72
+102 release/orchhit.pat note=60 amp=108
+103 GUS/sfx/carstop.pat note=67 amp=48
+104 mazpat/FX/RAINYDAY.PAT note=56 keep=env amp=72
+105 GUS/gsdrum00/snare2.pat note=36 amp=84
+106 GUS/timbaleh.pat note=58 pan=0 amp=66
+107 GUS/power/gatesd2.pat note=38 amp=120
+108 GUS/gsdrum25/808snare.pat note=32 amp=120
+109 wowpats/realtom1.pat note=62 pan=0 amp=150
+110 wowpats/realtom1.pat note=64 pan=0 amp=150
+111 wowpats/realtom1.pat note=66 pan=0 amp=150
+112 GUS/gsdrum25/78snare.pat note=38 amp=90
+113 GUS/gsdrum25/909snare.pat note=36 amp=78
+114 GUS/gsdrum25/808snare.pat note=32 amp=120
+115 GUS/gsdrum25/808snar2.pat note=43 amp=120
+116 GUS/gsdrum25/808snar2.pat note=47 amp=120
+117 GUS/gsdrum25/909snare.pat note=38 amp=120
+118 GUS/gsdrum25/909snare.pat note=44 amp=120
+119 GUS/gsdrum25/909snare.pat note=38 amp=120
+120 GUS/gsdrum25/909snare.pat note=40 amp=120
+121 GUS/timbaleh.pat note=58 pan=0 amp=126
+122 GUS/gsdrum25/78snare.pat note=38 amp=90
+123 gusperc/timbaleh.pat note=59 strip=tail pan=0 amp=72
+124 GUS/gsdrum00/snare2.pat note=40 amp=72
+125 GUS/timbaleh.pat note=61 pan=0 amp=90
+126 GUS/gsdrum00/snare1.pat note=38 amp=42
+127 GUS/claps.pat note=42 amp=66
+
