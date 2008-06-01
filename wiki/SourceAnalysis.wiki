@@ -1,0 +1,479 @@
+#summary 소스 분석을 하면서 알게된 내용을 기록합니다 (About Midi)
+
+-1> 일러두기
+Moonshell 자체는 미디어 플레이어이면서 Open Source로 공개되어있습니다.
+Moonshell 에서 MIDI 파일을 플레이하려면 음원 파일과 해당 플러그인을 같이 복사해서 넣어준담에 기계에 Moonshell에 넣어주면 실제로 MIDI 파일을 불러와서 NDSL로 재생이 가능합니다.
+따라서 해당 플러그인을 분석할 필요가 있고, 심지어 그냥 카피해서 요리조리 잘 조리하면 프로젝트를 쉽게 완수할 수 있을것 같습니다..
+
+예상되는 문제점 : 현재 smidlib 부분은 ARM9에서 돌리고 있습니다 아시다시피 NDSL에서는 ARM7과 ARM9 두개로 만들어져있는데,
+미디를 ARM9에서 돌려버리면 그래픽 연산 같은것은 어떻게 될지 잘 모르겠습니다. Moonshell 만든 작자가 ARM7으로 옮기려다가 귀차니즘때문에 그만둔듯;
+
+0> 전역변수와 구조체들
+하도 이짓을 안하다보니까 소스 분석하는 요령도 다 잊어먹네요. 먼저 전역변수와 정의된 구조체부터 봅시다.
+
+1) smidlib_sm.cpp 파일을 보면 다음과 같은 전역 변수와 정의된 구조체가 있습니다.
+char *gME_Text=NULL,*gME_Copyright=NULL,*gME_Title=NULL;
+
+ALIGNED_VAR_IN_DTCM TStdMIDI StdMIDI;
+
+typedef struct {
+  u32 Len;
+} TSysExEvent;
+
+typedef struct {
+  u8 ID;
+  u32 Len;
+  u8 *Data;
+} TMetaEvent;
+
+typedef struct {
+  u8 Status;
+  u32 EventType; // 0=MIDI 1=SysEx 2=Meta
+  TMetaEvent MetaEvent;
+} TSM_Event;
+
+2) smidlib.h에 보면 또 이런 구조체가 있지요. 근데 왜 이놈들 Chunk라고 안하고 Chank라고 했나요?.........
+typedef struct {
+  u8 ID[4];
+  u32 Len;
+  u16 Format;
+  u16 Track;
+  u16 TimeRes;
+} TSM_Chank;
+
+typedef struct {
+  bool EndFlag;
+  u8 ID[4];
+  u8 *Data,*DataEnd;
+  u8 RunningStatus;
+  int WaitClock;
+} TSM_Track;
+
+typedef struct {
+  u8 *File;
+  u32 FilePos;
+ 
+  bool FastNoteOn;
+ 
+  u32 SampleRate;
+  u32 SamplePerClockFix16;
+ 
+  TSM_Chank SM_Chank;
+ 
+  TSM_Track SM_Tracks[SM_TracksCountMax];
+} TStdMIDI;
+
+#define SM_TracksCountMax (32)
+extern char *gME_Text,*gME_Copyright,*gME_Title;
+extern TStdMIDI StdMIDI;
+
+3) 그리고 smidlib_mtrk.cpp에 다음과 같은 전역 변수와 구조체가 또 한무더기 있습니다
+typedef struct {
+  u32 Program;
+  s32 PitchBend;
+  u32 DrumMap;
+  s32 BendRange;
+ 
+  u8 ccBankSelectMSB,ccBankSelectLSB,ccModulation,ccVolume,ccPanpot,ccExpression;
+  bool ccSustainPedal;
+  u8 ccReleaseTime,ccAttackTime,ccDecayTime,ccVibRate,ccVibDepth,ccVibDelay;
+  u8 ccReverb,ccChorus,ccVariation;
+  u8 ccMSB,ccLSB;
+} TMTRK_Track;
+
+#define MTRK_TrackCount (16)
+
+typedef struct {
+  TMTRK_Track Track[MTRK_TrackCount];
+} TMTRK;
+
+static ALIGNED_VAR_IN_DTCM TMTRK MTRK;
+static ALIGNED_VAR_IN_DTCM TMTRK_Track DrumMap1,DrumMap2;
+
+일단 이 정도 있다고 봅시다.
+
+1> Start(Main.cpp)
+// 이 Start라는 함수를 콜하는 부분이 소스 내에 없는 것으로 보아 저 함수를 부르는 것은
+// MoonShell 본체 소스에 있는 것 같습니다. 따라서 이부분이 진짜 시작부분이 아닐까 하네요.
+
+ 
+
+// <-- arm9/Source/Plugin.h 에 보면
+
+typedef struct {
+  bool (*Start)(int FileHandle); <-- 이 부분이 호출 부분같다.
+  void (*Free)(void);
+ 
+  u32 (*Update)(s16 *lbuf,s16 *rbuf);
+ 
+  s32 (*GetPosMax)(void);
+  s32 (*GetPosOffset)(void);
+  void (*SetPosOffset)(s32 ofs);
+ 
+  u32 (*GetChannelCount)(void);
+  u32 (*GetSampleRate)(void);
+  u32 (*GetSamplePerFrame)(void);
+  int (*GetInfoIndexCount)(void);
+ 
+  bool (*GetInfoStrL)(int idx,char *str,int len);
+  bool (*GetInfoStrW)(int idx,UnicodeChar *str,int len);
+  bool (*GetInfoStrUTF8)(int idx,char *str,int len);
+} TPlugin_SoundLib;
+
+ 
+
+그럼 다시 한번 TPlugin_SoundLib 구조체가 선언되어 있는 곳을 따라가면,
+
+arm9/source/Dll.h 에
+
+ 
+
+typedef struct {
+  TPluginHeader PluginHeader;
+  void *pData;
+  int DataSize;
+  void *pbss;
+  int bssSize;
+  bool (*LoadLibrary)(const TPlugin_StdLib *_pStdLib,u32 _TextDataAddress);
+  void (*FreeLibrary)(void);
+  int (*QueryInterfaceLibrary)(void);
+  const TPlugin_ImageLib *pIL;
+  const TPlugin_SoundLib *pSL;            // arm9/source/Main.cpp 에 pPluginBody->pSL->Start(FileHandle); 란 부분으로 호출 하는 것을 알 수 있다.
+
+                                                                    // 하지만 이를 포함하는 함수가 bool MP3Boot_PlayFileFromShell(char *mp3fn) 이라는거..-_-;; 
+
+                                                                    // 그래도 이 함수 부분을 보면 FileHandle을 선언하고 Shell_OpenFile 같은 함수를 이용하여 파일을 읽어들이는 부분을 볼 수 있다.
+  const TPlugin_ClockLib *pCL;
+  const TPlugin_SoundEffectLib *pSE;
+ 
+  char *INIData;
+  int INISize;
+  int BINFileHandle;
+  void *BINData;
+  int BINSize;
+} TPluginBody;
+
+ 
+
+ 
+
+
+// 일단 해당 소스를 보면...
+
+bool Start(int FileHandle)
+{
+  // 시작부터 쌩뚱맞게 INI이 뭐지? 라고 생각이 들텐데...
+  // 같은 디렉토리에 MidRcp.ini 파일이 있는데 이 부분에 뭔가 설정해주는 것 같음. 실제로 GetINIData가 뭔지 추적을 할수가 없긴한데... 
+  // 실제로 아래와 같이 INI 파일을 불러온 다음에 StackCount=GlobalINI.MIDPlugin.DelayStackSize; 이런식으로 직접 접근을 해서 쓰더라능
+
+  // Plugin_def.h 에 #define GetINIData (pStdLib->GetINIData) 로 정의되어 있으며, const TPlugin_StdLib *pStdLib; 로 선언되어 있는 것도 알 수 있다.
+
+  // pStdLib 포인터는 Plugin_dll.cpp 에 정의된 LoadLibrary함수에 의해 값이 할당되는데, 이 LoadLibrary함수를 콜하는 부분이 아무리 봐도 여기엔 존재하지 않는다-_-;
+
+  // TPlugin_StdLib 구조체는 Plugin.h 파일에 정의되어 있으며,상당히 많은 변수들을 포함하고 있어서 링크는 쉽지가 않음 
+  InitINI();
+  LoadINI(GetINIData(),GetINISize());
+ 
+  // 뭔가 스택 초기화 부분 같은데, 정확히 소스만 봐서는 뭔말인지 파악하기 힘들다. 일단 미디에 초첨을 맞춰서 전체적인 흐름을 보는 것으로 합시다.
+  if(Start_InitStackBuf()==false) return(false);
+ 
+  TiniMIDPlugin *MIDPlugin=&GlobalINI.MIDPlugin;
+ 
+  {
+    if(MaxSampleRate<MIDPlugin->SampleRate) MIDPlugin->SampleRate=MaxSampleRate;
+   
+    SamplePerFrame=MIDPlugin->SampleRate/MIDPlugin->FramePerSecond;
+    if(MaxSamplePerFrame<SamplePerFrame) SamplePerFrame=MaxSamplePerFrame;
+    SamplePerFrame&=~15;
+    if(SamplePerFrame<16) SamplePerFrame=16;
+   
+......우왕 뭔말인지 모르겠어요;
+ 
+
+ - 진모
+이후 setStart까지의 코드를 보면.. FileHandle에 해당하는만큼의 메모리를 할당하는 것을 볼 수 있다.
+
+ DeflateBuf : 해당 파일을 읽어들인 버퍼
+
+ Deflatesize : 해당 파일의 크기
+
+이후 오류검사를 한 뒤, DeflateBuf 를 이용하여 파일 포맷을 검사한다.
+
+ 
+
+Offset
+	
+
+Length
+
+(byte)
+	
+
+Type
+	
+
+Description
+	
+
+Value
+
+00
+	
+
+4
+	
+
+Char[4]
+	
+
+Chunk ID
+	
+
+“MThd” (0x4D546864)
+
+04
+	
+
+4
+	
+
+Dword
+	
+
+Chunk Size
+	
+
+6 (0x00000006)
+
+08
+	
+
+2
+	
+
+Word
+	
+
+Format Type
+	
+
+0~2
+
+10
+	
+
+2
+	
+
+Word
+	
+
+Number of Tracks
+	
+
+1~65,535
+
+12
+	
+
+2
+	
+
+Word
+	
+
+Time Division
+	
+
+ 
+
+
+if(strncmp((char*)DeflateBuf,"MThd",4)==0){
+  _consolePrintf("Start Standard MIDI file.\n");
+  detect=true;
+  FileFormat=EFF_MID;
+}
+if(strncmp((char*)DeflateBuf,"RCM-PC98V2.0(C)COME ON MUSIC",28)==0){
+  _consolePrintf("Start RecomposerV2.0 file.\n");
+  detect=true;
+  FileFormat=EFF_RCP;
+}
+
+ 
+
+우리가 세미나에서 알아봤듯이 첫 4바이트의 값이 MThd 인지 확인을 해서 미디 파일인지 구분하는 것을 알 수 있다.
+
+MID or RCP 둘 다 아니면 false를 리턴하며 종료하게 된다.
+
+ 
+
+이후엔, 클락 세팅을 한다.
+
+
+2> selStart ( Main.cpp )
+// 일단 소스의 시작은 미디 파일의 로딩부터 시작을 해보려고 합니다.
+static bool selStart(void)
+{
+  switch(FileFormat){
+    case EFF_MID: return(smidlibStart()); break;
+    case EFF_RCP: return(rcplibStart()); break;
+  }
+ 
+  return(false);
+}
+
+이라는 부분부터 출발! 여기서 보면 이 모듈은 MID와 RCP라는 두개의 음원 종류를 재생하기 때문에 파일 포맷에 따라 초기화해주는 부분이 차이가 나는 것을 확인 가능.
+
+2> smidlibStart (smidlib.cpp ) - #1
+1>에 이어서 smidlibStart 부분을 찾아가면........다음과 같은 진정한 초기화 루틴이 나옵니다.
+먼저 SM_Init으로 메모리 초기화와 구조체 초기화를 때려줍니다.
+bool smidlibStart(void)
+{
+  TStdMIDI *_StdMIDI=&StdMIDI;
+ 
+  SM_Init();                                          // 위에서 정의한 전역변수인 StdMIDI를 사용전에 메모리 초기화해주고 각 구조체의 멤버를 0으로 지정합니다.
+                                                         // 함수에 대해서 특별한 내용은 없어서 코드는 생략합니다.
+  SM_LoadStdMIDI(bdata,bSampleRate);   //  이 부분은 아래 참조.
+
+// ......일단 이런 과정이 있으니 실제 호출 부분으로 점프해봅시다
+
+3> SM_LoadStdMIDI
+// 우왕 실제로 파일 불러오나봅니다.
+void SM_LoadStdMIDI(u8 *FilePtr,u32 SampleRate)
+{
+  TStdMIDI *_StdMIDI=&StdMIDI;
+ 
+  _StdMIDI->File=FilePtr;
+  _StdMIDI->FilePos=0;
+ 
+  _StdMIDI->SampleRate=SampleRate;
+  _StdMIDI->SamplePerClockFix16=0;
+ 
+  SM_LoadChank();                        // 하단의 해당함수 분석 참조.
+  SM_ProcMetaEvent_InitTempo();    // 이부분은 뭐하는건지 잘 모르겠음; somebody explain to us!
+ 
+  // 디버깅용으로 화면에 찍어보는 부분인듯.
+  {
+    TSM_Chank *_SM_Chank=&StdMIDI.SM_Chank;
+    _consolePrintf("Chank:Len=%d frm=%d trk=%d res=%d\n",_SM_Chank->Len,_SM_Chank->Format,_SM_Chank->Track,_SM_Chank->TimeRes);
+  }
+ 
+  // 스펙상으로 인하면 트랙의 개수가 6만 몇개인데, 32개로 제한을 해둔 것 같다. 왜 그럴까? somebody explain to us!
+  if(SM_TracksCountMax<_StdMIDI->SM_Chank.Track) _StdMIDI->SM_Chank.Track=SM_TracksCountMax;
+ 
+  // 우왕 실제로 트랙 불러옵니다! 그전에 메모리 초기화부터 해주는 센스.
+  MemSet32CPU(0,&_StdMIDI->SM_Tracks,SM_TracksCountMax*sizeof(TSM_Track));
+ 
+  // 실제로 하단의 루프는 트랙을 실제로 메모리로 불러옵니다. 일단 루프를 돌기 위해서 변수 초기화.
+  u32 TrackCount=_StdMIDI->SM_Chank.Track;
+ 
+  // 루프를 돌면서 각 트랙의 데이터를 SM_Tracks 배열 안으로 데이터를 긁어옵니다. 이 과정에서 SM_LoadTrackChank 함수를 호출해서 진행하는데...하단에 자세한 설명!
+  for(u32 TrackNum=0;TrackNum<TrackCount;TrackNum++){
+    TSM_Track *pSM_Track=&_StdMIDI->SM_Tracks[TrackNum];
+    SM_LoadTrackChank(pSM_Track);
+    _consolePrintf("Track.%d:length=%d\n",TrackNum,(u32)pSM_Track->DataEnd-(u32)pSM_Track->Data);
+  }
+}
+
+4> SM_LoadChank
+// 우왕 이부분이 드디어 MIDI파일의 HeaderChunk를 읽어오는 부분입니다.
+// 스펙을 잠깐 보시려면 이 페이지를 참조 해서 Header Chunk로 검색해서 보세요. 징짜 스펙대로 만든 케이스.
+// 스펙에 의하면 MIDI의 데이터 단위는 청크이므로 여기서도 청크 구조체를 선언하고 그런식으로 헤더만 불러온다는거.
+static void SM_LoadChank(void)
+{
+  TSM_Chank *_SM_Chank=&StdMIDI.SM_Chank;
+ 
+  _SM_Chank->ID[0]=SM_ReadByte();
+  _SM_Chank->ID[1]=SM_ReadByte();
+  _SM_Chank->ID[2]=SM_ReadByte();
+  _SM_Chank->ID[3]=SM_ReadByte();
+ 
+  _SM_Chank->Len=SM_ReadBigDWord();
+  _SM_Chank->Format=SM_ReadBigWord();
+  _SM_Chank->Track=SM_ReadBigWord();
+  _SM_Chank->TimeRes=SM_ReadBigWord();
+ 
+  if(_SM_Chank->Format==0) _SM_Chank->Track=1;
+}
+
+5> SM_LoadTrackChunk
+// 헤더를 불러운 다음에 트랙 데이터를 _StdMIDI->SM_Tracks[TrackNum] 안으로 불러오는 과정인데
+// 여기서 ReadSkip 하면 len만큼 파일 포인터를 뒤로 밀어버리는 과정이다.
+// 위의 과정과 같이  이 페이지를 참조 하면 Track Chunk 부분의 스펙대로 제작한 케이스임을 알 수 있다.
+// 현재 SM_ReadByte이니 SM_ReadBigDWord 같은 과정들도 데이터를 읽어오면서 파일포인터를 그만큼 뒤로 미룬다.
+// 특별히 트랙의 데이터에 대해서는 터치를 하지 않고 있다.
+// 대충 이부분까지 끝나면 다시 2>로 돌아가자! (파일 로딩이 끝난것임)
+
+static void SM_LoadTrackChank(TSM_Track *pSM_Track)
+{
+  pSM_Track->EndFlag=false;
+ 
+  pSM_Track->ID[0]=SM_ReadByte();
+  pSM_Track->ID[1]=SM_ReadByte();
+  pSM_Track->ID[2]=SM_ReadByte();
+  pSM_Track->ID[3]=SM_ReadByte();
+ 
+  u32 len=SM_ReadBigDWord();
+ 
+  pSM_Track->Data=&StdMIDI.File[StdMIDI.FilePos];
+  pSM_Track->DataEnd=&pSM_Track->Data[len];
+ 
+  SM_ReadSkip(len);
+ 
+  pSM_Track->RunningStatus=0;
+  pSM_Track->WaitClock=0;
+}
+
+6> smidlibStart (smidlib.cpp ) - #2
+ /// ....2>에 이어서
+ // 우왕 SMF Type2는 지원을 아예 안하는군요 ㅋ;
+  if(_StdMIDI->SM_Chank.Format==2){
+    _consolePrintf("not support Format2\n");
+    return(false);
+  }
+
+ // 다음 함수는 실제 사운드 부분을 초기화 하는 부분 같음 : 우왕 핻당 소스를 봤는데 무슨 말인지 전혀 모르겠군요; 일단 스킵;
+  PCH_Init(bSampleRate,bSampleBufCount,bMaxChannelCount,bGenVolume);
+ // MTRKCC_Init은 뭐하는걸까요?  <-- MTRK 는 Midi Track 의 약자로 알고 있는데 실제 정의부분을 보면 Track을 초기화하고 있는듯 - 진모
+  MTRKCC_Init();
+ 
+  u32 TrackCount=_StdMIDI->SM_Chank.Track;
+ 
+  for(u32 TrackNum=0;TrackNum<TrackCount;TrackNum++){
+    TSM_Track *pSM_Track=&_StdMIDI->SM_Tracks[TrackNum];
+    pSM_Track->WaitClock=SM_GetDeltaTime(pSM_Track);
+  }
+ 
+  return(true);
+}
+
+7> MTRKCC_Init
+
+
+typedef struct {
+  TMTRK_Track Track[MTRK_TrackCount];
+} TMTRK;
+
+ 
+
+static ALIGNED_VAR_IN_DTCM TMTRK MTRK;
+
+ 
+
+static ALIGNED_VAR_IN_DTCM TMTRK_Track DrumMap1,DrumMap2;
+
+  
+
+void MTRKCC_Init(void)
+{
+  MemSet32CPU(0,&MTRK,sizeof(TMTRK));            // 미디파일의 모든 트랙을 0으로 초기화, TMTRK <-- 모든 MTRK를 갖고 있는 구조체
+  for(u32 trk=0;trk<MTRK_TrackCount;trk++){       // 각각의 트랙을 초기화
+    MTRKCC_InitTrack(&MTRK.Track[trk],trk);
+  }
+ 
+  MemSet32CPU(0,&DrumMap1.Program,sizeof(TMTRK_Track));
+  MTRKCC_InitTrack(&DrumMap1,0xfe);
+  MemSet32CPU(0,&DrumMap2.Program,sizeof(TMTRK_Track));
+  MTRKCC_InitTrack(&DrumMap2,0xff);
+}
+
