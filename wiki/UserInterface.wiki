@@ -5,10 +5,13 @@
 만약 PALib로 화면에 뭔가를 그린다고 하면 그냥 PALib 함수를 죄다 이용해서 그려야지 openGL API로 그린것을 vram에 다가 덮어 쓸 수 없는 듯하다.
 만약 OpenGL을 사용한다면 PALib 함수로 VRAM을 초기화하고 관리하는 함수를 사용하면 안되고 devkit 의 low API를 이용해야만한다. 이 경우 레퍼런스도 없고 시간도 없고 여러모로 힘들것 같으니깐 일단 PALib로 개발하기로 한다.
 
-1. 전체 클래스의 구조
+----
+
+==1. 전체 클래스의 구조==
 
 
-2. API
-*PA_3DSetSpriteWidthHeight(u16 spriteNum, u16 widthSize, u16 heightSize);*.
+==2. API==
 
+*PA_3DSetSpriteWidthHeight(u16 spriteNum, u16 widthSize, u16 heightSize);*
+  
 이미지의 가로/세로 크기를 지정할 수 있다.
