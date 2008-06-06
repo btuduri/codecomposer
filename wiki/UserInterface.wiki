@@ -1,3 +1,8 @@
 #Coposer의 User Interface와 관련된 내용을 정리합니다.
 
-test 여기에 내용을 추가합니다.
+1. 전체 클래스의 구조
+
+
+2. API
+*PA_3DSetSpriteWidthHeight(u16 spriteNum, u16 widthSize, u16 heightSize);*
+이미지의 가로/세로 크기를 지정할 수 있다.
