@@ -8,8 +8,11 @@ Moonshell 에서 MIDI 파일을 플레이하려면 음원 파일과 해당 플�
 예상되는 문제점 : 현재 smidlib 부분은 ARM9에서 돌리고 있습니다 아시다시피 NDSL에서는 ARM7과 ARM9 두개로 만들어져있는데,
 미디를 ARM9에서 돌려버리면 그래픽 연산 같은것은 어떻게 될지 잘 모르겠습니다. Moonshell 만든 작자가 ARM7으로 옮기려다가 귀차니즘때문에 그만둔듯;
 
-=== Standard Midi Part의 구성 ===
-먼저 분석하기 전에 이 그림을 참조합시다. 대략 분석해보니 이런 구조임. 
+=== MoonShell의 플러그인 구성에 관하여 ===
+ * 소스가 플러그인 형태이기 때문에 상당히 Moonshell 자체에 의존적인데, 따라서 먼저 플러그인의 종류를 좀 봐야합니다.
+ * plugin.h에서[http://code.google.com/p/codecomposer/source/browse/trunk/mspv21_midrcp/arm9/source/plugin.h#15  다음과 같은 공통적인 함수를 제공합니다.].
+
+ * 먼저 분석하기 전에 이 그림을 참조합시다. 정확하지는 않습니다만, 대략 분석해보니 이런 구조임. 
 http://farm4.static.flickr.com/3122/2554900175_3d8529bb9c_o.png
 
 === 전역변수와 구조체들 ===
