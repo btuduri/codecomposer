@@ -81,7 +81,25 @@ int main(void)
     }
     // ... 중략
 }}}
-
+ * bool strpcmUpdate_mainloop(void) 를 실제보개되면 ldst와 rdst가 뭔지 볼 수 있다. 
+   * 여기서 Samples=pPluginBody->pSL->Update(ldst,rdst); 하는 식으로 호출을 하는 것을 볼 수 있다.
+{{{
+ // ... 중략
+  s16 *ldst=&strpcmRingLBuf[BaseSamples*CurIndex];
+  s16 *rdst=&strpcmRingRBuf[BaseSamples*CurIndex];
+  
+  if(strpcmRequestStop==true){ cwl();
+    Samples=0;
+    }else{ cwl();
+    
+    switch(ExecMode){ cwl();
+      case EM_MSPSound: case EM_MP3Boot: { cwl();
+        if(strpcmDoubleSpeedFlag==true){ cwl();
+          pPluginBody->pSL->Update(NULL,NULL);
+        }
+        Samples=pPluginBody->pSL->Update(ldst,rdst);
+ // ... 중략
+}}}
 == Start 함수 분석 ==
  * 여기서 {{{ bool (*Start)(int FileHandle); }}}부분은 다음과 같은 곳에서 호출을 하고 있습니다.
    * {{{ pPluginBody->pSL->Start(FileHandle) }}} 라는 부분으로 MoonShell 전체에서 찾아보면 Main_fs.h 파일에 다음과 같이 사용을 하고 있습니다.
