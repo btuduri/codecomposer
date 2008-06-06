@@ -193,13 +193,41 @@ static inline u32 SM_TrackReadVarDWord(TSM_Track *pSM_Track)
   
 }
 
+// 실제로 MIDI Event에서 statue를 기준으로 데이터를 처리하는 부분을 구현한 함수이다. 
+// 이 함수에서 Smidlib_mrtk.* 에 정의된 함수를 호출하여 미디 메시지를 처리한다. 
 static void SM_ProcMIDIEvent(bool ShowMessage,bool EnableNote,TSM_Track *pSM_Track,u32 Status)
 {
   TStdMIDI *_StdMIDI=&StdMIDI;
-  
+
+  /*
+  이렇게 cmd를 통해서 메시지의 종류를 구분하는 기준은 다음의 페이지를 참조하자.
+  http://www.borg.com/~jglatt/tech/midispec/messages.htm
+
+  For these Status bytes, you break up the 8-bit byte into 2 4-bit nibbles. 
+  For example, a Status byte of 0x92 can be broken up into 2 nibbles with values of 9 (high nibble) and 2 (low nibble). 
+  The high nibble tells you what type of MIDI message this is. 
+
+  In this case, cmd means high neeble, and ch means low nibble.
+  What's the low nibble of 2 mean? This means that the message is on MIDI channel 2. 
+  There are 16 possible (logical) MIDI channels, with 0 being the first. So, this message is a Note On on channel 2
+  */
   u32 cmd=Status >> 4;
   u32 ch=Status & 0x0f;
-  
+
+  /*
+  메시지 종류에 따라 한바이트만 사용하는지, 두바이트만 사용을 하는지 결정된다. 
+  여기서 문쉘 제작자는 코드내에서 간단히 매크로를 정의하여 나름 깔끔하게 정리해보려고 노력한것 같다.
+
+  예를 들어 Note On의 경우 다음과 같이 사용된다
+  The first data is the note number. There are 128 possible notes on a MIDI device, numbered 0 to 127 (where Middle C is note number 60). 
+  This indicates which note should be played.
+
+  The second data byte is the velocity, a value from 0 to 127. 
+  This indicates with how much force the note should be played (where 127 is the most force). 
+  It's up to a MIDI device how it uses velocity information. 
+  Often velocity is be used to tailor the VCA attack time and/or attack level (and therefore the overall volume of the note). 
+  MIDI devices that can generate Note On messages, but don't implement velocity features, will transmit Note On messages with a preset velocity of 64.  
+  */
   u32 Data0,Data1;
   
 #define ReadData1() { \
@@ -210,17 +238,18 @@ static void SM_ProcMIDIEvent(bool ShowMessage,bool EnableNote,TSM_Track *pSM_Tra
   Data0=SM_TrackReadByte(pSM_Track); \
   Data1=SM_TrackReadByte(pSM_Track); \
 }
-  
+
+   // Here are the possible values for the high nibble, and what type of Voice Category message each represents:
   switch(cmd){
+    // 8 = Note Off ( http://www.borg.com/~jglatt/tech/midispec/noteoff.htm )
     case 0x8:
       ReadData2();
-      if(ShowMessage==true) _consolePrintf("$%xx/NoteOff(%x):note%d vel%d\n",cmd,ch,Data0,Data1);
       if(EnableNote==true) MTRK_NoteOff(ch,Data0,Data1);
       break;
+
+    // 9 = Note On ( http://www.borg.com/~jglatt/tech/midispec/noteon.htm )
     case 0x9:
-      // if(ch==1) EnableNote=false;
       ReadData2();
-      if(ShowMessage==true) _consolePrintf("$%xx/NoteOn(%x):note%d vel%d\n",cmd,ch,Data0,Data1);
       if(Data1!=0){ // Vel!=0
         if(EnableNote==false){
           MTRK_NoteOn_LoadProgram(ch,Data0,Data1);
@@ -232,29 +261,35 @@ static void SM_ProcMIDIEvent(bool ShowMessage,bool EnableNote,TSM_Track *pSM_Tra
       }
       _StdMIDI->FastNoteOn=true;
       break;
-    case 0xa:
+
+    // A = AfterTouch (ie, key pressure) ( http://www.borg.com/~jglatt/tech/midispec/aftert.htm )
+     case 0xa:
       ReadData2();
-//      if(ShowMessage==true) _consolePrintf("$%xx/PolyKeyPress(%x):note%d vel%d\n",cmd,ch,Data0,Data1);
       break;
+
+    // B = Control Change
     case 0xb:
       ReadData2();
-      if(ShowMessage==true) _consolePrintf("$%xx/ControlChange(%x):Num%d Val%d\n",cmd,ch,Data0,Data1);
       MTRKCC_Proc(ch,Data0,Data1);
       break;
+
+    // C = Program (patch) change
     case 0xc:
       ReadData1();
       _consolePrintf("$%xx/ProgramChange(%x):prg%d\n",cmd,ch,Data0);
       MTRK_SetProgram(ch,Data0);
       break;
+
+    // D = Channel Pressure
     case 0xd:
       ReadData1();
-//      if(ShowMessage==true) _consolePrintf("$%xx/ChannelPress(%x):vel%d\n",cmd,ch,Data0);
       break;
+
+    // E = Pitch Wheel
     case 0xe:
       ReadData2();
       s32 PitchBend=(((s32)Data1) << 7)+((s32)Data0);
       PitchBend-=8192;
-//      if(ShowMessage==true) _consolePrintf("$%xx/PitchBend(%x):%d\n",cmd,ch,PitchBend);
       MTRK_ChangePitchBend(ch,PitchBend);
       break;
   }
