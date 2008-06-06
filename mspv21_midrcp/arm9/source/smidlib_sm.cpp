@@ -193,14 +193,14 @@ static inline u32 SM_TrackReadVarDWord(TSM_Track *pSM_Track)
   
 }
 
-// ½ÇÁ¦·Î MIDI Event¿¡¼­ statue¸¦ ±âÁØÀ¸·Î µ¥ÀÌÅÍ¸¦ Ã³¸®ÇÏ´Â ºÎºĞÀ» ±¸ÇöÇÑ ÇÔ¼öÀÌ´Ù. 
-// ÀÌ ÇÔ¼ö¿¡¼­ Smidlib_mrtk.* ¿¡ Á¤ÀÇµÈ ÇÔ¼ö¸¦ È£ÃâÇÏ¿© ¹Ìµğ ¸Ş½ÃÁö¸¦ Ã³¸®ÇÑ´Ù. 
+// ì‹¤ì œë¡œ MIDI Eventì—ì„œ statueë¥¼ ê¸°ì¤€ìœ¼ë¡œ ë°ì´í„°ë¥¼ ì²˜ë¦¬í•˜ëŠ” ë¶€ë¶„ì„ êµ¬í˜„í•œ í•¨ìˆ˜ì´ë‹¤. 
+// ì´ í•¨ìˆ˜ì—ì„œ Smidlib_mrtk.* ì— ì •ì˜ëœ í•¨ìˆ˜ë¥¼ í˜¸ì¶œí•˜ì—¬ ë¯¸ë”” ë©”ì‹œì§€ë¥¼ ì²˜ë¦¬í•œë‹¤. 
 static void SM_ProcMIDIEvent(bool ShowMessage,bool EnableNote,TSM_Track *pSM_Track,u32 Status)
 {
   TStdMIDI *_StdMIDI=&StdMIDI;
 
   /*
-  ÀÌ·¸°Ô cmd¸¦ ÅëÇØ¼­ ¸Ş½ÃÁöÀÇ Á¾·ù¸¦ ±¸ºĞÇÏ´Â ±âÁØÀº ´ÙÀ½ÀÇ ÆäÀÌÁö¸¦ ÂüÁ¶ÇÏÀÚ.
+  ì´ë ‡ê²Œ cmdë¥¼ í†µí•´ì„œ ë©”ì‹œì§€ì˜ ì¢…ë¥˜ë¥¼ êµ¬ë¶„í•˜ëŠ” ê¸°ì¤€ì€ ë‹¤ìŒì˜ í˜ì´ì§€ë¥¼ ì°¸ì¡°í•˜ì.
   http://www.borg.com/~jglatt/tech/midispec/messages.htm
 
   For these Status bytes, you break up the 8-bit byte into 2 4-bit nibbles. 
@@ -215,10 +215,10 @@ static void SM_ProcMIDIEvent(bool ShowMessage,bool EnableNote,TSM_Track *pSM_Tra
   u32 ch=Status & 0x0f;
 
   /*
-  ¸Ş½ÃÁö Á¾·ù¿¡ µû¶ó ÇÑ¹ÙÀÌÆ®¸¸ »ç¿ëÇÏ´ÂÁö, µÎ¹ÙÀÌÆ®¸¸ »ç¿ëÀ» ÇÏ´ÂÁö °áÁ¤µÈ´Ù. 
-  ¿©±â¼­ ¹®½© Á¦ÀÛÀÚ´Â ÄÚµå³»¿¡¼­ °£´ÜÈ÷ ¸ÅÅ©·Î¸¦ Á¤ÀÇÇÏ¿© ³ª¸§ ±ò²ûÇÏ°Ô Á¤¸®ÇØº¸·Á°í ³ë·ÂÇÑ°Í °°´Ù.
+  ë©”ì‹œì§€ ì¢…ë¥˜ì— ë”°ë¼ í•œë°”ì´íŠ¸ë§Œ ì‚¬ìš©í•˜ëŠ”ì§€, ë‘ë°”ì´íŠ¸ë§Œ ì‚¬ìš©ì„ í•˜ëŠ”ì§€ ê²°ì •ëœë‹¤. 
+  ì—¬ê¸°ì„œ ë¬¸ì‰˜ ì œì‘ìëŠ” ì½”ë“œë‚´ì—ì„œ ê°„ë‹¨íˆ ë§¤í¬ë¡œë¥¼ ì •ì˜í•˜ì—¬ ë‚˜ë¦„ ê¹”ë”í•˜ê²Œ ì •ë¦¬í•´ë³´ë ¤ê³  ë…¸ë ¥í•œê²ƒ ê°™ë‹¤.
 
-  ¿¹¸¦ µé¾î Note OnÀÇ °æ¿ì ´ÙÀ½°ú °°ÀÌ »ç¿ëµÈ´Ù
+  ì˜ˆë¥¼ ë“¤ì–´ Note Onì˜ ê²½ìš° ë‹¤ìŒê³¼ ê°™ì´ ì‚¬ìš©ëœë‹¤
   The first data is the note number. There are 128 possible notes on a MIDI device, numbered 0 to 127 (where Middle C is note number 60). 
   This indicates which note should be played.
 
