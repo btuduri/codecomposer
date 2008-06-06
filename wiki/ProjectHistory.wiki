@@ -1,8 +1,6 @@
 #summary Project의 진행이 어떻게 되었는지에 대해서 기록합니다.
 
 = Note =
-
- * *미팅 날짜를 바꾸었으면 좋겠습니다. 화목 오후 5시부터 학원수업이 있어서 그렇습니다;*
  * 저 원래 GRE 시험을 5월 28일날 보려고 하다가 6월 27일, 7월 2일로 미루기로 했습니다.
  * 그래서 6월 26일 ~ 7월 3일사이에는 한국에 없습니다(?!)
  * 면세점에서 사실것 있으면 미리 여기에 적어주시면 선후불제로 하겠습니다 ㅋㅋ
@@ -10,56 +8,28 @@
 = Moonshell MIDI Part =
 
  * 개발 내용 요약 :  NDSL에 악기 사운드 뱅크를 넣어두고, 직접 바닥부터 미디 인터페이스를 개발하는겁니다.
-
  * 그러나 실제로.....개발하기는 귀찮고 NDSL에서 미디를 플레이하거나 관련 부분을 찾아본 결과 Moonshell이라는 NDSL용 미뎌 플레이어 발견
-
  * NDSL의 커스텀 쉘처럼 되어있어서 유일하게 ndsl에서 midi 플레이가 가능한 소프트웨어. 간단한 영문 소개는 위키페디아 참조.
-
  * 따라서 별도로 사운드 뱅크를 플러그 인 형태로 내장시킬 수 있습니다!!!! (사실 사운드뱅크, 사운드폰트라고 부르기도 하는데 이건 공개된 자료가 많이 널려있다.
-
  * 사운드뱅크를 어떻게 만들것인가? 에 대한 방법은 이 링크를 참조한다. (호기심 차원)
-
  * "다운로드 페이지", 게다가 오픈소스! (Moonshell 전체 소스, midi 부분은 본 소스에는 없더군요)
-
-   - 사운드뱅크에 관련된 음원 다운로드 페이지 (Moonshell 제작자가 만든 음원)
-
-   - 미디 부분은 플러그인 형태로 들어가나봅니다. 일단은 관련 소스도 있긴 있네요 (mspv20_midrcp, mspv21_midrcp 디렉토리)
-
-   - 해당소스를 이해하고, 추려내서 일단 돌려보는게 급선무.
-
-    - 일단 Moonshell은 기본적으로 미디어플레이어이기 때문에, main.cpp에 보면 플레이어의 추상적인 인터페이스가 구현되어있습니다.
-
-     - 해당 소스 분석 기록 페이지는 별도로 제작했음(이 쪽으로 오세요 질문 있으시면)
-
-   - 플러그 인 개발 환경은 DevKitProR20+libnds-20070127이 기반임.
-
- - 현재 생각하고 있는 방법은
-
-   - #1 : Moonshell의 midi 플레이어 부분을 따와서 PALIB에 집어넣은다음에 이 PALIB으로 개발을 하는 것이 좋을것 같다는 생각.
-
-   - #2 : UI도 그냥 밑바닥 부터 모조리 만드능? ㅋㅋ 사실 이것도 그렇게 나쁘진 않다; UI만드는 사람이 죽.....
-
+   * 사운드뱅크에 관련된 음원 다운로드 페이지 (Moonshell 제작자가 만든 음원)
+   * 미디 부분은 플러그인 형태로 들어가나봅니다. 일단은 관련 소스도 있긴 있네요 (mspv20_midrcp, mspv21_midrcp 디렉토리)
+   * 해당소스를 이해하고, 추려내서 일단 돌려보는게 급선무.
+    * 일단 Moonshell은 기본적으로 미디어플레이어이기 때문에, main.cpp에 보면 플레이어의 추상적인 인터페이스가 구현되어있습니다.
+   * 플러그 인 개발 환경은 DevKitProR20+libnds-20070127이 기반임.
+ * 현재 생각하고 있는 방법은
+   * #1 : Moonshell의 midi 플레이어 부분을 따와서 PALIB에 집어넣은다음에 이 PALIB으로 개발을 하는 것이 좋을것 같다는 생각.
+   * #2 : UI도 그냥 밑바닥 부터 모조리 만드능? ㅋㅋ 사실 이것도 그렇게 나쁘진 않다; UI만드는 사람이 죽.....
 
 = Visual Studio 2005 에 PALib 개발환경을 이용하여 개발하기 =
-
- - 이 방법을 사용하기로 했었음.
-
- - http://0pen.us/Forum/freeforum/600 을 참조하여 개발을 진행함.
-
- - 예제를 따라하다가 ds_arm9_crt0.s:(.init+0x2ac): undefined reference to `initSystem' 발생시
-
-    http://vixen.egloos.com/3958026을 참조하여 개발을 진행한다.
-
- 
-
- - 사용 에뮬레이터 : NDSxGL2 , NO&GBA
- - 이렇게 외부 툴을 설정해주면 편합니다.
-
- - 그럼 그냥 바로 No$GBA 실행시키면
- - 그냥 바로 퍽 뜨죠 :)
-
- 
-
+ * 이 방법을 사용하기로 했었음.
+ * http://0pen.us/Forum/freeforum/600 을 참조하여 개발을 진행함.
+ * 예제를 따라하다가 ds_arm9_crt0.s:(.init+0x2ac): undefined reference to `initSystem' 발생시 http://vixen.egloos.com/3958026을 참조하여 개발을 진행한다.
+ * 구지 PALib 아니여도 DevkitPro를 사용해서 Visual Studio와 연계하는 방법.
+   * http://www.coderjoe.net/archive/2007/07/23/nintendo-ds-homebrew-tools-of-the-trade/
+   * http://www.coderjoe.net/archive/2007/07/30/using-the-libnds-example-template-makefiles/
+   * http://www.coderjoe.net/archive/2007/07/30/using-devkitarm-and-libnds-with-visual-studio-2005/
   
 = Case1: DevkitPro 기반 개발 환경 설정하기 (Deprecated) =
 
