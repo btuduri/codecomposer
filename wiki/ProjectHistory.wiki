@@ -250,7 +250,3 @@ void vramSetBankA(VRAM_A_LCD);
 void lcdSwap();
 상하 스크린의 main과 sub의 역할을 바꾸는 함수다.
 우리 프로젝트에서 PA_Init(); PA_InitVBL(); 두 문장을 수행 하면 디폴트로 아래쪽 터치스크린이 main screen으로 잡히게 된다.
-
-<B>PALib 와 debkitARM을 low API는 서로 병행할 수 없다!!</B>
-만약 PALib로 화면에 뭔가를 그린다고 하면 그냥 PALib 함수를 죄다 이용해서 그려야지 openGL API로 그린것을 vram에 다가 덮어 쓸 수 없는 듯하다.
-만약 OpenGL을 사용한다면 PALib 함수로 VRAM을 초기화하고 관리하는 함수를 사용하면 안되고 devkit 의 low API를 이용해야만한다. 이 경우 레퍼런스도 없고 시간도 없고 여러모로 힘들것 같으니깐 일단 PALib로 개발하기로 한다.
