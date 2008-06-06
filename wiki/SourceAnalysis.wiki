@@ -38,8 +38,8 @@ typedef struct {
 
 #endif
 }}}
- * 여기서  bool (*Start)(int FileHandle); 부분은 다음과 같은 곳에서 호출을 하고 있습니다.
-   * pPluginBody->pSL->Start(FileHandle) 라는 부분으로 MoonShell 전체에서 찾아보면 Main_fs.h 파일에 다음과 같이 사용을 하고 있습니다.
+ * 여기서 {{{ bool (*Start)(int FileHandle); }}}부분은 다음과 같은 곳에서 호출을 하고 있습니다.
+   * {{{ pPluginBody->pSL->Start(FileHandle) }}} 라는 부분으로 MoonShell 전체에서 찾아보면 Main_fs.h 파일에 다음과 같이 사용을 하고 있습니다.
    * 정확히 분석할 필요는 없으나, 다음과 같은 식으로 사용이 됩니다.
      * 대충 보면 플러그인을 로딩하고, 해당 파일을 열어서 플러그인쪽으로 던져주는 식이네요.
 {{{
