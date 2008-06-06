@@ -38,7 +38,7 @@ typedef struct {
 
 #endif
 }}}
-
+  * *위의 함수 중 Start와 Update 부분이 중요한편이며, 실제로 어떻게 함수가 Moonshell에서 호출이 되는지 살펴볼 필요가 있다.*
 == Update 함수 분석 ==
   * Update 함수가 어디서 시작되는지 보려면 다음과 같이 main함수에서 mainloop안을 살펴봐야한다.
 {{{
