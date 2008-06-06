@@ -10,7 +10,8 @@ Moonshell 에서 MIDI 파일을 플레이하려면 음원 파일과 해당 플�
 
 === MoonShell의 플러그인 구성에 관하여 ===
  * 소스가 플러그인 형태이기 때문에 상당히 Moonshell 자체에 의존적인데, 따라서 먼저 플러그인의 종류를 좀 봐야합니다.
- * plugin.h에서[http://code.google.com/p/codecomposer/source/browse/trunk/mspv21_midrcp/arm9/source/plugin.h#15  다음과 같은 공통적인 함수를 제공합니다.].
+    # plugin.h에서 다음과 같은 공통적인 함수[http://code.google.com/p/codecomposer/source/browse/trunk/mspv21_midrcp/arm9/source/plugin.h#15   (TPlugin_StdLib)] 를 제공하고 있습니다.
+    #  
 
  * 먼저 분석하기 전에 이 그림을 참조합시다. 정확하지는 않습니다만, 대략 분석해보니 이런 구조임. 
 http://farm4.static.flickr.com/3122/2554900175_3d8529bb9c_o.png
