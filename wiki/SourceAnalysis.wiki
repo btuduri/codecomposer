@@ -38,6 +38,52 @@ typedef struct {
 
 #endif
 }}}
+ * 여기서  bool (*Start)(int FileHandle); 부분은 다음과 같은 곳에서 호출을 하고 있습니다.
+   * pPluginBody->pSL->Start(FileHandle) 라는 부분으로 MoonShell 전체에서 찾아보면 Main_fs.h 파일에 다음과 같이 사용을 하고 있습니다.
+   * 정확히 분석할 필요는 없으나, 다음과 같은 식으로 사용이 됩니다.
+     * 대충 보면 플러그인을 로딩하고, 해당 파일을 열어서 플러그인쪽으로 던져주는 식이네요.
+{{{
+  if(ExecMode==EM_MSPSound){ cwl();
+    {
+      char fn[PluginFilenameMax];
+      char ext[ExtMaxLength];
+      
+      FileSys_GetFileExt(FileIndex,ext);
+      DLLList_GetPluginFilename(ext,fn);
+      pPluginBody=DLLList_LoadPlugin(fn);
+    }
+    MWin_AllocMem(WM_PlayControl);
+    if(FS_FileOpen(FileIndex)==false) return;
+    if(pPluginBody->pSL->Start(FileHandle)==false){ cwl();
+      FS_ExecuteFile_LoadFail();
+      PlugInfo_ShowCustomMessage_LoadError();
+      FS_ExecuteFile_InitFileInfoWindow();
+      return;
+    }
+    FS_ExecuteFile_InitFileInfoWindow();
+    FS_ExecuteFile_InitPlayControlWindow(FileIndex);
+    
+    u32 SampleRate=pPluginBody->pSL->GetSampleRate();
+    u32 SamplePerFrame=pPluginBody->pSL->GetSamplePerFrame();
+    u32 ChannelCount=pPluginBody->pSL->GetChannelCount();
+    EstrpcmFormat SPF=FS_ExecuteFile_GetOversamplingFactorFromSampleRate(SampleRate);
+    
+    for(u32 idx=0;idx<SoundEffectPluginCount;idx++){
+      pSoundEffectPluginBody[idx]=DLLList_LoadSoundEffectPlugin(idx);
+      if(pSoundEffectPluginBody[idx]!=NULL){
+        if(pSoundEffectPluginBody[idx]->pSE->Start(SampleRate,SamplePerFrame,ChannelCount)==false){
+          DLLList_FreeSoundEffectPlugin(idx);
+          safefree(pSoundEffectPluginBody[idx]); pSoundEffectPluginBody[idx]=NULL;
+        }
+      }
+    }
+    
+    Resume_Backup(true);
+    strpcmStart(false,SampleRate,SamplePerFrame,ChannelCount,SPF);
+    PrintFreeMem();
+    return;
+  }
+}}}
 
  * 먼저 분석하기 전에 이 그림을 참조합시다. 정확하지는 않습니다만, 대략 분석해보니 이런 구조임. 
 http://farm4.static.flickr.com/3122/2554900175_3d8529bb9c_o.png
