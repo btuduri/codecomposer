@@ -1,0 +1,7 @@
+---- ClockCur Matches (6 in 1 files) ----
+Main.cpp (arm9\source):static u32 ClockCur;
+Main.cpp (arm9\source):  ClockCur=selGetNearClock();
+Main.cpp (arm9\source):    while(ClockCur<SamplePerFrameFix16){
+Main.cpp (arm9\source):      ClockCur+=SamplePerClockFix16;
+Main.cpp (arm9\source):    ClockCur-=SamplePerFrame*0x10000;
+Main.cpp (arm9\source):  ClockCur=0;
