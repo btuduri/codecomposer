@@ -12,6 +12,39 @@
 
 ==2. API==
 
-*PA_3DSetSpriteWidthHeight(u16 spriteNum, u16 widthSize, u16 heightSize);*
-  
-이미지의 가로/세로 크기를 지정할 수 있다.
+=== 3D Sprite Function ===
+
+  * PA_3DSetSpriteWidthHeight(u16 spriteNum, u16 widthSize, u16 heightSize);
+    * 이미지의 가로/세로 크기를 지정할 수 있다.
+
+
+=== Font Sprite Function ===
+  * PA_OutputSimpleText(bool screen, u16 x, u16 y, const char *text)*
+    * 가장 쉽게 그리고 간단하게 글자를 출력하는 함수, x,y는 타일 인덱스를 말하는 것으로 x는 타일(0-31)에서 x좌표이다. y는 타일(0-23)에서 y좌표이다. 텍스트를 삭제할려면 공백을 가지고 덮어 쓰면 된다. PA_OutputSimpleText(0, 0, 0, " “);
+
+  * PA_OutputText(bool screen, u16 x, u16 y, const char *text, 변수들..)
+    * 변수와 함께 문자를 출력하는데 사용된다.
+    * int형 : PA_OutputText(1,0,0,"Stylus X : %d   Stylus Y : %d", Stylus.X, Stylus.Y);
+    * float형 : PA_OutputText(1,0,0,"Float value : %f3", test);
+    * string형 : PA_OutputText(1,0,0,"Hi %s", name); // char name[100];
+    * %cX(0~9) : 이 첨자를 문자열에 붙여 문자를 특정 색상으로 바꾼다. (0 = white, 1 = red, 2 = green, 3 = blue, 4 = purple, 5 = cyan, 6 = yellow, 7 = light grey, 8 = dark grey, 9 = black) ex) PA_OutputText(0, 0, 0, "Color test...%c1another one, %c2again, %c3again...");
+
+  * A_SetTextCol(screen, r, g, b);
+    * 스크린상의 *모든 문자*를 같은 색으로 바꾼다.
+    * Blue : PA_SetTextCol(screen, 0, 0, 31)
+    *Red : PA_SetTextCol(screen, 31, 0, 0)
+    *White : PA_SetTextCol(screen, 31, 31, 31)
+    *Black : PA_SetTextCol(screen, 0, 0, 0)
+    *Grey : PA_SetTextCol(screen, 22, 22, 22)
+    *Magenta : PA_SetTextCol(screen, 31, 0, 31)
+
+  * PA_SetTextTileCol(screen, colorNumber);
+    * PA_SetTextCol 과 다른 점은 전에 설정된 텍스트 색은 변경하지 않는다.
+    * 0 = white, 1 = red, 2 = green, 3 = blue, 4 = purple, 5 = cyan, 6 = yellow, 7 = light grey, 8 = dark grey, 9 = black
+
+  * PA_InitCustomText(screen#, background#, newFontName );
+    * 사용자 지정폰트를 사용할 수 있다.
+    * newFontName은 폰트를 스프라이트로 떠서 pcx로 변환한 이미지를 말하는 듯하다
+
+  * PA_16cText(screen#, x1, y1, x2, y2, textString, color (1-10), text size (0-4), MaxCharNum)
+    * 텍스트를 그리는데 크게 두가지 옵션이 있다. 16c 와 8bit 모드가 그것이다. 16c는 16color만을 지원하는 것으로 스크린에 그리거나 지울때 8bit 보다 2-4배 빠르다. Vram의 거의 반절정도의 공간만 사용한다. 8bit : 색상을 256 color를 지원한다. 쓰여지는 글자를 좌,우로 회전할수 있다. 
