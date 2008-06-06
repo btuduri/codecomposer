@@ -15,7 +15,8 @@ http://farm4.static.flickr.com/3122/2554900175_3d8529bb9c_o.png
 === 전역변수와 구조체들 ===
 하도 이짓을 안하다보니까 소스 분석하는 요령도 다 잊어먹네요. 먼저 전역변수와 정의된 구조체부터 봅시다.
 
-1) smidlib_sm.cpp 파일을 보면 다음과 같은 전역 변수와 정의된 구조체가 있습니다.
+ * smidlib_sm.cpp 파일을 보면 다음과 같은 전역 변수와 정의된 구조체가 있습니다.
+{{{
 char *gME_Text=NULL,*gME_Copyright=NULL,*gME_Title=NULL;
 
 ALIGNED_VAR_IN_DTCM TStdMIDI StdMIDI;
@@ -35,8 +36,10 @@ typedef struct {
   u32 EventType; // 0=MIDI 1=SysEx 2=Meta
   TMetaEvent MetaEvent;
 } TSM_Event;
+}}}
 
-2) smidlib.h에 보면 또 이런 구조체가 있지요. 근데 왜 이놈들 Chunk라고 안하고 Chank라고 했나요?.........
+  * smidlib.h에 보면 또 이런 구조체가 있지요. 근데 왜 이놈들 Chunk라고 안하고 Chank라고 했나요?.........
+{{{
 typedef struct {
   u8 ID[4];
   u32 Len;
@@ -70,8 +73,9 @@ typedef struct {
 #define SM_TracksCountMax (32)
 extern char *gME_Text,*gME_Copyright,*gME_Title;
 extern TStdMIDI StdMIDI;
+}}}
 
-3) 그리고 smidlib_mtrk.cpp에 다음과 같은 전역 변수와 구조체가 또 한무더기 있습니다
+ * 그리고 smidlib_mtrk.cpp에 다음과 같은 전역 변수와 구조체가 또 한무더기 있습니다
 typedef struct {
   u32 Program;
   s32 PitchBend;
