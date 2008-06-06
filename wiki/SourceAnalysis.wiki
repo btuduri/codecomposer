@@ -62,8 +62,13 @@ int main(void)
   ShowLogHalt();
 }
 }}}
- * void mainloop(void) 부분을 실제로 보면 화면이 갱신될때마다 해당 pcm 부분을 업데이트하는것 같다. 이 부분까지 다 가지고 가야할것 같다는 생각.
+ * void mainloop(void) 부분을 실제로 보면 화면이 갱신될때마다 해당 pcm 부분을 업데이트하는것 같다. 
+  * 이 부분까지 다 가지고 가야할것 같다는 생각. 
+  * 혹은 그런 부분이 있다면 이렇게 Update해주는 부분을 호출하는 식으로 가야할듯.
 {{{    
+// 이 부분을 보면 리셋 요청이 들어오기 전까지 계속해서 무한반복을 돌고 있다.
+while(RequestSystemReset==false){ cwl();
+
     // ... 중략
     while(strpcmUpdate_mainloop()==true){ cwl();
       if(GlobalINI.KeyRepeat.DelayCount<VsyncPassedCount) break;
@@ -80,8 +85,9 @@ int main(void)
       while(1);
     }
     // ... 중략
+}
 }}}
- * bool strpcmUpdate_mainloop(void) 를 실제보개되면 ldst와 rdst가 뭔지 볼 수 있다. 
+ * bool strpcmUpdate_mainloop(void) 를 실제 보게되면 ldst와 rdst가 뭔지 볼 수 있다. 
    * 여기서 Samples=pPluginBody->pSL->Update(ldst,rdst); 하는 식으로 호출을 하는 것을 볼 수 있다.
 {{{
  // ... 중략
@@ -105,6 +111,7 @@ int main(void)
    * {{{ pPluginBody->pSL->Start(FileHandle) }}} 라는 부분으로 MoonShell 전체에서 찾아보면 Main_fs.h 파일에 다음과 같이 사용을 하고 있습니다.
    * 정확히 분석할 필요는 없으나, 다음과 같은 식으로 사용이 됩니다.
      * 대충 보면 플러그인을 로딩하고, 해당 파일을 열어서 플러그인쪽으로 던져주는 식이네요.
+     * if(pPluginBody->pSL->Start(FileHandle)==false){ cwl(); ... 이런식입니다.
 {{{
   if(ExecMode==EM_MSPSound){ cwl();
     {
@@ -117,6 +124,7 @@ int main(void)
     }
     MWin_AllocMem(WM_PlayControl);
     if(FS_FileOpen(FileIndex)==false) return;
+
     if(pPluginBody->pSL->Start(FileHandle)==false){ cwl();
       FS_ExecuteFile_LoadFail();
       PlugInfo_ShowCustomMessage_LoadError();
@@ -154,11 +162,6 @@ http://farm4.static.flickr.com/3122/2554900175_3d8529bb9c_o.png
  * 여기서 가장 하단의 Smidlib_pch.* 부분은 왜 그렇게 짰는지에 대한 레퍼런스도 없을뿐더러 소스의 양이 상당하므로 사용에 중점을 둬야할것 같습니다. 
 
 1> Start(Main.cpp)
-// 이 Start라는 함수를 콜하는 부분이 소스 내에 없는 것으로 보아 저 함수를 부르는 것은
-// MoonShell 본체 소스에 있는 것 같습니다. 따라서 이부분이 진짜 시작부분이 아닐까 하네요.
-
- 
-
 // <-- arm9/Source/Plugin.h 에 보면
 
 typedef struct {
