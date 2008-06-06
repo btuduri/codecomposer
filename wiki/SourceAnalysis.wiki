@@ -9,6 +9,7 @@ Moonshell 에서 MIDI 파일을 플레이하려면 음원 파일과 해당 플�
 미디를 ARM9에서 돌려버리면 그래픽 연산 같은것은 어떻게 될지 잘 모르겠습니다. Moonshell 만든 작자가 ARM7으로 옮기려다가 귀차니즘때문에 그만둔듯;
 
 = MoonShell의 플러그인 구성에 관하여 =
+ * 진모형이 주석단 부분을 참조로 좀더 자세하게 따라가보았습니다.
  * 소스가 플러그인 형태이기 때문에 상당히 Moonshell 자체에 의존적인데, 따라서 먼저 플러그인의 종류를 좀 봐야합니다.
     # plugin.h에서 다음과 같은 플러그인 지원을 위해 [http://code.google.com/p/codecomposer/source/browse/trunk/mspv21_midrcp/arm9/source/plugin.h#15   공통적인 함수(TPlugin_StdLib)] 를 제공하고 있습니다.
     # 그리고 이미지용 플러그인은 [http://code.google.com/p/codecomposer/source/browse/trunk/mspv21_midrcp/arm9/source/plugin.h#102 다음 구조체에 정의된 함수]를 추가적으로 사용이 가능합니다.
@@ -162,19 +163,6 @@ while(RequestSystemReset==false){ cwl();
 http://farm4.static.flickr.com/3122/2554900175_3d8529bb9c_o.png
 
  * 여기서 가장 하단의 Smidlib_pch.* 부분은 왜 그렇게 짰는지에 대한 레퍼런스도 없을뿐더러 소스의 양이 상당하므로 사용에 중점을 둬야할것 같습니다. 
-
- 
-  const TPlugin_ClockLib *pCL;
-  const TPlugin_SoundEffectLib *pSE;
- 
-  char *INIData;
-  int INISize;
-  int BINFileHandle;
-  void *BINData;
-  int BINSize;
-} TPluginBody;
-
- 
 
  
 == 아직 정리를 못한 부분 ==
