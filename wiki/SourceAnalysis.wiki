@@ -12,6 +12,32 @@ Moonshell 에서 MIDI 파일을 플레이하려면 음원 파일과 해당 플�
  * 소스가 플러그인 형태이기 때문에 상당히 Moonshell 자체에 의존적인데, 따라서 먼저 플러그인의 종류를 좀 봐야합니다.
     # plugin.h에서 다음과 같은 플러그인 지원을 위해 [http://code.google.com/p/codecomposer/source/browse/trunk/mspv21_midrcp/arm9/source/plugin.h#15   공통적인 함수(TPlugin_StdLib)] 를 제공하고 있습니다.
     # 그리고 이미지용 플러그인은 [http://code.google.com/p/codecomposer/source/browse/trunk/mspv21_midrcp/arm9/source/plugin.h#102 다음 구조체에 정의된 함수]를 추가적으로 사용이 가능합니다.
+    # 그리고 우리가 분석하는 함수는 [http://code.google.com/p/codecomposer/source/browse/trunk/mspv21_midrcp/arm9/source/plugin.h#121 다음과 같은 구조체에 정의된 함수]를 정의해서 구현해야 하는것 같습니다. 플러그인에 있는 Main.cpp에 있는 함수가 이러한 내용이 구현되어있습니다.
+{{{
+#ifdef PluginMode_Sound
+
+typedef struct {
+  bool (*Start)(int FileHandle);
+  void (*Free)(void);
+  
+  u32 (*Update)(s16 *lbuf,s16 *rbuf);
+  
+  s32 (*GetPosMax)(void);
+  s32 (*GetPosOffset)(void);
+  void (*SetPosOffset)(s32 ofs);
+  
+  u32 (*GetChannelCount)(void);
+  u32 (*GetSampleRate)(void);
+  u32 (*GetSamplePerFrame)(void);
+  int (*GetInfoIndexCount)(void);
+  
+  bool (*GetInfoStrL)(int idx,char *str,int len);
+  bool (*GetInfoStrW)(int idx,UnicodeChar *str,int len);
+  bool (*GetInfoStrUTF8)(int idx,char *str,int len);
+} TPlugin_SoundLib;
+
+#endif
+}}}
 
  * 먼저 분석하기 전에 이 그림을 참조합시다. 정확하지는 않습니다만, 대략 분석해보니 이런 구조임. 
 http://farm4.static.flickr.com/3122/2554900175_3d8529bb9c_o.png
