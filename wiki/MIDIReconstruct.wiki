@@ -11,7 +11,11 @@
    * http://www.coderjoe.net/archive/2007/07/23/nintendo-ds-homebrew-tools-of-the-trade/
    * http://www.coderjoe.net/archive/2007/07/30/using-the-libnds-example-template-makefiles/
    * http://www.coderjoe.net/archive/2007/07/30/using-devkitarm-and-libnds-with-visual-studio-2005/
+   * devkitPro의 경로는 C:\devkitPro
+   * 에뮬레이터의 경로는 C:\devkitPro\emulators\nosgba 
+   * 이렇게 해서 기본적인 템플릿이 컴파일되고 동작하는 것을 확인하였습니다.
   * 그리고 mspv21_midrcp에 있는 일부파일과 Moonshell 본체에 있는 일부 소스를 집어넣었습니다.
+   
 == TO DO ==
   * Moonshell의 소스 분석이 어느정도 진행된 상태이므로 
     * 해당 소스를 다시 조합하여 실제 Code Composer에서 사용할 부분을 만들어야합니다.
