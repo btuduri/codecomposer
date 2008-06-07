@@ -22,7 +22,7 @@
     * 그런 까닭에 SVN의 trunk/MIDISoundTest 디렉토리에 어느정도 조합을 해놔서 넣어놨습니다.
   * plugin.h, plugin_def.h 부분은 일단 stdio.h 같은 것을 사용할 수 있기 때문에 컴파일시 포함이 안되게 해놨습니다만.
     * 일부 메모리 함수 부분이 추가가 안되어있습니다. 이 부분 부탁드립니다.
-      <-- memtool.h 와 memtool.cpp를 추가하고 컴파일 하면 해결됨
+      (memtool.h 와 memtool.cpp를 추가하고 컴파일 하면 해결됨)
   * 존재하지 않는 헤더파일인데, 사용되고 있고, 게다가 꼭 필요한것 같습니다. 이부분 어떻게하죠?
     * http://code.google.com/p/codecomposer/source/browse/trunk/MIDISoundTest/source/smidlib_pch.cpp#7
 == 의문점 ==
