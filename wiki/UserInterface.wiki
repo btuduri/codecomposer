@@ -1,4 +1,4 @@
-#Summary Coposer의 User Interface와 관련된 내용을 정리합니다.
+#summary Coposer의 User Interface와 관련된 내용을 정리합니다.
 
 *PALib 와 debkitARM을 low API는 서로 병행할 수 없다!!*
 
