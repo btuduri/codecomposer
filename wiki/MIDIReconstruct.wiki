@@ -6,3 +6,11 @@
   * Moonshell의 소스 분석이 어느정도 진행된 상태이므로 
     * 해당 소스를 다시 조합하여 실제 Code Composer에서 사용할 부분을 만들어야합니다.
     * 그런 까닭에 SVN의 trunk/MIDISoundTest 디렉토리에 어느정도 조합을 해놔서 넣어놨습니다.
+
+= 현재 진행 과정 =
+== 프로젝트 생성 과정에 관하여 ==
+  * 다음 블로그의 글 3개를 참조(고대로 따라?)하여 처음 프로젝트를 생성하였습니다.
+   * http://www.coderjoe.net/archive/2007/07/23/nintendo-ds-homebrew-tools-of-the-trade/
+   * http://www.coderjoe.net/archive/2007/07/30/using-the-libnds-example-template-makefiles/
+   * http://www.coderjoe.net/archive/2007/07/30/using-devkitarm-and-libnds-with-visual-studio-2005/
+  * 그리고 mspv21_midrcp에 있는 일부파일과 Moonshell 본체에 있는 일부 소스를 집어넣었습니다.
