@@ -3,6 +3,7 @@
 = 일러두기 =
   * 현재 프로젝트는 utf-8 기반으로 작성되어있습니다. 
     * 혹시 저장할때나 볼때 문제가 생기시면 [http://wiz.pe.kr/tag/Visual%20Studio?page=3]을 참조하시길 바랍니다.
+  * SVN의 사용 방법에 대해서는 [http://www.pyrasis.com/main/Subversion-HOWTO]을 참조해주세요.
   * Moonshell의 소스 분석이 어느정도 진행된 상태이므로 
     * 해당 소스를 다시 조합하여 실제 Code Composer에서 사용할 부분을 만들어야합니다.
     * 그런 까닭에 SVN의 trunk/MIDISoundTest 디렉토리에 어느정도 조합을 해놔서 넣어놨습니다.
