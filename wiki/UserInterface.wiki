@@ -32,6 +32,13 @@ PA_Init16bitBg(0, 3);
 PA_Load16bitBitmap(0, Background_Bitmap);
 }}}
 
+  * PA_3DCreateSpriteFromTex(sprite#, texture#, width, height, palete#, posX, posY);
+    * 텍스쳐를 바탕으로 스프라이트를 생성한다. 이 함수의 호출과 동시에 화면이 그려진다. 나중에 스프라이트를 지우라는 명령을 하지 않으면 계속 스프라이트가 화면에 그려진다.
+  * sprite number라는 것에 집중할 필요가 있다. sprite number는 일종의 sprite priority다. 이 값을 기준으로 화면에 스프라이트가 찍히는 우선순위를 결정한다.
+
+  * PA_3DDeleteSprite( sprite# );
+    * 해당 스프라이트를 화면에서 지워주는 함수다.
+
 === Font Sprite Function ===
   * PA_OutputSimpleText(bool screen, u16 x, u16 y, const char *text)
     * 가장 쉽게 그리고 간단하게 글자를 출력하는 함수, x,y는 타일 인덱스를 말하는 것으로 x는 타일(0-31)에서 x좌표이다. y는 타일(0-23)에서 y좌표이다. 텍스트를 삭제할려면 공백을 가지고 덮어 쓰면 된다. PA_OutputSimpleText(0, 0, 0, " “);
