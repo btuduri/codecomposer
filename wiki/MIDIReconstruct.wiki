@@ -30,3 +30,4 @@
   * PRFStart, PRFEnd 함수가 2개가 있는데, 정확히 어디다가 쓴건지, 왜쓴건지 모르겠네요.
     * http://code.google.com/p/codecomposer/source/browse/trunk/MIDISoundTest/source/_console.c#150
     * http://code.google.com/p/codecomposer/source/browse/trunk/MIDISoundTest/source/_consoleWriteLog.cpp#4
+  * 시작 부분에 LoadINI(GetINIData(), GetINISize()); 에서 GetINIData는 Plugin_GetINIData 란 함수를 말한다. 이 함수는 TPluginBody 구조체의 INIData 변수를 반환한다. TPluginBody는 어디서 설정?
