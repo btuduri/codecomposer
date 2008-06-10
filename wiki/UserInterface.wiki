@@ -34,12 +34,15 @@ PA_Load16bitBitmap(0, Background_Bitmap);
 
   * PA_3DCreateSpriteFromTex(sprite#, texture#, width, height, palete#, posX, posY);
     * 텍스쳐를 바탕으로 스프라이트를 생성한다. 이 함수의 호출과 동시에 화면이 그려진다. 나중에 스프라이트를 지우라는 명령을 하지 않으면 계속 스프라이트가 화면에 그려진다.
+    * 생성후 이 함수는 만들어진 텍스쳐 스프라이트를 구분하기위한 인식번호를 리턴한다. u16타입이며 0번부터 만들어져서 1, 2, 3... 순으로 발급하는 것을 확인했다.
+
   * sprite number라는 것에 집중할 필요가 있다. sprite number는 일종의 sprite priority다. 이 값을 기준으로 화면에 스프라이트가 찍히는 우선순위를 결정한다.
 
   * PA_3DDeleteSprite( sprite# );
     * 해당 스프라이트를 화면에서 지워주는 함수다.
 
 === Font Sprite Function ===
+
   * PA_OutputSimpleText(bool screen, u16 x, u16 y, const char *text)
     * 가장 쉽게 그리고 간단하게 글자를 출력하는 함수, x,y는 타일 인덱스를 말하는 것으로 x는 타일(0-31)에서 x좌표이다. y는 타일(0-23)에서 y좌표이다. 텍스트를 삭제할려면 공백을 가지고 덮어 쓰면 된다. PA_OutputSimpleText(0, 0, 0, " “);
 
@@ -72,6 +75,7 @@ PA_Load16bitBitmap(0, Background_Bitmap);
     * 사용하기 전에 PA_Init16cBg(screen#, background#); 으로 초기화 한다.
 
 === Input Function ===
+  
   * NDS로의 입력은 패드, 스타일러스, 키보드가 지원된다.
   * 패드
     * 매 프레임마다 자동으로 상태값이 업데이트 되기때문에 컨트롤 하기가 쉽다.
@@ -146,3 +150,12 @@ PA_OutputSimpleText(1, 8, 11, text); // Write the text
 PA_WaitForVBL();
 }
 }}}
+
+
+== 3. 기타 ==
+
+=== 텍스쳐 스프라이트 생성에 관해서 ===
+
+  * 텍스쳐 생성 순서가 중요하다. 현재 텍스쳐로 만들어진 스프라이트의 수는 10개다. (악기 아이콘 8 + 악기 추가1 + Play 1)
+  * 순서는 다음과 같다.
+    * TEX_PIANO = 0, TEX_GUITAR, TEX_BGUITAR, TEX_EGUITAR, TEX_VIOLIN, TEX_DRUM, TEX_FLUTE, TEX_TRUMPET, TEX_PLUS, TEX_PLAY
