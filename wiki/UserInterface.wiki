@@ -159,3 +159,4 @@ PA_WaitForVBL();
   * 텍스쳐 생성 순서가 중요하다. 현재 텍스쳐로 만들어진 스프라이트의 수는 10개다. (악기 아이콘 8 + 악기 추가1 + Play 1)
   * 순서는 다음과 같다.
     * TEX_PIANO = 0, TEX_GUITAR, TEX_BGUITAR, TEX_EGUITAR, TEX_VIOLIN, TEX_DRUM, TEX_FLUTE, TEX_TRUMPET, TEX_PLUS, TEX_PLAY
+  * 모든 아이콘의 크기는 32x32 로 고정되어있다.
