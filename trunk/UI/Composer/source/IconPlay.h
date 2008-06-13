@@ -8,7 +8,7 @@ class CIconPlay :
 {
 public:
 	CIconPlay(void);
-	CIconPlay(float initPosX = 0.0f, float initPosY = 0.0f, int textureID = TEX_PLAY);
+	CIconPlay(s16 initPosX = 0.0f, s16 initPosY = 0.0f, u8 textureID = TEX_PLAY);
 	~CIconPlay(void);
 };
 

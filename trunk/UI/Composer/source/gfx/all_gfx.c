@@ -13,8 +13,18 @@ extern "C" {
 #include "Background.c"
 
 // Sprite files : 
-#include "IconPlus.c"
-#include "IconPlay.c"
+#include "Signal_Line.c"
+#include "Icon_Bguitar.c"
+#include "Icon_Drum.c"
+#include "Icon_Eguitar.c"
+#include "Icon_Flute.c"
+#include "Icon_Guitar.c"
+#include "Icon_Piano.c"
+#include "Icon_Play.c"
+#include "Icon_Plus.c"
+#include "Icon_Trumpet.c"
+#include "Icon_Violin.c"
+#include "Sheet_Piano.c"
 
 // Palette files : 
 #include "Background.pal.c"

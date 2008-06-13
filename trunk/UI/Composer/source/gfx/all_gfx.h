@@ -25,8 +25,18 @@ extern PAGfx_struct Background; // background pointer
 
 
 // Sprite files : 
-extern const unsigned short IconPlus_Texture[1024] __attribute__ ((aligned (4))) ;  // 16bit texture
-extern const unsigned short IconPlay_Texture[1024] __attribute__ ((aligned (4))) ;  // 16bit texture
+extern const unsigned short Signal_Line_Texture[64] __attribute__ ((aligned (4))) ;  // 16bit texture
+extern const unsigned short Icon_Bguitar_Texture[1024] __attribute__ ((aligned (4))) ;  // 16bit texture
+extern const unsigned short Icon_Drum_Texture[1024] __attribute__ ((aligned (4))) ;  // 16bit texture
+extern const unsigned short Icon_Eguitar_Texture[1024] __attribute__ ((aligned (4))) ;  // 16bit texture
+extern const unsigned short Icon_Flute_Texture[1024] __attribute__ ((aligned (4))) ;  // 16bit texture
+extern const unsigned short Icon_Guitar_Texture[1024] __attribute__ ((aligned (4))) ;  // 16bit texture
+extern const unsigned short Icon_Piano_Texture[1024] __attribute__ ((aligned (4))) ;  // 16bit texture
+extern const unsigned short Icon_Play_Texture[1024] __attribute__ ((aligned (4))) ;  // 16bit texture
+extern const unsigned short Icon_Plus_Texture[1024] __attribute__ ((aligned (4))) ;  // 16bit texture
+extern const unsigned short Icon_Trumpet_Texture[1024] __attribute__ ((aligned (4))) ;  // 16bit texture
+extern const unsigned short Icon_Violin_Texture[1024] __attribute__ ((aligned (4))) ;  // 16bit texture
+extern const unsigned short Sheet_Piano_Texture[4096] __attribute__ ((aligned (4))) ;  // 16bit texture
 
 // Palette files : 
 extern const unsigned short Background_Pal[8] __attribute__ ((aligned (4))) ;

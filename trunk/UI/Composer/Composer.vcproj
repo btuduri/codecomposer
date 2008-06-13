@@ -66,6 +66,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\source\Music.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\source\RscManager.cpp"
 				>
 			</File>
@@ -89,6 +93,10 @@
 			</File>
 			<File
 				RelativePath=".\source\IconPlus.h"
+				>
+			</File>
+			<File
+				RelativePath=".\source\Music.h"
 				>
 			</File>
 			<File
