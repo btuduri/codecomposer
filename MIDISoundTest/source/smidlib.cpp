@@ -2,6 +2,7 @@
 #include <nds.h>
 
 #include "smidlib.h"
+#include "_console.h"
 
 static u8 *bdata;
 static u32 bSampleRate,bSampleBufCount;

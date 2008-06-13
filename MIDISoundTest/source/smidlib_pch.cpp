@@ -4,11 +4,11 @@
 #include "std.h"
 #include "smidlib.h"
 
-#include "powtbl_bin.h"
+//#include "powtbl_bin.h"
 static u16 *powtbl=(u16*)powtbl_bin;
 #define POWRANGE (1024)
 
-#include "sintbl_bin.h"
+//#include "sintbl_bin.h"
 static int *sintbl=(int*)sintbl_bin;
 #define SINRANGE (120)
 
