@@ -155,8 +155,21 @@ PA_WaitForVBL();
 == 3. 기타 ==
 
 === 텍스쳐 스프라이트 생성에 관해서 ===
-
-  * 텍스쳐 생성 순서가 중요하다. 현재 텍스쳐로 만들어진 스프라이트의 수는 10개다. (악기 아이콘 8 + 악기 추가1 + Play 1)
+  * 텍스쳐 스프라이트를 생성하면 각 스프라이트를 구별하는 식별 번호가 주어지는데 이번호를 통해 스프라이트를 이동시고 삭제할 스프라이트를 지정할 수 있다.
+  * 텍스쳐 생성 순서가 중요하다. 현재 텍스쳐로 만들어진 스프라이트의 수는 최소 10개 이상이다. (악기 아이콘 8 + 악기 추가1 + Play 1 + 악기별 sheet + 음표)
   * 순서는 다음과 같다.
-    * TEX_PIANO = 0, TEX_GUITAR, TEX_BGUITAR, TEX_EGUITAR, TEX_VIOLIN, TEX_DRUM, TEX_FLUTE, TEX_TRUMPET, TEX_PLUS, TEX_PLAY
-  * 모든 아이콘의 크기는 32x32 로 고정되어있다.
+    * TEX_PIANO = 0, TEX_GUITAR, TEX_BGUITAR, TEX_EGUITAR, TEX_VIOLIN, TEX_DRUM, TEX_FLUTE, TEX_TRUMPET, TEX_PLUS, TEX_PLAY, TEX_SHEET5, TEX_LINE
+  * 모든 아이콘의 크기는 32x32 로 고정되어있다. (예외 : 악보 시트, 라인)
+  * 악보 시트의 스프라이트 크기 : 256 x 64 (실제 유효 크기 220 x 35)
+  * 텍스쳐 스프라이트 식별 번호 할당 계획
+    * 0 : Icon Plus
+    * 1 : Icon Play
+    * 2~15 : 현재 비워져 있음
+    * 16~31 : IconPlus class에 할당, Icon Plus가 눌러지면 생기는 메뉴의 스프라이트를 위해 할당됨
+    * 32~47 : IconPlay class에 할당. 현재 비워져 있음
+    * 48~63 : 추후 추가될 메뉴를 위해 할당. 현재 비워져 있음
+    * 64 ~ : Music class에 할당 되어 있음. 
+      *Music class는 악기 구조체를 포함하고 있는데 악기별로 64개의 가용 스프라이트를 가질 수 있음
+      * Instrument에 할당된 64개의 sprite 중 첫번째는 악기 아이콘 스프라이트의 식별 번호
+      * Instrument에 할당된 64개의 sprite 중 두번째는 악보 시트 스프라이트의 식별 번호
+      * 실제 음표(라인)을 나타내는 스프라이트는 한 악기당 화면에 62개를 그릴 수 있음( 악보 시트의 가로 넓이 (220px) / 라인 segment 넓이 (8px) = 27.5 이므로 최대 28개의 음표 라인이 들어간다고 생각하고 넉넉하게 잡았음
