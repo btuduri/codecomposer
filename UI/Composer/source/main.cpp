@@ -6,6 +6,7 @@
 #include "RscManager.h"
 #include "IconPlus.h"
 #include "IconPlay.h"
+#include "Music.h"
 
 // Converted using PAGfx
 //#include "gfx/all_gfx.c"
@@ -25,8 +26,12 @@ void Destroy(void);
 CCamera			g_cCamera;
 CRscManager		g_cRscManager;
 
+
 CIconPlus	*g_pIconPlus;
 CIconPlay	*g_pIconPlay;
+
+CMusic		*g_pMusic;
+
 
 
 
@@ -45,12 +50,12 @@ int main()
 
 	
 	PA_Init16cBg(0, 1); // 16 color background init with default colors for text
-	PA_Init16cBg(1, 1);  
-
-	PA_16cText(0, 45, 170, 255, 190, "Song Tile", 1, 4, 100); 
-		// #screen, x1, y1, x2, y2, Text string, color(1-10), text size(0-4), max Characters
+	PA_InitText(1, 1);
 
 	Initialize();
+
+	PA_16cText(0, 45, 170, 255, 190, "Song Title", 1, 4, 100); 
+		// #screen, x1, y1, x2, y2, Text string, color(1-10), text size(0-4), max Characters
 
 	// Load Backgrounds with their palettes !
 	PA_EasyBgLoad(0, 3,	Background); // #Screen, #Background, Background name
@@ -84,6 +89,9 @@ void Initialize(void)
 	g_pIconPlus = new CIconPlus(16, 175);
 	g_pIconPlay = new CIconPlay(239, 175);
 
+	// Create Music
+	g_pMusic	= new CMusic();
+
 }
 
 
@@ -94,6 +102,7 @@ void Destroy(void)
 {
 	delete g_pIconPlus;
 	delete g_pIconPlay;
+	delete g_pMusic;
 
 }
 
@@ -105,7 +114,7 @@ void Destroy(void)
 void FrameUpdate(void)
 {
 	// 스타일러스 입력 처리
-	if( Stylus.Held )
+	if( Stylus.Newpress )
 	{
 		if( g_pIconPlus ->IsTouch( Stylus.X, Stylus.Y ) )
 		{
@@ -113,10 +122,17 @@ void FrameUpdate(void)
 		}
 		else
 		{
-			PA_3DDeleteSprite(12);
+			g_pIconPlus ->OffTouch();
 		}
 	}
 	
+
+	if( g_pIconPlus ->DoesAddInst() )
+	{
+		g_pMusic ->AddInstrument( g_pIconPlus ->GetAddInstNum() );
+		
+		g_pIconPlus ->SetAddInstFalse();
+	}
 }
 
 
