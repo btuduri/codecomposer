@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <nds.h>
-
+#include "_console.h"
 #include "smidlib.h"
 #include "_console.h"
 

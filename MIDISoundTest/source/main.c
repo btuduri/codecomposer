@@ -3,46 +3,37 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-/*
-  이 부분을 추가하였습니다. (시작)
-  아래 부분은 원래 Main.cpp에 있던 부분입니다.
-  함수간의 의존성 문제 등을 해결해서 별도로 돌아가도록 작성해낼 필요가 있습니다.
-*/
+#include "_console.h"
 #include "_const.h"
 #include "std.h"
 #include "inifile.h"
 #include "smidlib.h"
+#include "memtool.h"
+
+#define MaxSampleRate (32768)
+#define MinFramePerSecond (120)
+#define MaxSamplePerFrame (MaxSampleRate/MinFramePerSecond)
+#define MaxStackCount (12)
+#define ReserveCount (4)
+
+// The following two line is 
+// enum EFileFormat {EFF_MID,EFF_RCP};
+// static EFileFormat FileFormat;
 
 static u8 *DeflateBuf=NULL;
 static u32 DeflateSize;
 static u32 SamplePerFrame;
 static int TotalClock,CurrentClock;
 static u32 ClockCur;
-
-enum EFileFormat {EFF_MID,EFF_RCP};
-static EFileFormat FileFormat;
-
-#define MaxSampleRate (32768)
-#define MinFramePerSecond (120)
-#define MaxSamplePerFrame (MaxSampleRate/MinFramePerSecond)
-
 static ALIGNED_VAR_IN_DTCM s32 DTCM_tmpbuf[MaxSamplePerFrame*2];
 static ALIGNED_VAR_IN_DTCM s32 DTCM_dstbuf[MaxSamplePerFrame*2];
 
 static u32 StackIndex;
 static u32 StackCount;
-#define MaxStackCount (12)
 static s32 *pStackBuf[ChannelsCount][MaxStackCount];
 static s32 StackLastCount[ChannelsCount];
-
-#define ReserveCount (4)
 static void *pReserve[ReserveCount];
 static u32 SoundFontLoadTimeus;
-
-/*
-  이 부분을 추가하였습니다. (종료)
-  여기서 하단 부분은 기본 템플릿 소스입니다.
-*/
 
 //---------------------------------------------------------------------------------
 int main(void) {
@@ -78,11 +69,6 @@ int main(void) {
 	return 0;
 }
 
-/*
-	기본 템플릿 부분 종료.
-	이 부분을 추가하였습니다. (시작) 
-	RCP 부분을 제거해내고 일단 가져다가 붙여놨습니다;
-*/
 void Free(void);
 
 static void selSetParam(u8 *data,u32 SampleRate,u32 SampleBufCount,u32 MaxChannelCount,u32 GenVolume)
@@ -97,48 +83,27 @@ static bool selStart(void)
 
 static void selFree(void)
 {
-  switch(FileFormat){
-    case EFF_MID: smidlibFree(); break;
-    case EFF_RCP: rcplibFree(); break;
-  }
+	smidlibFree();
 }
 
 static int selGetNearClock(void)
 {
-  switch(FileFormat){
-    case EFF_MID: return(smidlibGetNearClock()); break;
-    case EFF_RCP: return(rcplibGetNearClock()); break;
-  }
-  
-  return(0);
+	return(smidlibGetNearClock());
 }
 
 static bool selNextClock(bool ShowEventMessage,bool EnableNote,int DecClock)
 {
-  switch(FileFormat){
-    case EFF_MID: return(smidlibNextClock(ShowEventMessage,EnableNote,DecClock)); break;
-    case EFF_RCP: return(rcplibNextClock(ShowEventMessage,EnableNote,DecClock)); break;
-  }
-  
-  return(false);
+	return(smidlibNextClock(ShowEventMessage,EnableNote,DecClock));
 }
 
 static void selAllSoundOff(void)
 {
-  switch(FileFormat){
-    case EFF_MID: smidlibAllSoundOff(); break;
-    case EFF_RCP: rcplibAllSoundOff(); break;
-  }
+	smidlibAllSoundOff();
 }
 
 static bool sel_isAllTrackEOF(void)
 {
-  switch(FileFormat){
-    case EFF_MID: return(SM_isAllTrackEOF()); break;
-    case EFF_RCP: return(RCP_isAllTrackEOF()); break;
-  }
-  
-  return(false);
+	return(SM_isAllTrackEOF());
 }
 
 static u32 sel_GetSamplePerClockFix16(void)
@@ -150,9 +115,9 @@ static void Start_smidlibDetectTotalClock()
 {
   TSM_Track *pSM_Track=NULL;
   u32 trklen=0;
-  
+  u32 idx=0;
   {
-    for(u32 idx=0;idx<StdMIDI.SM_Chank.Track;idx++){
+    for(idx=0;idx<StdMIDI.SM_Chank.Track;idx++){
       TSM_Track *pCurSM_Track=&StdMIDI.SM_Tracks[idx];
       u32 ctrklen=(u32)pCurSM_Track->DataEnd-(u32)pCurSM_Track->Data;
       if(trklen<ctrklen){
@@ -164,10 +129,12 @@ static void Start_smidlibDetectTotalClock()
   
   if((pSM_Track==NULL)||(trklen==0)){
     _consolePrintf("Fatal error.\n");
-    ShowLogHalt();
+    
+	// ShowLogHalt();	// This function cannot be implemented by us - KHS
   }
   
-  MWin_ProgressShow("Loading...",trklen);
+
+  // MWin_ProgressShow("Loading...",trklen);  // This function cannot be implemented by us - KHS
   
   int LastClock=0;
   int PrevDiv=StdMIDI.SM_Chank.TimeRes*8;
@@ -176,30 +143,34 @@ static void Start_smidlibDetectTotalClock()
     if(PrevDiv<(TotalClock-LastClock)){
       LastClock=TotalClock;
       u32 lastlen=(u32)pSM_Track->DataEnd-(u32)pSM_Track->Data;
-      if(lastlen<trklen) MWin_ProgressSetPos(trklen-lastlen);
+      
+	  // if(lastlen<trklen) MWin_ProgressSetPos(trklen-lastlen);	// This function cannot be implemented by us - KHS
     }
     int DecClock=smidlibGetNearClock();
     if(smidlibNextClock(false,false,DecClock)==false) break;
     TotalClock+=DecClock;
   }
   
-  MWin_ProgressHide();
+  // MWin_ProgressHide();	// // This function cannot be implemented by us - KHS
 }
 
 bool Start_InitStackBuf(void)
 {
-  for(u32 ch=0;ch<ChannelsCount;ch++){
-    for(u32 sidx=0;sidx<MaxStackCount;sidx++){
-      pStackBuf[ch][sidx]=NULL;
-    }
-  }
+	u32 ch = 0;
+	u32 sidx = 0;
+
+	for(ch = 0;ch<ChannelsCount;ch++){
+		for(sidx = 0;sidx<MaxStackCount;sidx++){
+			pStackBuf[ch][sidx]=NULL;
+		}
+	}
   
   StackCount=GlobalINI.MIDPlugin.DelayStackSize;
   if(StackCount==0) StackCount=1;
   if(MaxStackCount<StackCount) StackCount=MaxStackCount;
   
-  for(u32 ch=0;ch<ChannelsCount;ch++){
-    for(u32 sidx=0;sidx<StackCount;sidx++){
+  for(ch = 0;ch<ChannelsCount;ch++){
+    for(sidx = 0;sidx<StackCount;sidx++){
       pStackBuf[ch][sidx]=(s32*)safemalloc((MaxSamplePerFrame+1)*2*4);
       if(pStackBuf[ch][sidx]==NULL){
         _consolePrintf("pStackBuf: Memory overflow.\n");
@@ -263,6 +234,8 @@ bool Start(int FileHandle)
   {
     bool detect=false;
     
+	// The following routine is not required for our program. - KHS
+	/*
     if(strncmp((char*)DeflateBuf,"MThd",4)==0){
       _consolePrintf("Start Standard MIDI file.\n");
       detect=true;
@@ -272,6 +245,13 @@ bool Start(int FileHandle)
       _consolePrintf("Start RecomposerV2.0 file.\n");
       detect=true;
       FileFormat=EFF_RCP;
+    }
+    */
+	// Therefore, I arranged and copy that routine as below. - KHS
+
+	if(strncmp((char*)DeflateBuf,"MThd",4)==0){
+      _consolePrintf("Start Standard MIDI file.\n");
+      detect=true; 
     }
     
     if(detect==false){
@@ -294,10 +274,9 @@ bool Start(int FileHandle)
   CurrentClock=0;
   
   PrfStart();
-  switch(FileFormat){
-    case EFF_MID: Start_smidlibDetectTotalClock(); break;
-    case EFF_RCP: Start_rcplibDetectTotalClock(); break;
-  }
+
+  Start_smidlibDetectTotalClock();
+
   SoundFontLoadTimeus=PrfEnd(0);
   
   if(TotalClock==0){
@@ -312,7 +291,8 @@ bool Start(int FileHandle)
   ClockCur=selGetNearClock();
   selNextClock(MIDPlugin->ShowEventMessage,true,selGetNearClock());
   
-  for(u32 idx=0;idx<ReserveCount;idx++){
+  u32 idx=0;
+  for(idx=0;idx<ReserveCount;idx++){
     if(pReserve[idx]!=NULL){
       safefree(pReserve[idx]); pReserve[idx]=NULL;
     }
@@ -323,7 +303,8 @@ bool Start(int FileHandle)
 
 void Free(void)
 {
-  for(u32 idx=0;idx<ReserveCount;idx++){
+  u32 idx=0;
+  for(idx=0;idx<ReserveCount;idx++){
     if(pReserve[idx]!=NULL){
       safefree(pReserve[idx]); pReserve[idx]=NULL;
     }
@@ -333,8 +314,10 @@ void Free(void)
   
   PCH_FreeProgramMap();
   
-  for(u32 ch=0;ch<ChannelsCount;ch++){
-    for(u32 sidx=0;sidx<MaxStackCount;sidx++){
+  u32 ch=0;
+  u32 sidx = 0;
+  for(ch = 0;ch<ChannelsCount;ch++){
+    for(sidx=0;sidx<MaxStackCount;sidx++){
       if(pStackBuf[ch][sidx]!=NULL){
         safefree(pStackBuf[ch][sidx]); pStackBuf[ch][sidx]=NULL;
       }
@@ -383,7 +366,8 @@ u32 Update(s16 *lbuf,s16 *rbuf)
     StackIndex++;
     if(StackIndex==StackCount) StackIndex=0;
     
-    for(u32 ch=0;ch<ChannelsCount;ch++){
+	u32 ch=0;
+    for(ch = 0;ch<ChannelsCount;ch++){
       bool reqproc=false;
       bool reqrender=false;
       if(StackLastCount[ch]!=0) reqproc=true;
@@ -554,7 +538,7 @@ void SetPosOffset(s32 ofs)
   ClockCur=0;
 }
 
-bool GetInfoStrW(int idx,UnicodeChar *str,int len)
+bool GetInfoStrW(int idx, u16 *str,int len)
 {
   return(false);
 }

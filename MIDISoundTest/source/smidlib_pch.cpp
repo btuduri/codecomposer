@@ -1,14 +1,17 @@
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <nds.h>
 #include "std.h"
 #include "smidlib.h"
+#include "memtool.h"
+#include "_console.h"
 
-//#include "powtbl_bin.h"
+#include "powtbl_bin.h"
 static u16 *powtbl=(u16*)powtbl_bin;
 #define POWRANGE (1024)
 
-//#include "sintbl_bin.h"
+#include "sintbl_bin.h"
 static int *sintbl=(int*)sintbl_bin;
 #define SINRANGE (120)
 
@@ -44,7 +47,7 @@ typedef struct {
 } TProgramPatch;
 
 typedef struct {
-  int FileHandle;
+  FILE* FileHandle;
   u32 FileOffset;
   
   u32 DataOffset[128];
@@ -146,7 +149,7 @@ static u32 PCMFileOffset;
 
 // ----------------------------------------------------
 
-static void PCH_SetProgramMap_Load(TProgramMap *pPrgMap,int FileHandle,u32 FileOffset)
+static void PCH_SetProgramMap_Load(TProgramMap *pPrgMap,FILE* FileHandle,u32 FileOffset)
 {
   MemoryOverflowFlag=false;
   
@@ -162,7 +165,7 @@ static void PCH_SetProgramMap_Load(TProgramMap *pPrgMap,int FileHandle,u32 FileO
   }
 }
 
-void PCH_SetProgramMap(int FileHandle)
+void PCH_SetProgramMap(FILE* FileHandle)
 {
   MemSet32CPU(0,&VarMap_Tone,sizeof(TVariationMap));
   MemSet32CPU(0,&VarMap_Drum,sizeof(TVariationMap));
@@ -592,7 +595,7 @@ bool PCH_LoadProgram(s32 Note,u32 var,u32 prg,bool DrumMode)
       } break;
       default: {
         _consolePrint("Fatal error! Unknown WAVE format.\n");
-        ShowLogHalt();
+//        ShowLogHalt();	// This cannot be implemented us, by KHS
       } break;
     }
     
@@ -1551,7 +1554,8 @@ static __attribute__ ((noinline)) void PCH_Render_Loop(int ch,u32 FreqAddFix16,s
     EndPoint=pPrg->LoopEnd;
     LoopStart=pPrg->LoopStart;
   }
-  
+
+
 // in/out
 #define REG_SampleCount "%0"
 #define REG_PrgPos "%1"

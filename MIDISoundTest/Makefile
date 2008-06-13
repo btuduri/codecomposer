@@ -22,20 +22,38 @@ INCLUDES	:=	include build
 #---------------------------------------------------------------------------------
 # options for code generation
 #---------------------------------------------------------------------------------
-ARCH	:=	-mthumb -mthumb-interwork
+
+ARCH	:=	-mthumb-interwork
+
+CFLAGS	:=	-g -Wall -O3 \
+			-march=armv5te -mtune=arm946e-s -fomit-frame-pointer \
+			-ffast-math \
+			$(ARCH)
+
+CFLAGS	+=	$(INCLUDE) -DARM9 \
+			-funsigned-char -DPluginMode_Sound
+CXXFLAGS	:=	$(CFLAGS) -fno-rtti -fno-exceptions
+
+ASFLAGS	:=	-g $(ARCH) -march=armv5te -mtune=arm946e-s
+
+LDFLAGS	=	-specs=$(CURDIR)/../specs/ds_arm9_mshlplg.specs -T $(CURDIR)/../specs/ds_arm9_mshlplg.ld -g $(ARCH) -mno-fpu -Wl,-Map,$(notdir $*.map)
+
+
+# Previous code generation
+# ARCH	:=	-mthumb -mthumb-interwork
 
 # note: arm9tdmi isn't the correct CPU arch, but anything newer and LD
 # *insists* it has a FPU or VFP, and it won't take no for an answer!
-CFLAGS	:=	-g -Wall -O2\
+# CFLAGS	:=	-g -Wall -O2\
  			-mcpu=arm9tdmi -mtune=arm9tdmi -fomit-frame-pointer\
 			-ffast-math \
 			$(ARCH)
 
-CFLAGS	+=	$(INCLUDE) -DARM9
-CXXFLAGS	:= $(CFLAGS) -fno-rtti -fno-exceptions
+# CFLAGS	+=	$(INCLUDE) -DARM9
+# CXXFLAGS	:= $(CFLAGS) -fno-rtti -fno-exceptions
 
-ASFLAGS	:=	-g $(ARCH)
-LDFLAGS	=	-specs=ds_arm9.specs -g $(ARCH) -mno-fpu -Wl,-Map,$(notdir $*.map)
+# ASFLAGS	:=	-g $(ARCH)
+# LDFLAGS	=	-specs=ds_arm9.specs -g $(ARCH) -mno-fpu -Wl,-Map,$(notdir $*.map)
 
 #---------------------------------------------------------------------------------
 # any extra libraries we wish to link with the project

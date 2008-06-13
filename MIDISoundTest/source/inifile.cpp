@@ -1,12 +1,10 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <NDS.h>
 
 #include "inifile.h"
 #include "_console.h"
-
-#include <stdlib.h>
-#include <string.h>
-
 TGlobalINI GlobalINI;
 
 void InitINI(void)
@@ -38,7 +36,8 @@ static void readsection(char *str)
   while(*str!=']'){
     if((128<=ofs)||(*str==0)){
       _consolePrintf("line%d error.\nThe section name doesn't end correctly.\n",readline);
-      //ShowLogHalt();
+
+//	  ShowLogHalt();	// This function cannot be define nor make by ourselves.
     }
     section[ofs]=*str;
     str++;
@@ -51,7 +50,7 @@ static void readkey(char *str)
 {
   if(section[0]==0){
     _consolePrintf("line%d error.\nThere is a key ahead of the section name.\n",readline);
-//    ShowLogHalt();
+//    ShowLogHalt();	// This function cannot be define nor make by ourselves.
     return;
   }
   
@@ -63,7 +62,7 @@ static void readkey(char *str)
   while(*str!='='){
     if((128<=ofs)||(*str==0)){
       _consolePrintf("line%d error.\nThe key name doesn't end correctly.\n",readline);
-      //ShowLogHalt();
+//      ShowLogHalt();	// This function cannot be define nor make by ourselves.
     }
     key[ofs]=*str;
     str++;
@@ -77,7 +76,7 @@ static void readkey(char *str)
   while(*str!=0){
     if(128<=ofs){
       _consolePrintf("line%d error.\nThe value doesn't end correctly.\n",readline);
-      //ShowLogHalt();
+//     ShowLogHalt();	// This function cannot be define nor make by ourselves.
     }
     value[ofs]=*str;
     str++;
