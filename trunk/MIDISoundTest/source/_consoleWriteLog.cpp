@@ -28,9 +28,9 @@ u32 PrfEnd(int data)
   
   if(data!=-1){
     if(us<0){
-      _consolePrint(".");
+      //_consolePrint(".");
       }else{
-      _consolePrintf("prf data=%d %6dus\n",data,us);
+      //_consolePrintf("prf data=%d %6dus\n",data,us);
     }
   }
   

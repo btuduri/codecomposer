@@ -1,7 +1,10 @@
-
 #include <stdio.h>
 #include <nds.h>
 #include "std.h"
+
+#include "memtool.h"
+#include "_console.h"
+#include "smidlib_pch.h"
 
 typedef struct {
   u32 Program;
