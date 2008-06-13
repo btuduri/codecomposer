@@ -1,5 +1,6 @@
 #include <NDS.h>
 #include "_consoleWriteLog.h"
+#include "_console.h"
 
 void PrfStart(void)
 {

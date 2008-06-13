@@ -1,5 +1,9 @@
 #include <stdio.h>
 #include <nds.h>
+
+#include "_console.h"
+#include "smidlib_pch.h"
+#include "memtool.h"
 #include "std.h"
 
 #include "memtool.h"
