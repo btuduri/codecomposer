@@ -1,4 +1,3 @@
-
 #ifndef memtool_h
 #define memtool_h
 
@@ -35,4 +34,3 @@ u32 PrintFreeMem(void);
 #endif
 
 #endif
-

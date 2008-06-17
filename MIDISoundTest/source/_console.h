@@ -9,8 +9,8 @@
 
 extern void _consolePrint(const char* pstr);
 extern void _consolePrintf(const char* format, ...);
-extern void PrfStart(void);
-extern u32 PrfEnd(int data);
+//extern void PrfStart(void);
+//extern u32 PrfEnd(int data);
 
 #else
 

@@ -1,3 +1,8 @@
+#include "plugin_supple.h"
+#include "_console.h"
+#include "Dll.h"
+
+static TPluginBody *pCurrentPluginBody=NULL;
 
 // However, the following part was in the main.cpp(Original moonshell)
 // To do : make the following functions work;
@@ -6,8 +11,11 @@
   while(1); \
 }
 
-__declspec(noreturn) void _ShowLogHalt(void)
-{ cwl();
+// __declspec(noreturn)
+void _ShowLogHalt(void)
+{ 
+#if 0
+  cwl();
   REG_IME=0;
   
   videoSetModeSub_SetShowLog(true);
@@ -16,6 +24,7 @@ __declspec(noreturn) void _ShowLogHalt(void)
   while(1){ cwl();
     swiWaitForVBlank();
   }
+#endif
 }
 
 // Most of related files are located in Dll.cpp (Original Moonshell)
