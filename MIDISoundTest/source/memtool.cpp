@@ -3,7 +3,7 @@
 #include <stdlib.h>
 
 #include <NDS.h>
-#include <NDS/ARM9/CP15.h>
+
 
 #include "_console.h"
 #include "_const.h"

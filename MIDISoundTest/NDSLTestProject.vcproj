@@ -113,11 +113,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\source\plugin.h"
+				RelativePath=".\source\plugin_supple.h"
 				>
 			</File>
 			<File
-				RelativePath=".\source\plugin_supple.h"
+				RelativePath=".\source\shell.h"
 				>
 			</File>
 			<File
