@@ -66,7 +66,7 @@ static void *GetBINData(void)
   if(pPB->BINSize==0) return(0);
   
   if(pPB->BINData==NULL){
-    pPB->BINData=safemalloc(pPB->BINSize);
+    //pPB->BINData=safemalloc(pPB->BINSize);
     if(pPB->BINData!=NULL){
       FileSys_fread(pPB->BINData,1,pPB->BINSize,pPB->BINFileHandle);
     }

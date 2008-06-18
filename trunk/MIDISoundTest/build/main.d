@@ -1,4 +1,4 @@
-main.o: d:/Workspace/ndsl/source/main.c c:/devkitPro/libnds/include/nds.h \
+main.o: d:/苞力/Midi/source/main.c c:/devkitPro/libnds/include/nds.h \
   c:/devkitPro/libnds/include/nds/jtypes.h \
   c:/devkitPro/libnds/include/nds/bios.h \
   c:/devkitPro/libnds/include/nds/card.h \
@@ -9,6 +9,7 @@ main.o: d:/Workspace/ndsl/source/main.c c:/devkitPro/libnds/include/nds.h \
   c:/devkitPro/libnds/include/nds/memory.h \
   c:/devkitPro/libnds/include/nds/system.h \
   c:/devkitPro/libnds/include/nds/timers.h \
+  c:/devkitPro/libnds/include/nds/arm9/background.h \
   c:/devkitPro/libnds/include/nds/arm9/boxtest.h \
   c:/devkitPro/libnds/include/nds/arm9/video.h \
   c:/devkitPro/libnds/include/nds/arm9/videoGL.h \
@@ -21,7 +22,14 @@ main.o: d:/Workspace/ndsl/source/main.c c:/devkitPro/libnds/include/nds.h \
   c:/devkitPro/libnds/include/nds/arm9/pcx.h \
   c:/devkitPro/libnds/include/nds/arm9/input.h \
   c:/devkitPro/libnds/include/nds/arm9/rumble.h \
-  c:/devkitPro/libnds/include/nds/arm9/sound.h
+  c:/devkitPro/libnds/include/nds/arm9/sound.h \
+  c:/devkitPro/libnds/include/nds/arm9/sprite.h \
+  d:/苞力/Midi/source/_console.h d:/苞力/Midi/source/_const.h \
+  d:/苞力/Midi/source/std.h d:/苞力/Midi/source/inifile.h \
+  d:/苞力/Midi/source/smidlib.h d:/苞力/Midi/source/smidlib_pch.h \
+  d:/苞力/Midi/source/smidlib_mtrk.h d:/苞力/Midi/source/smidlib_sm.h \
+  d:/苞力/Midi/source/memtool.h d:/苞力/Midi/source/filesys.h \
+  d:/苞力/Midi/source/shell.h d:/苞力/Midi/source/plugin_supple.h
 
 c:/devkitPro/libnds/include/nds.h:
 
@@ -44,6 +52,8 @@ c:/devkitPro/libnds/include/nds/memory.h:
 c:/devkitPro/libnds/include/nds/system.h:
 
 c:/devkitPro/libnds/include/nds/timers.h:
+
+c:/devkitPro/libnds/include/nds/arm9/background.h:
 
 c:/devkitPro/libnds/include/nds/arm9/boxtest.h:
 
@@ -70,3 +80,29 @@ c:/devkitPro/libnds/include/nds/arm9/input.h:
 c:/devkitPro/libnds/include/nds/arm9/rumble.h:
 
 c:/devkitPro/libnds/include/nds/arm9/sound.h:
+
+c:/devkitPro/libnds/include/nds/arm9/sprite.h:
+
+d:/苞力/Midi/source/_console.h:
+
+d:/苞力/Midi/source/_const.h:
+
+d:/苞力/Midi/source/std.h:
+
+d:/苞力/Midi/source/inifile.h:
+
+d:/苞力/Midi/source/smidlib.h:
+
+d:/苞力/Midi/source/smidlib_pch.h:
+
+d:/苞力/Midi/source/smidlib_mtrk.h:
+
+d:/苞力/Midi/source/smidlib_sm.h:
+
+d:/苞力/Midi/source/memtool.h:
+
+d:/苞力/Midi/source/filesys.h:
+
+d:/苞力/Midi/source/shell.h:
+
+d:/苞力/Midi/source/plugin_supple.h:

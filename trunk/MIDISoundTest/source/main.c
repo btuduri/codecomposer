@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <string.h>
 
 #include "_console.h"
 #include "_const.h"
@@ -9,6 +10,11 @@
 #include "inifile.h"
 #include "smidlib.h"
 #include "memtool.h"
+
+#include "filesys.h"
+#include "shell.h"
+
+#include "plugin_supple.h"
 
 #define MaxSampleRate (32768)
 #define MinFramePerSecond (120)
@@ -65,6 +71,8 @@ int main(void) {
 
 		swiWaitForVBlank();
 	}
+
+	Shell_SkinOpenFile("midi.mid");
 
 	return 0;
 }
@@ -213,13 +221,13 @@ bool Start(int FileHandle)
     pReserve[3]=safemalloc(samples*2);
   }
   
-  fseek(FileHandle,0,SEEK_END);
-  DeflateSize=ftell(FileHandle);
-  fseek(FileHandle,0,SEEK_SET);
+  FileSys_fseek(FileHandle,0,SEEK_END);
+  DeflateSize=FileSys_ftell(FileHandle);
+  FileSys_fseek(FileHandle,0,SEEK_SET);
   
   DeflateBuf=(u8*)safemalloc(DeflateSize);
   if(DeflateBuf==NULL) return(false);
-  fread(DeflateBuf,1,DeflateSize,FileHandle);
+  FileSys_fread(DeflateBuf,1,DeflateSize,FileHandle);
   
   if(GetBINFileHandle()==0){
     _consolePrintf("not found sound font file. 'midrcp.bin'\n");
