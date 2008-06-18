@@ -2,6 +2,18 @@
 #include "_consoleWriteLog.h"
 #include "_console.h"
 
+void _cwl(char *file,int line,u32 sp)
+{
+  char *seek=file;
+  
+  while(*seek!=0){
+    if(*seek=='\\') file=seek;
+    seek++;
+  }
+  
+  _consolePrintf("%s%d[%x]\n",file,line,sp);
+}
+
 void PrfStart(void)
 {
   TIMER0_CR=0;
