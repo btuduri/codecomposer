@@ -32,7 +32,7 @@
   * 존재하지 않는 헤더파일인데, 사용되고 있고, 게다가 꼭 필요한것 같습니다. 이부분 어떻게하죠?
     * http://code.google.com/p/codecomposer/source/browse/trunk/MIDISoundTest/source/smidlib_pch.cpp#7
     * 이 부분 잡아냈습니다. MakeFile 보시면 알수있습니다.
-
+  * 다른건 다 잡은거 같은데.. safemalloc 이 부분이 난감. plugin_def.h / plugin.h 함수 포인터로 선언되어 있는데, 도저히 정의 부분 찾을 수가 없음.. 이 부분 알아? by 진모
 == 의문점 ==
   * PRFStart, PRFEnd 함수가 2개가 있는데, 정확히 어디다가 쓴건지, 왜쓴건지 모르겠네요.
     * http://code.google.com/p/codecomposer/source/browse/trunk/MIDISoundTest/source/_console.c#150
