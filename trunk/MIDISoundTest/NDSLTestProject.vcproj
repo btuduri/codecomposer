@@ -89,6 +89,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\source\filesys.h"
+				>
+			</File>
+			<File
 				RelativePath=".\source\gba_nds_fat\gba_nds_fat.h"
 				>
 			</File>
@@ -174,6 +178,10 @@
 			</File>
 			<File
 				RelativePath=".\source\gba_nds_fat\disc_io.c"
+				>
+			</File>
+			<File
+				RelativePath=".\source\filesys.cpp"
 				>
 			</File>
 			<File

@@ -1,6 +1,7 @@
 #include "plugin_supple.h"
 #include "_console.h"
 #include "Dll.h"
+#include "filesys.h"
 
 static TPluginBody *pCurrentPluginBody=NULL;
 
