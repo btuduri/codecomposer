@@ -1,27 +1,18 @@
-
-#include "_console.h"
-
-#ifndef ShowDebugMsg
-
-void _ttywrch(int ch)
-{
-}
-
-#else
-
 #include <stdio.h>
 #include <string.h>
 #include <stdarg.h>
 
+#include "_console.h"
+
 void _ttywrch(int ch)
 {
   // WAIT_CR |= BIT(7);	// set GBA owner to ARM7. ignore control from ARM7.
-  PcPrintChar((char)ch);
+  // PcPrintChar((char)ch);
 }
 
-void _consolePrint(const char* pstr)
+void _consolePrint(char const* pstr)
 {
-  PcPrint(pstr);
+  // PcPrint(pstr);
 }
 
 static s32 _udeci(u32 u,s8 *s,s32 i){
@@ -68,12 +59,13 @@ static s32 _hex(u32 u,s8 *s,s32 i,s32 keta){
 
 //	%d:符号あり１０進数
 //	%u:符号なし１０進数
-//	%[n]x:１６進数（オプションでn(0-8)桁表示）
+//	%[n]x:１６進数（オプションでn(0-8)桁?示）
 //	%s:文字列
 //	%c:文字
 //	\n:改行
 
-void _consolePrintf(const char* format, ...)
+// void _consolePrintf(const char* format, ...)
+void _consolePrintf(char const* format, ...)
 {
 	va_list args;
 	s32 i,d,keta;
@@ -147,6 +139,7 @@ again:
     _consolePrint((char*)buf);
 }
 
+/*
 void PrfStart(void)
 {
   TIMER3_CR=0;
@@ -177,5 +170,4 @@ u32 PrfEnd(int data)
   
   return((u32)us);
 }
-
-#endif
+*/

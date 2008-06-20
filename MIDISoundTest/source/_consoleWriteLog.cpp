@@ -1,6 +1,6 @@
 #include <NDS.h>
-#include "_consoleWriteLog.h"
 #include "_console.h"
+#include "_consoleWriteLog.h"
 
 void _cwl(char *file,int line,u32 sp)
 {

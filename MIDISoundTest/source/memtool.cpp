@@ -4,21 +4,16 @@
 
 #include <NDS.h>
 
-
 #include "_console.h"
 #include "_const.h"
-
 #include "string.h"
-
 #include "memtool.h"
-
 #include "Emulator.h"
 
 static vu32 DMAFIXSRC;
 
 #define CACHE_LINE_SIZE (32)
 #define prcdiv (0x40)
-
 #define memchk if(false)
 
 #include "tcmstart.h"
@@ -33,7 +28,7 @@ void DC_FlushRangeOverrun(const void *v,u32 size)
   size+=CACHE_LINE_SIZE-1;
   size&=~(CACHE_LINE_SIZE-1);
   
-  if(va==NULL) return;
+  if(va==0) return;
   if(size==0) return;
   
   DC_FlushRange((void*)va,size);

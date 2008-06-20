@@ -8,13 +8,12 @@
 #include "_const.h"
 #include "std.h"
 #include "inifile.h"
-#include "smidlib.h"
 #include "memtool.h"
-
 #include "filesys.h"
 #include "shell.h"
-
 #include "plugin_supple.h"
+
+#include "smidlib.h"
 
 #define MaxSampleRate (32768)
 #define MinFramePerSecond (120)
@@ -72,7 +71,7 @@ int main(void) {
 		swiWaitForVBlank();
 	}
 
-	Shell_SkinOpenFile("midi.mid");
+	Shell_SkinOpenFile("Dancing_Queen.mid");
 
 	return 0;
 }
@@ -281,11 +280,11 @@ bool Start(int FileHandle)
   TotalClock=0;
   CurrentClock=0;
   
-  PrfStart();
+  // PrfStart();
 
   Start_smidlibDetectTotalClock();
 
-  SoundFontLoadTimeus=PrfEnd(0);
+  // SoundFontLoadTimeus=PrfEnd(0);
   
   if(TotalClock==0){
     _consolePrintf("Detect TotalClock equal Zero.\n");
