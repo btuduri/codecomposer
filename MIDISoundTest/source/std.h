@@ -5,4 +5,3 @@
 #define ALIGNED_VAR_IN_DTCM __attribute__ ((aligned(4),section (".dtcm")))
 
 #endif
-

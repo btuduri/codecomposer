@@ -1,11 +1,13 @@
 #include <stdio.h>
+#include <string.h>
 #include <nds.h>
 
-#include "plugin.h"
-#include "plugin_def.h"
+// #include "plugin.h"
+// #include "plugin_def.h"
+#include "_console.h"
 #include "std.h"
-
 #include "smidlib.h"
+#include "memtool.h"
 
 char *gME_Text=NULL,*gME_Copyright=NULL,*gME_Title=NULL;
 
