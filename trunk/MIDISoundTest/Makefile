@@ -18,6 +18,7 @@ TARGET		:=	$(shell basename $(CURDIR))
 BUILD		:=	build
 SOURCES		:=	gfx source data  
 INCLUDES	:=	include build
+DATA		:=	data
 
 #---------------------------------------------------------------------------------
 # options for code generation
@@ -25,35 +26,28 @@ INCLUDES	:=	include build
 
 ARCH	:=	-mthumb-interwork
 
-CFLAGS	:=	-g -Wall -O3 \
-			-march=armv5te -mtune=arm946e-s -fomit-frame-pointer \
+CFLAGS	:=	-g -Wall -O2\
+ 			-march=armv5te -mtune=arm946e-s -fomit-frame-pointer\
 			-ffast-math \
 			$(ARCH)
 
-CFLAGS	+=	$(INCLUDE) -DARM9 \
-			-funsigned-char -DPluginMode_Sound
+CFLAGS	+=	$(INCLUDE) -DARM9 -funsigned-char
 CXXFLAGS	:=	$(CFLAGS) -fno-rtti -fno-exceptions
 
 ASFLAGS	:=	-g $(ARCH) -march=armv5te -mtune=arm946e-s
 
-LDFLAGS	=	-specs=$(CURDIR)/../specs/ds_arm9_mshlplg.specs -T $(CURDIR)/../specs/ds_arm9_mshlplg.ld -g $(ARCH) -mno-fpu -Wl,-Map,$(notdir $*.map)
+LDFLAGS	=	-specs=ds_arm9.specs -g $(ARCH) -Wl,-Map,$(notdir $*.map)
 
-
-# Previous code generation
-# ARCH	:=	-mthumb -mthumb-interwork
-
-# note: arm9tdmi isn't the correct CPU arch, but anything newer and LD
-# *insists* it has a FPU or VFP, and it won't take no for an answer!
-# CFLAGS	:=	-g -Wall -O2\
- 			-mcpu=arm9tdmi -mtune=arm9tdmi -fomit-frame-pointer\
-			-ffast-math \
-			$(ARCH)
-
-# CFLAGS	+=	$(INCLUDE) -DARM9
-# CXXFLAGS	:= $(CFLAGS) -fno-rtti -fno-exceptions
-
-# ASFLAGS	:=	-g $(ARCH)
-# LDFLAGS	=	-specs=ds_arm9.specs -g $(ARCH) -mno-fpu -Wl,-Map,$(notdir $*.map)
+# ARCH	:=	-mthumb-interwork
+# CFLAGS	:=	-g -Wall -O3 \
+#			-march=armv5te -mtune=arm946e-s -fomit-frame-pointer \
+#			-ffast-math \
+#			$(ARCH)
+# CFLAGS	+=	$(INCLUDE) -DARM9 \
+#			-funsigned-char 
+#CXXFLAGS	:=	$(CFLAGS) -fno-rtti -fno-exceptions
+#ASFLAGS	:=	-g $(ARCH) -march=armv5te -mtune=arm946e-s
+#LDFLAGS	=	-specs=$(CURDIR)/../specs/ds_arm9_mshlplg.specs -T $(CURDIR)/../specs/ds_arm9_mshlplg.ld -g $(ARCH) -mno-fpu -Wl,-Map,$(notdir $*.map)
 
 #---------------------------------------------------------------------------------
 # any extra libraries we wish to link with the project
@@ -73,12 +67,13 @@ LIBDIRS	:=	$(LIBNDS)
 #---------------------------------------------------------------------------------
 ifneq ($(BUILD),$(notdir $(CURDIR)))
 #---------------------------------------------------------------------------------
- 
-export OUTPUT	:=	$(CURDIR)/$(TARGET)
- 
-export VPATH	:=	$(foreach dir,$(SOURCES),$(CURDIR)/$(dir))
-export DEPSDIR	:=	$(CURDIR)/$(BUILD)
+export ARM9BIN	:=	$(TOPDIR)/$(TARGET).arm9
+export ARM9ELF	:=	$(CURDIR)/$(TARGET).arm9.elf
+export DEPSDIR := $(CURDIR)/$(BUILD)
 
+export VPATH	:=	$(foreach dir,$(SOURCES),$(CURDIR)/$(dir)) \
+					$(foreach dir,$(DATA),$(CURDIR)/$(dir))
+										
 CFILES		:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.c)))
 CPPFILES	:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.cpp)))
 SFILES		:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.s)))
@@ -129,9 +124,20 @@ DEPENDS	:=	$(OFILES:.o=.d)
 #---------------------------------------------------------------------------------
 # main targets
 #---------------------------------------------------------------------------------
-$(OUTPUT).nds	: 	$(OUTPUT).arm9
-$(OUTPUT).arm9	:	$(OUTPUT).elf
-$(OUTPUT).elf	:	$(OFILES)
+
+$(ARM9BIN)	:	$(ARM9ELF)
+	@$(OBJCOPY) -O binary $< $@
+	@echo built ... $(notdir $@)
+
+$(ARM9ELF)	:	$(OFILES)
+	@echo crt0.s
+	@$(CC) -x assembler-with-cpp -marm -mthumb-interwork -c ../specs/ds_arm9_mshlplg_crt0.s -o ../specs/ds_arm9_mshlplg_crt0.o
+	@echo linking $(notdir $@) $(LIBPATHS) $(LIBS) $(LIBNDS)
+	@$(LD)  $(LDFLAGS) $(OFILES) $(LIBPATHS) $(LIBS) -o $@
+	
+#$(OUTPUT).nds	: 	$(OUTPUT).arm9
+#$(OUTPUT).arm9	:	$(OUTPUT).elf
+#$(OUTPUT).elf	:	$(OFILES)
  
 #---------------------------------------------------------------------------------
 %.o	:	%.bin
