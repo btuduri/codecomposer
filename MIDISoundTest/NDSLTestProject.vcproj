@@ -24,11 +24,11 @@
 			<Tool
 				Name="VCNMakeTool"
 				BuildCommandLine="make -r 2&gt;&amp;1 | sed -e &apos;s/(.[a-zA-Z]+):([0-9]+):/1(2):/&apos;"
-				ReBuildCommandLine="make -r 2&gt;&amp;1 | sed -e &apos;s/(.[a-zA-Z]+):([0-9]+):/1(2):/&apos;&#x0D;&#x0A;"
+				ReBuildCommandLine="make -r 2&gt;&amp;1 | sed -e &apos;s/(.[a-zA-Z]+):([0-9]+):/1(2):/&apos;"
 				CleanCommandLine="make clean"
 				Output="ndsl.nds"
 				PreprocessorDefinitions="WIN32;_DEBUG;"
-				IncludeSearchPath="C:\devkitPro\devkitARM\include;C:\devkitPro\libnds\include"
+				IncludeSearchPath="C:\devkitPro\devkitARM\include;D:\Workspace\MIDISountTest\nds_include"
 				ForcedIncludes=""
 				AssemblySearchPath=""
 				ForcedUsingAssemblies=""
@@ -43,12 +43,12 @@
 			>
 			<Tool
 				Name="VCNMakeTool"
-				BuildCommandLine="make -r 2&gt;&amp;1 | sed -e ’s/(.[a-zA-Z]+):([0-9]+):/1(2):/’"
-				ReBuildCommandLine="make -r 2&gt;&amp;1 | sed -e ’s/(.[a-zA-Z]+):([0-9]+):/1(2):/’"
+				BuildCommandLine="make -r 2&gt;&amp;1 | sed -e &apos;s/(.[a-zA-Z]+):([0-9]+):/1(2):/&apos;"
+				ReBuildCommandLine="make -r 2&gt;&amp;1 | sed -e &apos;s/(.[a-zA-Z]+):([0-9]+):/1(2):/&apos;"
 				CleanCommandLine="make clean"
-				Output="NDSLTestProject.nds"
+				Output="ndsl.nds"
 				PreprocessorDefinitions="WIN32;NDEBUG;"
-				IncludeSearchPath="C:\devkitPro\devkitARM\include;C:\devkitPro\libnds\include"
+				IncludeSearchPath="C:\devkitPro\devkitARM\include;D:\Workspace\MIDISountTest\nds"
 				ForcedIncludes=""
 				AssemblySearchPath=""
 				ForcedUsingAssemblies=""
@@ -69,15 +69,15 @@
 				>
 			</File>
 			<File
-				RelativePath=".\source\_consoleWriteLog.h"
-				>
-			</File>
-			<File
 				RelativePath=".\source\_const.h"
 				>
 			</File>
 			<File
-				RelativePath=".\source\gba_nds_fat\disc_io.h"
+				RelativePath=".\source\ClustToSect_extern.h"
+				>
+			</File>
+			<File
+				RelativePath=".\source\disc_io.h"
 				>
 			</File>
 			<File
@@ -85,11 +85,47 @@
 				>
 			</File>
 			<File
+				RelativePath=".\source\fatdef.h"
+				>
+			</File>
+			<File
 				RelativePath=".\source\filesys.h"
 				>
 			</File>
 			<File
-				RelativePath=".\source\gba_nds_fat\gba_nds_fat.h"
+				RelativePath=".\source\fread.h"
+				>
+			</File>
+			<File
+				RelativePath=".\source\fread_fast16bit.h"
+				>
+			</File>
+			<File
+				RelativePath=".\source\gba_nds_fat.h"
+				>
+			</File>
+			<File
+				RelativePath=".\source\getattrib.h"
+				>
+			</File>
+			<File
+				RelativePath=".\source\getdirentry1.h"
+				>
+			</File>
+			<File
+				RelativePath=".\source\getdirentry2.h"
+				>
+			</File>
+			<File
+				RelativePath=".\source\getdirentry3.h"
+				>
+			</File>
+			<File
+				RelativePath=".\source\getdirentry4.h"
+				>
+			</File>
+			<File
+				RelativePath=".\source\getlongfilenameunicode.h"
 				>
 			</File>
 			<File
@@ -97,15 +133,35 @@
 				>
 			</File>
 			<File
-				RelativePath=".\source\gba_nds_fat\io_dldi.h"
+				RelativePath=".\source\initfiles1.h"
 				>
 			</File>
 			<File
-				RelativePath=".\source\gba_nds_fat\mediatype.h"
+				RelativePath=".\source\initfiles2.h"
+				>
+			</File>
+			<File
+				RelativePath=".\source\io_dldi.h"
+				>
+			</File>
+			<File
+				RelativePath=".\source\jtypes.h"
+				>
+			</File>
+			<File
+				RelativePath=".\source\lfnunicodedef.h"
+				>
+			</File>
+			<File
+				RelativePath=".\source\mediatype.h"
 				>
 			</File>
 			<File
 				RelativePath=".\source\memtool.h"
+				>
+			</File>
+			<File
+				RelativePath=".\source\nextcluster.h"
 				>
 			</File>
 			<File
@@ -169,11 +225,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\source\_consoleWriteLog.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\source\gba_nds_fat\disc_io.c"
+				RelativePath=".\source\disc_io.c"
 				>
 			</File>
 			<File
@@ -181,7 +233,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\source\gba_nds_fat\gba_nds_fat.c"
+				RelativePath=".\source\gba_nds_fat.c"
 				>
 			</File>
 			<File
@@ -222,7 +274,19 @@
 			</File>
 		</Filter>
 		<File
-			RelativePath=".\source\gba_nds_fat\io_dldi.s"
+			RelativePath=".\source\TTAC_Decode_12bit_asm.s"
+			>
+		</File>
+		<File
+			RelativePath=".\source\TTAC_Decode_16bit_asm.s"
+			>
+		</File>
+		<File
+			RelativePath=".\source\TTAC_Decode_6bit_asm.s"
+			>
+		</File>
+		<File
+			RelativePath=".\source\TTAC_Decode_8bit_asm.s"
 			>
 		</File>
 	</Files>

@@ -16,8 +16,8 @@ include $(DEVKITARM)/ds_rules
 #---------------------------------------------------------------------------------
 TARGET		:=	$(shell basename $(CURDIR))
 BUILD		:=	build
-SOURCES		:=	gfx source data  
-INCLUDES	:=	include build
+SOURCES		:=	source data gba_nds_fat
+INCLUDES	:=	nds_include build
 DATA		:=	data
 
 #---------------------------------------------------------------------------------
@@ -37,24 +37,13 @@ CXXFLAGS	:=	$(CFLAGS) -fno-rtti -fno-exceptions
 ASFLAGS	:=	-g $(ARCH) -march=armv5te -mtune=arm946e-s
 
 LDFLAGS	=	-specs=ds_arm9.specs -g $(ARCH) -Wl,-Map,$(notdir $*.map)
-
-# ARCH	:=	-mthumb-interwork
-# CFLAGS	:=	-g -Wall -O3 \
-#			-march=armv5te -mtune=arm946e-s -fomit-frame-pointer \
-#			-ffast-math \
-#			$(ARCH)
-# CFLAGS	+=	$(INCLUDE) -DARM9 \
-#			-funsigned-char 
-#CXXFLAGS	:=	$(CFLAGS) -fno-rtti -fno-exceptions
-#ASFLAGS	:=	-g $(ARCH) -march=armv5te -mtune=arm946e-s
 #LDFLAGS	=	-specs=$(CURDIR)/../specs/ds_arm9_mshlplg.specs -T $(CURDIR)/../specs/ds_arm9_mshlplg.ld -g $(ARCH) -mno-fpu -Wl,-Map,$(notdir $*.map)
 
 #---------------------------------------------------------------------------------
 # any extra libraries we wish to link with the project
 #---------------------------------------------------------------------------------
 LIBS	:= -lnds9
- 
- 
+  
 #---------------------------------------------------------------------------------
 # list of directories containing libraries, this must be the top level containing
 # include and lib
@@ -67,18 +56,17 @@ LIBDIRS	:=	$(LIBNDS)
 #---------------------------------------------------------------------------------
 ifneq ($(BUILD),$(notdir $(CURDIR)))
 #---------------------------------------------------------------------------------
-export ARM9BIN	:=	$(TOPDIR)/$(TARGET).arm9
-export ARM9ELF	:=	$(CURDIR)/$(TARGET).arm9.elf
-export DEPSDIR := $(CURDIR)/$(BUILD)
 
-export VPATH	:=	$(foreach dir,$(SOURCES),$(CURDIR)/$(dir)) \
-					$(foreach dir,$(DATA),$(CURDIR)/$(dir))
-										
+export OUTPUT	:=	$(CURDIR)/$(TARGET)
+export VPATH	:=	$(foreach dir,$(SOURCES),$(CURDIR)/$(dir))
+export DEPSDIR	:=	$(CURDIR)/$(BUILD)
+
 CFILES		:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.c)))
 CPPFILES	:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.cpp)))
 SFILES		:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.s)))
 BINFILES	:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.bin)))
- 
+
+										 
 #---------------------------------------------------------------------------------
 # use CXX for linking C++ projects, CC for standard C
 #---------------------------------------------------------------------------------
@@ -125,19 +113,9 @@ DEPENDS	:=	$(OFILES:.o=.d)
 # main targets
 #---------------------------------------------------------------------------------
 
-$(ARM9BIN)	:	$(ARM9ELF)
-	@$(OBJCOPY) -O binary $< $@
-	@echo built ... $(notdir $@)
-
-$(ARM9ELF)	:	$(OFILES)
-	@echo crt0.s
-	@$(CC) -x assembler-with-cpp -marm -mthumb-interwork -c ../specs/ds_arm9_mshlplg_crt0.s -o ../specs/ds_arm9_mshlplg_crt0.o
-	@echo linking $(notdir $@) $(LIBPATHS) $(LIBS) $(LIBNDS)
-	@$(LD)  $(LDFLAGS) $(OFILES) $(LIBPATHS) $(LIBS) -o $@
-	
-#$(OUTPUT).nds	: 	$(OUTPUT).arm9
-#$(OUTPUT).arm9	:	$(OUTPUT).elf
-#$(OUTPUT).elf	:	$(OFILES)
+$(OUTPUT).nds	: 	$(OUTPUT).arm9
+$(OUTPUT).arm9	:	$(OUTPUT).elf
+$(OUTPUT).elf	:	$(OFILES)
  
 #---------------------------------------------------------------------------------
 %.o	:	%.bin
