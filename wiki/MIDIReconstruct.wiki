@@ -33,9 +33,14 @@
     * http://code.google.com/p/codecomposer/source/browse/trunk/MIDISoundTest/source/smidlib_pch.cpp#7
     * 이 부분 잡아냈습니다. MakeFile 보시면 알수있습니다.
   * 다른건 다 잡은거 같은데.. safemalloc 이 부분이 난감. plugin_def.h / plugin.h 함수 포인터로 선언되어 있는데, 도저히 정의 부분 찾을 수가 없음.. 이 부분 알아? by 진모
+    * memtool.*에 있습니다.
+  * 문쉘은 자신만의 libnds를 따서 씁니다. 모든 소스가 이걸로 맞춰져있으므로 주의하셔야..
+
+
 == 의문점 ==
   * PRFStart, PRFEnd 함수가 2개가 있는데, 정확히 어디다가 쓴건지, 왜쓴건지 모르겠네요.
     * http://code.google.com/p/codecomposer/source/browse/trunk/MIDISoundTest/source/_console.c#150
     * http://code.google.com/p/codecomposer/source/browse/trunk/MIDISoundTest/source/_consoleWriteLog.cpp#4
+    * 소스 분석을 해보니 이 부분은 일종의 벤치마크용 타이머입니다. 필요없으니 지우셔도 ok.
   * 시작 부분에 LoadINI(GetINIData(), GetINISize()); 에서 GetINIData는 Plugin_GetINIData 란 함수를 말한다. 이 함수는 TPluginBody 구조체의 INIData 변수를 반환한다. TPluginBody는 어디서 설정?
     * 이 부분은 Dll.cpp에 있습니다.
