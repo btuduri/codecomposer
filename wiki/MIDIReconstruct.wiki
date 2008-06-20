@@ -26,6 +26,18 @@
   * Moonshell의 소스 분석이 어느정도 진행된 상태이므로 
     * 해당 소스를 다시 조합하여 실제 Code Composer에서 사용할 부분을 만들어야합니다.
     * 그런 까닭에 SVN의 trunk/MIDISoundTest 디렉토리에 어느정도 조합을 해놔서 넣어놨습니다.
+  * *문쉘은 자신만의 libnds를 따서 씁니다. 모든 소스가 이걸로 맞춰져있으므로 주의하셔야..*
+    * 그래서 nds_include라는 디렉토리에 문쉘 소스에서 퍼온 libnds가 있습니다. 
+      * 이 버전은 devkit에 있는 libnds와 상당히 많이 다른 까닭에 주의하셔야합니다.
+
+
+== 의문점(진행된 점, 남은 점) ==
+  * PRFStart, PRFEnd 함수가 2개가 있는데, 정확히 어디다가 쓴건지, 왜쓴건지 모르겠네요.
+    * http://code.google.com/p/codecomposer/source/browse/trunk/MIDISoundTest/source/_console.c#150
+    * http://code.google.com/p/codecomposer/source/browse/trunk/MIDISoundTest/source/_consoleWriteLog.cpp#4
+    * 소스 분석을 해보니 이 부분은 일종의 벤치마크용 타이머입니다. 필요없으니 지우셔도 ok.
+  * 시작 부분에 LoadINI(GetINIData(), GetINISize()); 에서 GetINIData는 Plugin_GetINIData 란 함수를 말한다. 이 함수는 TPluginBody 구조체의 INIData 변수를 반환한다. TPluginBody는 어디서 설정?
+    * 이 부분은 Dll.cpp에 있습니다.
   * plugin.h, plugin_def.h 부분은 일단 stdio.h 같은 것을 사용할 수 있기 때문에 컴파일시 포함이 안되게 해놨습니다만.
     * 일부 메모리 함수 부분이 추가가 안되어있습니다. 이 부분 정리부탁드립니다.
      *(memtool.h 와 memtool.cpp를 추가하고 컴파일 하면 해결됨)
@@ -34,13 +46,3 @@
     * 이 부분 잡아냈습니다. MakeFile 보시면 알수있습니다.
   * 다른건 다 잡은거 같은데.. safemalloc 이 부분이 난감. plugin_def.h / plugin.h 함수 포인터로 선언되어 있는데, 도저히 정의 부분 찾을 수가 없음.. 이 부분 알아? by 진모
     * memtool.*에 있습니다.
-  * 문쉘은 자신만의 libnds를 따서 씁니다. 모든 소스가 이걸로 맞춰져있으므로 주의하셔야..
-
-
-== 의문점 ==
-  * PRFStart, PRFEnd 함수가 2개가 있는데, 정확히 어디다가 쓴건지, 왜쓴건지 모르겠네요.
-    * http://code.google.com/p/codecomposer/source/browse/trunk/MIDISoundTest/source/_console.c#150
-    * http://code.google.com/p/codecomposer/source/browse/trunk/MIDISoundTest/source/_consoleWriteLog.cpp#4
-    * 소스 분석을 해보니 이 부분은 일종의 벤치마크용 타이머입니다. 필요없으니 지우셔도 ok.
-  * 시작 부분에 LoadINI(GetINIData(), GetINISize()); 에서 GetINIData는 Plugin_GetINIData 란 함수를 말한다. 이 함수는 TPluginBody 구조체의 INIData 변수를 반환한다. TPluginBody는 어디서 설정?
-    * 이 부분은 Dll.cpp에 있습니다.
