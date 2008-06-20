@@ -1,21 +1,13 @@
+#include <nds.h>
+
 #include <stdio.h>
 #include <string.h>
 #include <stdarg.h>
 
 #include "_console.h"
 
-void _ttywrch(int ch)
+static s32 _udeci(u32 u,s8 *s,s32 i)
 {
-  // WAIT_CR |= BIT(7);	// set GBA owner to ARM7. ignore control from ARM7.
-  // PcPrintChar((char)ch);
-}
-
-void _consolePrint(char const* pstr)
-{
-  // PcPrint(pstr);
-}
-
-static s32 _udeci(u32 u,s8 *s,s32 i){
 	u32 div,flg;
 	div=1000000000;
 	flg=0;
@@ -57,14 +49,11 @@ static s32 _hex(u32 u,s8 *s,s32 i,s32 keta){
 	return(i);
 }
 
-//	%d:符号あり１０進数
-//	%u:符号なし１０進数
-//	%[n]x:１６進数（オプションでn(0-8)桁?示）
-//	%s:文字列
-//	%c:文字
-//	\n:改行
+void _consolePrint(char const* pstr)
+{
+  // PcPrint(pstr);
+}
 
-// void _consolePrintf(const char* format, ...)
 void _consolePrintf(char const* format, ...)
 {
 	va_list args;
@@ -138,36 +127,3 @@ again:
 	
     _consolePrint((char*)buf);
 }
-
-/*
-void PrfStart(void)
-{
-  TIMER3_CR=0;
-  TIMER3_DATA=0;
-  TIMER3_CR=TIMER_ENABLE | TIMER_DIV_1024; // max 2,012,863us
-//  TIMER3_CR=TIMER_ENABLE | TIMER_DIV_64; // max 125,803us
-//  TIMER3_CR=TIMER_ENABLE | TIMER_DIV_1; // max 1,966us
-}
-
-u32 PrfEnd(int data)
-{
-  u64 us=TIMER3_DATA;
-  
-  // (33.34*0x100)=8535.04;
-  us=(us*1024*0x100)/8535; 
-//  us=(us*64*0x100)/8535; 
-//  us=(us*1*0x100)/8535; 
-  
-  if(us<1){
-//    _consolePrint(".");
-    }else{
-    if(data!=-1){
-      _consolePrintf("prf data=%d %6dus\n",data,(u32)us);
-      }else{
-      _consolePrintf("prf %6dus\n",(u32)us);
-    }
-  }
-  
-  return((u32)us);
-}
-*/

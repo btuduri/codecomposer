@@ -1,6 +1,12 @@
-
 #ifndef inifile_h
 #define inifile_h
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <NDS.h>
+
+#include "_console.h"
 
 typedef struct {
   u32 SampleRate;

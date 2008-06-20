@@ -4,11 +4,11 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "filesys.h"
 #include "inifile.h"
 #include "_console.h"
-#include "_consoleWriteLog.h"
-#include "gba_nds_fat/gba_nds_fat.h"
+#include "gba_nds_fat.h"
+
+#include "filesys.h"
 
 typedef struct {
   bool Enabled;

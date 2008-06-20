@@ -1,10 +1,5 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <NDS.h>
-
 #include "inifile.h"
-#include "_console.h"
+
 TGlobalINI GlobalINI;
 
 void InitINI(void)
