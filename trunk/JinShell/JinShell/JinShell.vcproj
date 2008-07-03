@@ -110,6 +110,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\arm9\source\smidlib_pch.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\arm9\source\smidlib_pch.h"
+				>
+			</File>
+			<File
 				RelativePath=".\arm9\source\test.cpp"
 				>
 			</File>
