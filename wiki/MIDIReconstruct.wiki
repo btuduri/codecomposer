@@ -11,8 +11,9 @@
    * http://www.coderjoe.net/archive/2007/07/23/nintendo-ds-homebrew-tools-of-the-trade/
    * http://www.coderjoe.net/archive/2007/07/30/using-the-libnds-example-template-makefiles/
    * http://www.coderjoe.net/archive/2007/07/30/using-devkitarm-and-libnds-with-visual-studio-2005/
-   * devkitPro의 경로는 C:\devkitPro
-   * 에뮬레이터의 경로는 C:\devkitPro\emulators\nosgba 
+   * devkitPro의 설치는 http://vision.byus.net/tt/entry/devkitPRO-PAlib-%C4%C4%C6%C4%C0%CF-%B0%A1%B4%C9%C7%D1-%B4%D1%C5%D9%B5%B5DSNDS-%B0%B3%B9%DF-%C8%AF%B0%E6-%B1%B8%C3%E0%C7%CF%B1%E2 을 참조하세요. 
+   * devkitPro의 경로는 C:\devkitPro 입니다.
+   * 에뮬레이터의 경로는 C:\devkitPro\emulators\nosgba 입니다.
    * 이렇게 해서 기본적인 템플릿이 컴파일되고 동작하는 것을 확인하였습니다.
   * 그리고 mspv21_midrcp에 있는 일부파일과 Moonshell 본체에 있는 일부 소스를 집어넣었습니다.
   * 라이브러리들의 위치
