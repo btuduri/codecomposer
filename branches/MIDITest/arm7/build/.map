@@ -1,0 +1,668 @@
+Archive member included because of file (symbol)
+
+c:/devkitPro/libnds/lib\libnds7.a(clock.o)
+                              template.o (initClockIRQ)
+c:/devkitPro/libnds/lib\libnds7.a(spi.o)
+                              template.o (writePowerManagement)
+c:/devkitPro/libnds/lib\libnds7.a(touch.o)
+                              template.o (touchReadXY)
+c:/devkitPro/libnds/lib\libnds7.a(userSettings.o)
+                              template.o (readUserSettings)
+c:/devkitPro/libnds/lib\libnds7.a(interrupts.o)
+                              template.o (irqSet)
+c:/devkitPro/libnds/lib\libnds7.a(biosCalls.o)
+                              c:/devkitPro/libnds/lib\libnds7.a(clock.o) (swiDelay)
+c:/devkitPro/libnds/lib\libnds7.a(interruptDispatcher.o)
+                              c:/devkitPro/libnds/lib\libnds7.a(interrupts.o) (IntrMain)
+c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1\libgcc.a(_divsi3.o)
+                              template.o (__aeabi_idiv)
+c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1\libgcc.a(_dvmd_tls.o)
+                              c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1\libgcc.a(_divsi3.o) (__div0)
+c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1\libgcc.a(_call_via_rX.o)
+                              c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/../../../../arm-eabi/lib/ds_arm7_crt0.o (_call_via_r3)
+c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/../../../../arm-eabi/lib\libg.a(lib_a-init.o)
+                              c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/../../../../arm-eabi/lib/ds_arm7_crt0.o (__libc_init_array)
+c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/../../../../arm-eabi/lib\libg.a(lib_a-memcpy.o)
+                              template.o (memcpy)
+c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/../../../../arm-eabi/lib\libg.a(lib_a-mktime.o)
+                              c:/devkitPro/libnds/lib\libnds7.a(clock.o) (mktime)
+c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/../../../../arm-eabi/lib\libg.a(lib_a-mktm_r.o)
+                              c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/../../../../arm-eabi/lib\libg.a(lib_a-mktime.o) (__tzcalc_limits)
+c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/../../../../arm-eabi/lib\libg.a(lib_a-tzlock.o)
+                              c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/../../../../arm-eabi/lib\libg.a(lib_a-mktm_r.o) (__tz_lock)
+c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/../../../../arm-eabi/lib\libg.a(lib_a-tzvars.o)
+                              c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/../../../../arm-eabi/lib\libg.a(lib_a-mktime.o) (_daylight)
+c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/../../../../arm-eabi/lib\libg.a(lib_a-div.o)
+                              c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/../../../../arm-eabi/lib\libg.a(lib_a-mktime.o) (div)
+c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/../../../../arm-eabi/lib\libg.a(lib_a-gettzinfo.o)
+                              c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/../../../../arm-eabi/lib\libg.a(lib_a-mktime.o) (__gettzinfo)
+
+Allocating common symbols
+Common symbol       size              file
+
+irqTable            0xc8              c:/devkitPro/libnds/lib\libnds7.a(interrupts.o)
+tempPos             0xc               template.o
+first               0xc               template.o
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+rom              0x08000000         0x02000000
+iwram            0x037f8000         0x00018000
+*default*        0x00000000         0xffffffff
+
+Linker script and memory map
+
+                0x037f8000                __iwram_start = 0x37f8000
+                0x03810000                __iwram_top = 0x3810000
+                0x0380ffa0                __sp_irq = (__iwram_top - 0x60)
+                0x0380fea0                __sp_svc = (__sp_irq - 0x100)
+                0x0380fda0                __sp_usr = (__sp_svc - 0x100)
+                0x0380fff8                __irq_flags = (__iwram_top - 0x8)
+                0x0380fffc                __irq_vector = (__iwram_top - 0x4)
+
+.init           0x037f8000       0xe8
+                0x037f8000                __text_start = .
+ *(.init)
+ .init          0x037f8000       0xd0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/../../../../arm-eabi/lib/ds_arm7_crt0.o
+                0x037f8000                _start
+ .init          0x037f80d0        0xc c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/crti.o
+                0x037f80d0                _init
+ .init          0x037f80dc        0xc c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/crtn.o
+                0x037f80e8                . = ALIGN (0x4)
+
+.plt
+ *(.plt)
+
+.text           0x037f80f0     0x2744
+ *(.text.*)
+ *(.stub)
+ *(.gnu.warning)
+ *(.gnu.linkonce.t*)
+ *(.glue_7)
+ .glue_7        0x037f80f0        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/../../../../arm-eabi/lib/ds_arm7_crt0.o
+ .glue_7        0x037f80f0        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/crti.o
+ .glue_7        0x037f80f0        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/crtbegin.o
+ .glue_7        0x037f80f0        0x0 template.o
+ .glue_7        0x037f80f0        0x0 c:/devkitPro/libnds/lib\libnds7.a(clock.o)
+ .glue_7        0x037f80f0        0x0 c:/devkitPro/libnds/lib\libnds7.a(spi.o)
+ .glue_7        0x037f80f0        0x0 c:/devkitPro/libnds/lib\libnds7.a(touch.o)
+ .glue_7        0x037f80f0        0x0 c:/devkitPro/libnds/lib\libnds7.a(userSettings.o)
+ .glue_7        0x037f80f0        0x0 c:/devkitPro/libnds/lib\libnds7.a(interrupts.o)
+ .glue_7        0x037f80f0        0x0 c:/devkitPro/libnds/lib\libnds7.a(biosCalls.o)
+ .glue_7        0x037f80f0        0x0 c:/devkitPro/libnds/lib\libnds7.a(interruptDispatcher.o)
+ .glue_7        0x037f80f0        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1\libgcc.a(_divsi3.o)
+ .glue_7        0x037f80f0        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1\libgcc.a(_dvmd_tls.o)
+ .glue_7        0x037f80f0        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1\libgcc.a(_call_via_rX.o)
+ .glue_7        0x037f80f0        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/../../../../arm-eabi/lib\libg.a(lib_a-init.o)
+ .glue_7        0x037f80f0        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/../../../../arm-eabi/lib\libg.a(lib_a-memcpy.o)
+ .glue_7        0x037f80f0        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/../../../../arm-eabi/lib\libg.a(lib_a-mktime.o)
+ .glue_7        0x037f80f0        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/../../../../arm-eabi/lib\libg.a(lib_a-mktm_r.o)
+ .glue_7        0x037f80f0        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/../../../../arm-eabi/lib\libg.a(lib_a-tzlock.o)
+ .glue_7        0x037f80f0        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/../../../../arm-eabi/lib\libg.a(lib_a-tzvars.o)
+ .glue_7        0x037f80f0        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/../../../../arm-eabi/lib\libg.a(lib_a-div.o)
+ .glue_7        0x037f80f0        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/../../../../arm-eabi/lib\libg.a(lib_a-gettzinfo.o)
+ .glue_7        0x037f80f0       0x6c c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/crtend.o
+                0x037f812c                __irqSet_from_arm
+                0x037f8138                __irqEnable_from_arm
+                0x037f80f0                ___call_via_r3_from_arm
+                0x037f8150                __touchReadXY_from_arm
+                0x037f80fc                __readUserSettings_from_arm
+                0x037f8114                __irqInit_from_arm
+                0x037f8144                __swiWaitForVBlank_from_arm
+                0x037f8120                __initClockIRQ_from_arm
+                0x037f8108                __writePowerManagement_from_arm
+ .glue_7        0x037f815c        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/crtn.o
+ *(.glue_7t)
+ .glue_7t       0x037f815c        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/../../../../arm-eabi/lib/ds_arm7_crt0.o
+ .glue_7t       0x037f815c        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/crti.o
+ .glue_7t       0x037f815c        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/crtbegin.o
+ .glue_7t       0x037f815c        0x0 template.o
+ .glue_7t       0x037f815c        0x0 c:/devkitPro/libnds/lib\libnds7.a(clock.o)
+ .glue_7t       0x037f815c        0x0 c:/devkitPro/libnds/lib\libnds7.a(spi.o)
+ .glue_7t       0x037f815c        0x0 c:/devkitPro/libnds/lib\libnds7.a(touch.o)
+ .glue_7t       0x037f815c        0x0 c:/devkitPro/libnds/lib\libnds7.a(userSettings.o)
+ .glue_7t       0x037f815c        0x0 c:/devkitPro/libnds/lib\libnds7.a(interrupts.o)
+ .glue_7t       0x037f815c        0x0 c:/devkitPro/libnds/lib\libnds7.a(biosCalls.o)
+ .glue_7t       0x037f815c        0x0 c:/devkitPro/libnds/lib\libnds7.a(interruptDispatcher.o)
+ .glue_7t       0x037f815c        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1\libgcc.a(_divsi3.o)
+ .glue_7t       0x037f815c        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1\libgcc.a(_dvmd_tls.o)
+ .glue_7t       0x037f815c        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1\libgcc.a(_call_via_rX.o)
+ .glue_7t       0x037f815c        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/../../../../arm-eabi/lib\libg.a(lib_a-init.o)
+ .glue_7t       0x037f815c        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/../../../../arm-eabi/lib\libg.a(lib_a-memcpy.o)
+ .glue_7t       0x037f815c        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/../../../../arm-eabi/lib\libg.a(lib_a-mktime.o)
+ .glue_7t       0x037f815c        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/../../../../arm-eabi/lib\libg.a(lib_a-mktm_r.o)
+ .glue_7t       0x037f815c        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/../../../../arm-eabi/lib\libg.a(lib_a-tzlock.o)
+ .glue_7t       0x037f815c        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/../../../../arm-eabi/lib\libg.a(lib_a-tzvars.o)
+ .glue_7t       0x037f815c        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/../../../../arm-eabi/lib\libg.a(lib_a-div.o)
+ .glue_7t       0x037f815c        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/../../../../arm-eabi/lib\libg.a(lib_a-gettzinfo.o)
+ .glue_7t       0x037f815c       0x18 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/crtend.o
+                0x037f815c                __mktime_from_thumb
+                0x037f8164                ____aeabi_idiv_from_thumb
+                0x037f816c                __memcpy_from_thumb
+                0x037f8160                __mktime_change_to_arm
+                0x037f8170                __memcpy_change_to_arm
+                0x037f8168                ____aeabi_idiv_change_to_arm
+ .glue_7t       0x037f8174        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/crtn.o
+                0x037f8174                . = ALIGN (0x4)
+ .text          0x037f8174        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/../../../../arm-eabi/lib/ds_arm7_crt0.o
+ .text          0x037f8174        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/crti.o
+ .text          0x037f8174       0xa4 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/crtbegin.o
+ .text          0x037f8218      0x2f0 template.o
+                0x037f8400                VcountHandler
+                0x037f8218                startSound
+                0x037f82d8                main
+                0x037f8374                VblankHandler
+                0x037f82ac                getFreeSoundChannel
+ .text          0x037f8508      0x3d0 c:/devkitPro/libnds/lib\libnds7.a(clock.o)
+                0x037f8508                BCDToInteger
+                0x037f8654                rtcSetTime
+                0x037f867c                rtcGetTime
+                0x037f87c0                initClockIRQ
+                0x037f8784                integerToBCD
+                0x037f887c                syncRTC
+                0x037f86c8                rtcSetTimeAndDate
+                0x037f8740                rtcReset
+                0x037f8534                rtcTransaction
+                0x037f86f4                rtcGetTimeAndDate
+ .text          0x037f88d8       0xf0 c:/devkitPro/libnds/lib\libnds7.a(spi.o)
+                0x037f88d8                writePowerManagement
+                0x037f8930                readFirmware
+ .text          0x037f89c8      0x7dc c:/devkitPro/libnds/lib\libnds7.a(touch.o)
+                0x037f8a48                CheckStylus
+                0x037f90a4                touchRead
+                0x037f8b78                readTouchValue
+                0x037f9170                touchReadTemperature
+                0x037f8da4                touchReadXY
+                0x037f89c8                UpdateRange
+ .text          0x037f91a4       0xf4 c:/devkitPro/libnds/lib\libnds7.a(userSettings.o)
+                0x037f91a4                readUserSettings
+ .text          0x037f9298      0x21c c:/devkitPro/libnds/lib\libnds7.a(interrupts.o)
+                0x037f9410                irqEnable
+                0x037f929c                irqSet
+                0x037f9468                irqDisable
+                0x037f9308                irqInit
+                0x037f9298                irqDummy
+                0x037f93dc                irqInitHandler
+                0x037f9358                irqClear
+ *fill*         0x037f94b4        0xc ff
+ .text          0x037f94c0       0x80 c:/devkitPro/libnds/lib\libnds7.a(biosCalls.o)
+                0x037f94d0                swiSleep
+                0x037f950a                swiDecompressLZSSVram
+                0x037f9522                swiGetPitchTable
+                0x037f94f2                swiFastCopy
+                0x037f94f6                swiSqrt
+                0x037f952a                swiSwitchToGBAMode
+                0x037f94c0                swiSoftReset
+                0x037f94fa                swiCRC16
+                0x037f950e                swiDecompressHuffman
+                0x037f952e                swiSetHaltCR
+                0x037f951e                swiGetSineTable
+                0x037f9526                swiGetVolumeTable
+                0x037f94dc                swiRemainder
+                0x037f9502                swiUnpackBits
+                0x037f951a                swiHalt
+                0x037f9506                swiDecompressLZSSWram
+                0x037f94c4                swiDelay
+                0x037f94e2                swiDivMod
+                0x037f9516                swiDecompressRLEVram
+                0x037f9512                swiDecompressRLEWram
+                0x037f94d8                swiDivide
+                0x037f94d4                swiChangeSoundBias
+                0x037f94cc                swiWaitForVBlank
+                0x037f94c8                swiIntrWait
+                0x037f94fe                swiIsDebugger
+                0x037f94ee                swiCopy
+ .text          0x037f9540       0xc8 c:/devkitPro/libnds/lib\libnds7.a(interruptDispatcher.o)
+                0x037f9540                IntrMain
+ .text          0x037f9608      0x144 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1\libgcc.a(_divsi3.o)
+                0x037f9608                __aeabi_idiv
+                0x037f9608                __divsi3
+                0x037f9734                __aeabi_idivmod
+ .text          0x037f974c        0x4 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1\libgcc.a(_dvmd_tls.o)
+                0x037f974c                __aeabi_ldiv0
+                0x037f974c                __div0
+                0x037f974c                __aeabi_idiv0
+ .text          0x037f9750       0x3c c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1\libgcc.a(_call_via_rX.o)
+                0x037f9758                _call_via_r2
+                0x037f9768                _call_via_r6
+                0x037f9764                _call_via_r5
+                0x037f975c                _call_via_r3
+                0x037f977c                _call_via_fp
+                0x037f9770                _call_via_r8
+                0x037f976c                _call_via_r7
+                0x037f9750                _call_via_r0
+                0x037f9778                _call_via_sl
+                0x037f9784                _call_via_sp
+                0x037f9774                _call_via_r9
+                0x037f9760                _call_via_r4
+                0x037f9754                _call_via_r1
+                0x037f9780                _call_via_ip
+                0x037f9788                _call_via_lr
+ .text          0x037f978c       0xd4 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/../../../../arm-eabi/lib\libg.a(lib_a-init.o)
+                0x037f97d8                __libc_init_array
+                0x037f978c                __libc_fini_array
+ .text          0x037f9860       0x9c c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/../../../../arm-eabi/lib\libg.a(lib_a-memcpy.o)
+                0x037f9860                memcpy
+ .text          0x037f98fc      0x720 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/../../../../arm-eabi/lib\libg.a(lib_a-mktime.o)
+                0x037f9c74                mktime
+ .text          0x037fa01c      0x798 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/../../../../arm-eabi/lib\libg.a(lib_a-mktm_r.o)
+                0x037fa01c                __tzcalc_limits
+                0x037fa248                _mktm_r
+ .text          0x037fa7b4        0x8 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/../../../../arm-eabi/lib\libg.a(lib_a-tzlock.o)
+                0x037fa7b8                __tz_unlock
+                0x037fa7b4                __tz_lock
+ .text          0x037fa7bc        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/../../../../arm-eabi/lib\libg.a(lib_a-tzvars.o)
+ .text          0x037fa7bc       0x6c c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/../../../../arm-eabi/lib\libg.a(lib_a-div.o)
+                0x037fa7bc                div
+ .text          0x037fa828        0xc c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/../../../../arm-eabi/lib\libg.a(lib_a-gettzinfo.o)
+                0x037fa828                __gettzinfo
+ .text          0x037fa834        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/crtend.o
+ .text          0x037fa834        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/crtn.o
+
+.fini           0x037fa834       0x18
+ *(.fini)
+ .fini          0x037fa834        0xc c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/crti.o
+                0x037fa834                _fini
+ .fini          0x037fa840        0xc c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/crtn.o
+                0x037fa84c                __text_end = .
+
+.rodata         0x037fa84c       0xcc
+ *(.rodata)
+ .rodata        0x037fa84c       0x60 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/../../../../arm-eabi/lib\libg.a(lib_a-mktime.o)
+ .rodata        0x037fa8ac       0x68 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/../../../../arm-eabi/lib\libg.a(lib_a-mktm_r.o)
+ *all.rodata*(*)
+ *(.roda)
+ *(.rodata.*)
+ .rodata.str1.4
+                0x037fa914        0x4 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/../../../../arm-eabi/lib\libg.a(lib_a-tzvars.o)
+ *(.gnu.linkonce.r*)
+                0x037fa918                . = ALIGN (0x4)
+
+.ARM.extab
+ *(.ARM.extab* .gnu.linkonce.armextab.*)
+                0x037fa918                __exidx_start = .
+
+.ARM.exidx
+ *(.ARM.exidx* .gnu.linkonce.armexidx.*)
+                0x037fa918                __exidx_end = .
+                0x037fa918                . = ALIGN (0x4)
+                0x037fa918                PROVIDE (__preinit_array_start, .)
+
+.preinit_array
+ *(.preinit_array)
+                0x037fa918                PROVIDE (__preinit_array_end, .)
+                0x037fa918                PROVIDE (__init_array_start, .)
+
+.init_array     0x037fa918        0x4
+ *(.init_array)
+ .init_array    0x037fa918        0x4 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/crtbegin.o
+                0x037fa91c                PROVIDE (__init_array_end, .)
+                0x037fa91c                PROVIDE (__fini_array_start, .)
+
+.fini_array     0x037fa91c        0x4
+ *(.fini_array)
+ .fini_array    0x037fa91c        0x4 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/crtbegin.o
+                0x037fa920                PROVIDE (__fini_array_end, .)
+
+.ctors          0x037fa920        0x0
+ *crtbegin.o(.ctors)
+ *(EXCLUDE_FILE(*crtend.o) .ctors)
+ *(SORT(.ctors.*))
+ *(.ctors)
+                0x037fa920                . = ALIGN (0x4)
+
+.dtors          0x037fa920        0x0
+ *crtbegin.o(.dtors)
+ *(EXCLUDE_FILE(*crtend.o) .dtors)
+ *(SORT(.dtors.*))
+ *(.dtors)
+                0x037fa920                . = ALIGN (0x4)
+
+.eh_frame       0x037fa920        0x4
+ *(.eh_frame)
+ .eh_frame      0x037fa920        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/crtbegin.o
+ .eh_frame      0x037fa920        0x4 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/crtend.o
+                0x037fa924                . = ALIGN (0x4)
+
+.gcc_except_table
+                0x037fa924        0x0
+ *(.gcc_except_table)
+                0x037fa924                . = ALIGN (0x4)
+
+.jcr            0x037fa924        0x4
+ *(.jcr)
+ .jcr           0x037fa924        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/crtbegin.o
+ .jcr           0x037fa924        0x4 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/crtend.o
+
+.got
+ *(.got.plt)
+ *(.got)
+
+.iwram          0x037fa928        0x0
+                0x037fa928                __iwram_start = <code 342> (.)
+ *(.iwram)
+ *iwram.*(.text)
+                0x037fa928                . = ALIGN (0x4)
+                0x037fa928                __iwram_end = <code 342> (.)
+
+.data           0x037fa928       0x54
+                0x037fa928                __data_start = <code 342> (.)
+ *(.data)
+ .data          0x037fa928        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/../../../../arm-eabi/lib/ds_arm7_crt0.o
+ .data          0x037fa928        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/crti.o
+ .data          0x037fa928        0x4 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/crtbegin.o
+                0x037fa928                __dso_handle
+ .data          0x037fa92c        0x4 template.o
+ .data          0x037fa930        0x0 c:/devkitPro/libnds/lib\libnds7.a(clock.o)
+ .data          0x037fa930        0x0 c:/devkitPro/libnds/lib\libnds7.a(spi.o)
+ .data          0x037fa930        0x1 c:/devkitPro/libnds/lib\libnds7.a(touch.o)
+ .data          0x037fa931        0x0 c:/devkitPro/libnds/lib\libnds7.a(userSettings.o)
+ .data          0x037fa931        0x0 c:/devkitPro/libnds/lib\libnds7.a(interrupts.o)
+ .data          0x037fa931        0x0 c:/devkitPro/libnds/lib\libnds7.a(biosCalls.o)
+ .data          0x037fa931        0x0 c:/devkitPro/libnds/lib\libnds7.a(interruptDispatcher.o)
+ .data          0x037fa931        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1\libgcc.a(_divsi3.o)
+ .data          0x037fa931        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1\libgcc.a(_dvmd_tls.o)
+ .data          0x037fa931        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1\libgcc.a(_call_via_rX.o)
+ .data          0x037fa931        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/../../../../arm-eabi/lib\libg.a(lib_a-init.o)
+ .data          0x037fa931        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/../../../../arm-eabi/lib\libg.a(lib_a-memcpy.o)
+ .data          0x037fa931        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/../../../../arm-eabi/lib\libg.a(lib_a-mktime.o)
+ .data          0x037fa931        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/../../../../arm-eabi/lib\libg.a(lib_a-mktm_r.o)
+ .data          0x037fa931        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/../../../../arm-eabi/lib\libg.a(lib_a-tzlock.o)
+ *fill*         0x037fa931        0x3 ff
+ .data          0x037fa934        0x8 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/../../../../arm-eabi/lib\libg.a(lib_a-tzvars.o)
+                0x037fa934                _tzname
+ .data          0x037fa93c        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/../../../../arm-eabi/lib\libg.a(lib_a-div.o)
+ .data          0x037fa93c       0x40 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/../../../../arm-eabi/lib\libg.a(lib_a-gettzinfo.o)
+ .data          0x037fa97c        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/crtend.o
+ .data          0x037fa97c        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/crtn.o
+ *(.data.*)
+ *(.gnu.linkonce.d*)
+                0x037fa97c                . = ALIGN (0x4)
+                0x037fa97c                __data_end = <code 342> (.)
+
+.bss            0x037fa97c      0x118
+                0x037fa97c                __bss_start = <code 342> (.)
+                0x037fa97c                __bss_start__ = <code 342> (.)
+ *(.dynbss)
+ *(.gnu.linkonce.b*)
+ *(.bss*)
+ .bss           0x037fa97c        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/../../../../arm-eabi/lib/ds_arm7_crt0.o
+ .bss           0x037fa97c        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/crti.o
+ .bss           0x037fa97c       0x1c c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/crtbegin.o
+ .bss           0x037fa998        0x0 template.o
+ .bss           0x037fa998        0x0 c:/devkitPro/libnds/lib\libnds7.a(clock.o)
+ .bss           0x037fa998        0x0 c:/devkitPro/libnds/lib\libnds7.a(spi.o)
+ .bss           0x037fa998       0x14 c:/devkitPro/libnds/lib\libnds7.a(touch.o)
+ .bss           0x037fa9ac        0x0 c:/devkitPro/libnds/lib\libnds7.a(userSettings.o)
+ .bss           0x037fa9ac        0x0 c:/devkitPro/libnds/lib\libnds7.a(interrupts.o)
+ .bss           0x037fa9ac        0x0 c:/devkitPro/libnds/lib\libnds7.a(biosCalls.o)
+ .bss           0x037fa9ac        0x0 c:/devkitPro/libnds/lib\libnds7.a(interruptDispatcher.o)
+ .bss           0x037fa9ac        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1\libgcc.a(_divsi3.o)
+ .bss           0x037fa9ac        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1\libgcc.a(_dvmd_tls.o)
+ .bss           0x037fa9ac        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1\libgcc.a(_call_via_rX.o)
+ .bss           0x037fa9ac        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/../../../../arm-eabi/lib\libg.a(lib_a-init.o)
+ .bss           0x037fa9ac        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/../../../../arm-eabi/lib\libg.a(lib_a-memcpy.o)
+ .bss           0x037fa9ac        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/../../../../arm-eabi/lib\libg.a(lib_a-mktime.o)
+ .bss           0x037fa9ac        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/../../../../arm-eabi/lib\libg.a(lib_a-mktm_r.o)
+ .bss           0x037fa9ac        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/../../../../arm-eabi/lib\libg.a(lib_a-tzlock.o)
+ .bss           0x037fa9ac        0x8 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/../../../../arm-eabi/lib\libg.a(lib_a-tzvars.o)
+                0x037fa9ac                _daylight
+                0x037fa9b0                _timezone
+ .bss           0x037fa9b4        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/../../../../arm-eabi/lib\libg.a(lib_a-div.o)
+ .bss           0x037fa9b4        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/../../../../arm-eabi/lib\libg.a(lib_a-gettzinfo.o)
+ .bss           0x037fa9b4        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/crtend.o
+ .bss           0x037fa9b4        0x0 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/crtn.o
+ *(COMMON)
+ COMMON         0x037fa9b4       0x18 template.o
+                0x037fa9b4                tempPos
+                0x037fa9c0                first
+ COMMON         0x037fa9cc       0xc8 c:/devkitPro/libnds/lib\libnds7.a(interrupts.o)
+                0x037fa9cc                irqTable
+                0x037faa94                . = ALIGN (0x4)
+                0x037faa94                __bss_end = .
+                0x037faa94                __bss_end__ = .
+                0x037faa94                _end = .
+                0x037faa94                __end__ = .
+                0x037faa94                PROVIDE (end, _end)
+
+.stab
+ *(.stab)
+
+.stabstr
+ *(.stabstr)
+
+.stab.excl
+ *(.stab.excl)
+
+.stab.exclstr
+ *(.stab.exclstr)
+
+.stab.index
+ *(.stab.index)
+
+.stab.indexstr
+ *(.stab.indexstr)
+
+.comment        0x00000000      0x290
+ *(.comment)
+ .comment       0x00000000       0x29 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/crtbegin.o
+ .comment       0x00000029       0x29 template.o
+ .comment       0x00000052       0x29 c:/devkitPro/libnds/lib\libnds7.a(clock.o)
+ .comment       0x0000007b       0x29 c:/devkitPro/libnds/lib\libnds7.a(spi.o)
+ .comment       0x000000a4       0x29 c:/devkitPro/libnds/lib\libnds7.a(touch.o)
+ .comment       0x000000cd       0x29 c:/devkitPro/libnds/lib\libnds7.a(userSettings.o)
+ .comment       0x000000f6       0x29 c:/devkitPro/libnds/lib\libnds7.a(interrupts.o)
+ .comment       0x0000011f       0x29 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/../../../../arm-eabi/lib\libg.a(lib_a-init.o)
+ .comment       0x00000148       0x29 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/../../../../arm-eabi/lib\libg.a(lib_a-memcpy.o)
+ .comment       0x00000171       0x29 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/../../../../arm-eabi/lib\libg.a(lib_a-mktime.o)
+ .comment       0x0000019a       0x29 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/../../../../arm-eabi/lib\libg.a(lib_a-mktm_r.o)
+ .comment       0x000001c3       0x29 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/../../../../arm-eabi/lib\libg.a(lib_a-tzlock.o)
+ .comment       0x000001ec       0x29 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/../../../../arm-eabi/lib\libg.a(lib_a-tzvars.o)
+ .comment       0x00000215       0x29 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/../../../../arm-eabi/lib\libg.a(lib_a-div.o)
+ .comment       0x0000023e       0x29 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/../../../../arm-eabi/lib\libg.a(lib_a-gettzinfo.o)
+ .comment       0x00000267       0x29 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/crtend.o
+
+.debug
+ *(.debug)
+
+.line
+ *(.line)
+
+.debug_srcinfo
+ *(.debug_srcinfo)
+
+.debug_sfnames
+ *(.debug_sfnames)
+
+.debug_aranges  0x00000000      0x110
+ *(.debug_aranges)
+ .debug_aranges
+                0x00000000       0x28 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/crti.o
+ .debug_aranges
+                0x00000028       0x20 template.o
+ .debug_aranges
+                0x00000048       0x20 c:/devkitPro/libnds/lib\libnds7.a(clock.o)
+ .debug_aranges
+                0x00000068       0x20 c:/devkitPro/libnds/lib\libnds7.a(spi.o)
+ .debug_aranges
+                0x00000088       0x20 c:/devkitPro/libnds/lib\libnds7.a(touch.o)
+ .debug_aranges
+                0x000000a8       0x20 c:/devkitPro/libnds/lib\libnds7.a(userSettings.o)
+ .debug_aranges
+                0x000000c8       0x20 c:/devkitPro/libnds/lib\libnds7.a(interrupts.o)
+ .debug_aranges
+                0x000000e8       0x28 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/crtn.o
+
+.debug_pubnames
+                0x00000000      0x296
+ *(.debug_pubnames)
+ .debug_pubnames
+                0x00000000       0x7c template.o
+ .debug_pubnames
+                0x0000007c       0xbb c:/devkitPro/libnds/lib\libnds7.a(clock.o)
+ .debug_pubnames
+                0x00000137       0x3c c:/devkitPro/libnds/lib\libnds7.a(spi.o)
+ .debug_pubnames
+                0x00000173       0x7c c:/devkitPro/libnds/lib\libnds7.a(touch.o)
+ .debug_pubnames
+                0x000001ef       0x27 c:/devkitPro/libnds/lib\libnds7.a(userSettings.o)
+ .debug_pubnames
+                0x00000216       0x80 c:/devkitPro/libnds/lib\libnds7.a(interrupts.o)
+
+.debug_info     0x00000000     0x1c42
+ *(.debug_info)
+ .debug_info    0x00000000       0x5b c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/crti.o
+ .debug_info    0x0000005b      0x6be template.o
+ .debug_info    0x00000719      0x74b c:/devkitPro/libnds/lib\libnds7.a(clock.o)
+ .debug_info    0x00000e64      0x140 c:/devkitPro/libnds/lib\libnds7.a(spi.o)
+ .debug_info    0x00000fa4      0x615 c:/devkitPro/libnds/lib\libnds7.a(touch.o)
+ .debug_info    0x000015b9      0x3e3 c:/devkitPro/libnds/lib\libnds7.a(userSettings.o)
+ .debug_info    0x0000199c      0x24b c:/devkitPro/libnds/lib\libnds7.a(interrupts.o)
+ .debug_info    0x00001be7       0x5b c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/crtn.o
+
+.debug_abbrev   0x00000000      0x89a
+ *(.debug_abbrev)
+ .debug_abbrev  0x00000000       0x10 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/crti.o
+ .debug_abbrev  0x00000010      0x246 template.o
+ .debug_abbrev  0x00000256      0x1a8 c:/devkitPro/libnds/lib\libnds7.a(clock.o)
+ .debug_abbrev  0x000003fe       0xa4 c:/devkitPro/libnds/lib\libnds7.a(spi.o)
+ .debug_abbrev  0x000004a2      0x1d8 c:/devkitPro/libnds/lib\libnds7.a(touch.o)
+ .debug_abbrev  0x0000067a       0xdb c:/devkitPro/libnds/lib\libnds7.a(userSettings.o)
+ .debug_abbrev  0x00000755      0x135 c:/devkitPro/libnds/lib\libnds7.a(interrupts.o)
+ .debug_abbrev  0x0000088a       0x10 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/crtn.o
+
+.debug_line     0x00000000      0xb06
+ *(.debug_line)
+ .debug_line    0x00000000       0x49 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/crti.o
+ .debug_line    0x00000049      0x1cf template.o
+ .debug_line    0x00000218      0x1e7 c:/devkitPro/libnds/lib\libnds7.a(clock.o)
+ .debug_line    0x000003ff      0x118 c:/devkitPro/libnds/lib\libnds7.a(spi.o)
+ .debug_line    0x00000517      0x321 c:/devkitPro/libnds/lib\libnds7.a(touch.o)
+ .debug_line    0x00000838      0x12a c:/devkitPro/libnds/lib\libnds7.a(userSettings.o)
+ .debug_line    0x00000962      0x15b c:/devkitPro/libnds/lib\libnds7.a(interrupts.o)
+ .debug_line    0x00000abd       0x49 c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/crtn.o
+
+.debug_frame    0x00000000      0x3ec
+ *(.debug_frame)
+ .debug_frame   0x00000000       0x9c template.o
+ .debug_frame   0x0000009c      0x144 c:/devkitPro/libnds/lib\libnds7.a(clock.o)
+ .debug_frame   0x000001e0       0x44 c:/devkitPro/libnds/lib\libnds7.a(spi.o)
+ .debug_frame   0x00000224       0xe0 c:/devkitPro/libnds/lib\libnds7.a(touch.o)
+ .debug_frame   0x00000304       0x38 c:/devkitPro/libnds/lib\libnds7.a(userSettings.o)
+ .debug_frame   0x0000033c       0xb0 c:/devkitPro/libnds/lib\libnds7.a(interrupts.o)
+
+.debug_str      0x00000000      0x900
+ *(.debug_str)
+ .debug_str     0x00000000      0x2de template.o
+                                0x371 (size before relaxing)
+ .debug_str     0x000002de      0x16e c:/devkitPro/libnds/lib\libnds7.a(clock.o)
+                                0x3aa (size before relaxing)
+ .debug_str     0x0000044c       0x71 c:/devkitPro/libnds/lib\libnds7.a(spi.o)
+                                0x173 (size before relaxing)
+ .debug_str     0x000004bd      0x19d c:/devkitPro/libnds/lib\libnds7.a(touch.o)
+                                0x2fa (size before relaxing)
+ .debug_str     0x0000065a      0x1e3 c:/devkitPro/libnds/lib\libnds7.a(userSettings.o)
+                                0x2fb (size before relaxing)
+ .debug_str     0x0000083d       0xc3 c:/devkitPro/libnds/lib\libnds7.a(interrupts.o)
+                                0x1b4 (size before relaxing)
+
+.debug_loc      0x00000000      0xfbe
+ *(.debug_loc)
+ .debug_loc     0x00000000      0x158 template.o
+ .debug_loc     0x00000158      0x446 c:/devkitPro/libnds/lib\libnds7.a(clock.o)
+ .debug_loc     0x0000059e       0xf2 c:/devkitPro/libnds/lib\libnds7.a(spi.o)
+ .debug_loc     0x00000690      0x6ab c:/devkitPro/libnds/lib\libnds7.a(touch.o)
+ .debug_loc     0x00000d3b      0x14e c:/devkitPro/libnds/lib\libnds7.a(userSettings.o)
+ .debug_loc     0x00000e89      0x135 c:/devkitPro/libnds/lib\libnds7.a(interrupts.o)
+
+.debug_macinfo
+ *(.debug_macinfo)
+
+.debug_weaknames
+ *(.debug_weaknames)
+
+.debug_funcnames
+ *(.debug_funcnames)
+
+.debug_typenames
+ *(.debug_typenames)
+
+.debug_varnames
+ *(.debug_varnames)
+
+.stack          0x00080000        0x0
+                0x00080000                _stack = .
+ *(.stack)
+LOAD c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/../../../../arm-eabi/lib/ds_arm7_crt0.o
+LOAD c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/crti.o
+LOAD c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/crtbegin.o
+LOAD template.o
+LOAD c:/devkitPro/libnds/lib\libnds7.a
+START GROUP
+LOAD c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1\libgcc.a
+LOAD c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/../../../../arm-eabi/lib\libg.a
+LOAD c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/../../../../arm-eabi/lib\libc.a
+END GROUP
+START GROUP
+LOAD c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/../../../../arm-eabi/lib\libsysbase.a
+LOAD c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/../../../../arm-eabi/lib\libc.a
+END GROUP
+LOAD c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/crtend.o
+LOAD c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/crtn.o
+OUTPUT(d:/Workspace/CodeComposer/arm7/CodeComposer.arm7.elf elf32-littlearm)
+
+.ARM.attributes
+                0x00000000       0x10
+ .ARM.attributes
+                0x00000000       0x1e c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/../../../../arm-eabi/lib/ds_arm7_crt0.o
+ .ARM.attributes
+                0x0000001e       0x1e c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/crti.o
+ .ARM.attributes
+                0x0000003c       0x1e c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/crtbegin.o
+ .ARM.attributes
+                0x0000005a       0x1e template.o
+ .ARM.attributes
+                0x00000078       0x1e c:/devkitPro/libnds/lib\libnds7.a(clock.o)
+ .ARM.attributes
+                0x00000096       0x1e c:/devkitPro/libnds/lib\libnds7.a(spi.o)
+ .ARM.attributes
+                0x000000b4       0x1e c:/devkitPro/libnds/lib\libnds7.a(touch.o)
+ .ARM.attributes
+                0x000000d2       0x1e c:/devkitPro/libnds/lib\libnds7.a(userSettings.o)
+ .ARM.attributes
+                0x000000f0       0x1e c:/devkitPro/libnds/lib\libnds7.a(interrupts.o)
+ .ARM.attributes
+                0x0000010e       0x1e c:/devkitPro/libnds/lib\libnds7.a(biosCalls.o)
+ .ARM.attributes
+                0x0000012c       0x1e c:/devkitPro/libnds/lib\libnds7.a(interruptDispatcher.o)
+ .ARM.attributes
+                0x0000014a       0x1e c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1\libgcc.a(_divsi3.o)
+ .ARM.attributes
+                0x00000168       0x1e c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1\libgcc.a(_dvmd_tls.o)
+ .ARM.attributes
+                0x00000186       0x1e c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1\libgcc.a(_call_via_rX.o)
+ .ARM.attributes
+                0x000001a4       0x1e c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/../../../../arm-eabi/lib\libg.a(lib_a-init.o)
+ .ARM.attributes
+                0x000001c2       0x1e c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/../../../../arm-eabi/lib\libg.a(lib_a-memcpy.o)
+ .ARM.attributes
+                0x000001e0       0x1e c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/../../../../arm-eabi/lib\libg.a(lib_a-mktime.o)
+ .ARM.attributes
+                0x000001fe       0x1e c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/../../../../arm-eabi/lib\libg.a(lib_a-mktm_r.o)
+ .ARM.attributes
+                0x0000021c       0x1e c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/../../../../arm-eabi/lib\libg.a(lib_a-tzlock.o)
+ .ARM.attributes
+                0x0000023a       0x1c c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/../../../../arm-eabi/lib\libg.a(lib_a-tzvars.o)
+ .ARM.attributes
+                0x00000256       0x1e c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/../../../../arm-eabi/lib\libg.a(lib_a-div.o)
+ .ARM.attributes
+                0x00000274       0x1e c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/../../../../arm-eabi/lib\libg.a(lib_a-gettzinfo.o)
+ .ARM.attributes
+                0x00000292       0x1c c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/crtend.o
+ .ARM.attributes
+                0x000002ae       0x1e c:/devkitpro/devkitarm/bin/../lib/gcc/arm-eabi/4.1.1/crtn.o
+
+.debug_ranges   0x00000000       0x90
+ .debug_ranges  0x00000000       0x48 template.o
+ .debug_ranges  0x00000048       0x48 c:/devkitPro/libnds/lib\libnds7.a(touch.o)
