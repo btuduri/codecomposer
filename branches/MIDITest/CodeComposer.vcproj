@@ -64,7 +64,19 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
+				RelativePath=".\arm7\source\_const.h"
+				>
+			</File>
+			<File
 				RelativePath=".\arm9\source\_const.h"
+				>
+			</File>
+			<File
+				RelativePath=".\arm7\source\_touch.h"
+				>
+			</File>
+			<File
+				RelativePath=".\arm7\source\a7sleep.h"
 				>
 			</File>
 			<File
@@ -77,6 +89,10 @@
 			</File>
 			<File
 				RelativePath=".\common.h"
+				>
+			</File>
+			<File
+				RelativePath=".\arm7\source\def_libnds.h"
 				>
 			</File>
 			<File
@@ -160,11 +176,43 @@
 				>
 			</File>
 			<File
+				RelativePath=".\arm7\source\main_boot_gbamp.h"
+				>
+			</File>
+			<File
+				RelativePath=".\arm7\source\main_boot_gbarom.h"
+				>
+			</File>
+			<File
+				RelativePath=".\arm7\source\main_init.h"
+				>
+			</File>
+			<File
+				RelativePath=".\arm7\source\main_irq_timer.h"
+				>
+			</File>
+			<File
+				RelativePath=".\arm7\source\main_proc.h"
+				>
+			</File>
+			<File
+				RelativePath=".\arm7\source\main_vsync.h"
+				>
+			</File>
+			<File
 				RelativePath=".\arm9\source\mediatype.h"
 				>
 			</File>
 			<File
+				RelativePath=".\arm7\source\memtool.h"
+				>
+			</File>
+			<File
 				RelativePath=".\arm9\source\memtool.h"
+				>
+			</File>
+			<File
+				RelativePath=".\arm7\source\memtoolARM7.h"
 				>
 			</File>
 			<File
@@ -232,6 +280,14 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath=".\arm7\source\_touch.c"
+				>
+			</File>
+			<File
+				RelativePath=".\arm7\source\a7sleep.c"
+				>
+			</File>
+			<File
 				RelativePath=".\arm9\source\cimfs.cpp"
 				>
 			</File>
@@ -260,11 +316,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\arm7\source\main.c"
+				>
+			</File>
+			<File
 				RelativePath=".\arm9\source\main.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\arm9\source\memtool.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\arm7\source\memtoolARM7.c"
 				>
 			</File>
 			<File

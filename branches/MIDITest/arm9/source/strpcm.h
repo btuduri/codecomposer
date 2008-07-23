@@ -3,7 +3,7 @@
 #define strpcm_h
 
 #include <NDS.h>
-#include "IPC3.h"
+#include "../../ipc3.h"
 
 #define strpcmRingBufCount (8)
 #define strpcmRingBufBitMask (strpcmRingBufCount-1)
