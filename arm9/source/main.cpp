@@ -19,7 +19,7 @@
 #include "shell.h"
 #include "cimfs.h"
 #include "directdisk.h"
-#include "ipc3.h"
+#include "../../ipc3.h"
 #include "strpcm.h"
 
 #define ChannelsCount (16)
@@ -78,10 +78,10 @@ int main(void)
 	REG_IME=0;
   
 	touchPosition touchXY;
-
-	irqInit();
-	irqEnable(IRQ_VBLANK);
-
+	
+	// I cannot find exact reason why interrupt does not work at all.
+	InitInterrupts();
+	
 	videoSetMode(0);	//not using the main screen
 	videoSetModeSub(MODE_0_2D | DISPLAY_BG0_ACTIVE);	//sub bg 0 will be used to print text
 	vramSetBankC(VRAM_C_SUB_BG);
@@ -91,7 +91,6 @@ int main(void)
 	BG_PALETTE_SUB[255] = RGB15(31,31,31);	//by default font will be rendered with color 255
 	consoleInitDefault((u16*)SCREEN_BASE_BLOCK_SUB(31), (u16*)CHAR_BASE_BLOCK_SUB(0), 16);
 
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     pIMFS = new CIMFS();
     if(pIMFS->InitIMFS()==false) 
 		while(1);
@@ -104,7 +103,6 @@ int main(void)
 	
 	strpcmSetVolume16(16);
 	DD_Init(EDDST_FAT);
-	InitInterrupts();
 	
 	{
 		TiniForSuperCard *ForSuperCard=&GlobalINI.ForSuperCard;
@@ -115,37 +113,48 @@ int main(void)
 
 	pPB = (TPluginBody*)safemalloc(sizeof(TPluginBody));
 	MIDPlugin = &MIDIINI.MIDPlugin;
-	
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	int file_handle = 0;
 	file_handle = Shell_OpenFile("Dancing_Queen.mid");
 
 	iprintf("Function Start\n");
-	Start(file_handle);
 	
+	if(Start(file_handle) == false)
+	{
+      iprintf("midi plugin start error.\n");
+      return 0;
+    }
+
 	// If you examining GetChannelCount(void) in original plugin source, 
 	// then you can find out just constant 2
 	iprintf("Function strpcmStart\n");
+	
+	ExecMode=EM_MSPSound;
 
 	EstrpcmFormat SPF = GetOversamplingFactorFromSampleRate(MIDPlugin->SampleRate);
 	strpcmStart(false, MIDPlugin->SampleRate, SamplePerFrame, 2, SPF);
 
-	iprintf("Function strpcmUpdate_mainloop\n");
-	
+	iprintf("enter strpcmUpdate_mainloop\n");
 	bool resLoop = true;
+	
+	iprintf("begin strpcmUpdate_mainloop\n");	
+	
+	while(strpcmUpdate_mainloop()==true)
+		;
 
-	while(resLoop)	
+	iprintf("end strpcmUpdate_mainloop\n");
+
+	/*
+	// while(resLoop)	
+	while(1)	
 	{
-		resLoop = strpcmUpdate_mainloop();
-
 		touchXY = touchReadXY();
 		iprintf("\x1b[10;0HTouch x = %04X, %04X\n", touchXY.x, touchXY.px);
 		iprintf("Touch y = %04X, %04X\n", touchXY.y, touchXY.py);
 
 		swiWaitForVBlank();
 	}
-
+	*/
 	return 0;
 }
 
@@ -651,7 +660,7 @@ bool strpcmUpdate_mainloop(void)
 	iprintf("PlayIndex is %d\n", PlayIndex);
 	PrintFreeMem();
   
-	return(false);
+	return (false);
   }
 	  
   if(EmptyFlag==true)
@@ -660,7 +669,7 @@ bool strpcmUpdate_mainloop(void)
   if((strpcmRingLBuf==NULL)||(strpcmRingRBuf==NULL)) 
   {
 	  iprintf("mainloop Buffer problem\n");
-	  return(false);
+	  return (false);
   }
 
   s16 *ldst=&strpcmRingLBuf[BaseSamples*CurIndex];
@@ -674,6 +683,7 @@ bool strpcmUpdate_mainloop(void)
   }
   else
   { 
+	// iprintf("strpcmRequestStop is false\n");
     switch(ExecMode)
 	{ 
       case EM_MSPSound: 
@@ -682,9 +692,12 @@ bool strpcmUpdate_mainloop(void)
         if(strpcmDoubleSpeedFlag==true)
 			Update(NULL,NULL);
         
-        Samples = Update(ldst,rdst);
 
-		iprintf("samples is %d\n", Samples);
+		iprintf("begin update\n");
+        Samples = Update(ldst,rdst);
+		iprintf("end update\n");
+
+		iprintf("Samples is %d\n", Samples);
 
       } break;
     }
@@ -709,7 +722,10 @@ bool strpcmUpdate_mainloop(void)
   REG_IME=1;
   
   if(Samples==0) 
+  {
+	  iprintf("samples is %d, and return false\n", Samples);
 	  return(false);
-  
+  }
+
   return(true);
 }

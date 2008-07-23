@@ -7,7 +7,7 @@
 #include "Emulator.h"
 #include "filesys.h"
 #include "strpcm.h"
-#include "ipc3.h"
+#include "../../ipc3.h"
 
 static volatile bool strpcmPause;
 
@@ -117,8 +117,10 @@ void InterruptHandler_IPC_SYNC(void)
 {  
   switch(IPC3->IR){
     case IR_NULL: {
+		// iprintf("IR_NULL\n");
     } break;
     case IR_NextSoundData: {
+		// iprintf("IR_NextSoundData\n");
       DC_FlushAll();
       
       strpcmUpdate();
@@ -131,52 +133,23 @@ void InterruptHandler_IPC_SYNC(void)
       
       IPC3->strpcmWriteRequest=0;
     } break;
-	/*
-    case IR_Flash: {
-      // IRQSYNC_MP2_flash();
-      // IRQSYNC_OGG_flash();
-    } break;
-    case IR_MP2_fread: {
-      // IRQSYNC_MP2_fread();
-    } break;
-    case IR_OGG_fread: {
-      // IRQSYNC_OGG_fread();
-    } break;
-    case IR_OGG_fseek: {
-      // IRQSYNC_OGG_fseek();
-    } break;
-    case IR_SyncSamples: {
-      u64 curs=IPC3->IR_SyncSamples_SendToARM9;
-      u64 bufs=IPC3->strpcmSamples;
-      curs+=DPGAudioStream_PregapSamples*4; // gap 4 frames
-      if(curs<bufs){
-        curs=0;
-        }else{
-        curs-=bufs;
-      }
-      DPGAudioStream_SyncSamples=curs;
-    } break;
-	*/
   }
   
   IPC3->IR=IR_NULL;
-  
 }
 
 #include "tcmend.h"
 
-extern void irqSet_u32(int mask, u32 handler);
 void InitInterrupts(void)
 {
   REG_IME = 0;
   
   irqInit();
   
-//  irqSet_u32(IRQ_IPC_SYNC,(u32)InterruptHandler_IPC_SYNC);
-//  irqSet_u32(IRQ_VBLANK,(u32)InterruptHandler_VBlank);
-
+  irqEnable(IRQ_VBLANK);
+  irqEnable(IRQ_IPC_SYNC);
+  
   irqSet(IRQ_IPC_SYNC, InterruptHandler_IPC_SYNC);
-  // irqSet(IRQ_VBLANK, InterruptHandler_VBlank);
   
   REG_IPC_SYNC=IPC_SYNC_IRQ_ENABLE;
   REG_IME = 1;
@@ -234,10 +207,8 @@ void strpcmStart(bool FastStart,u32 SampleRate,u32 SamplePerBuf,u32 ChannelCount
   DC_FlushAll();
   IPC3->strpcmControl=strpcmControl_Play;
   
-  /*
   while(IPC3->strpcmControl!=strpcmControl_NOP)
     swiWaitForIRQ();
-  */
 }
 
 void strpcmStop(void)
