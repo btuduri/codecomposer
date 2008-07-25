@@ -21,6 +21,7 @@
 #include "directdisk.h"
 #include "../../ipc3.h"
 #include "strpcm.h"
+#include "extmem.h"
 
 #define ChannelsCount (16)
 #define MaxSampleRate (32768)
@@ -79,9 +80,6 @@ int main(void)
   
 	touchPosition touchXY;
 	
-	// I cannot find exact reason why interrupt does not work at all.
-	InitInterrupts();
-	
 	videoSetMode(0);	//not using the main screen
 	videoSetModeSub(MODE_0_2D | DISPLAY_BG0_ACTIVE);	//sub bg 0 will be used to print text
 	vramSetBankC(VRAM_C_SUB_BG);
@@ -90,6 +88,11 @@ int main(void)
 
 	BG_PALETTE_SUB[255] = RGB15(31,31,31);	//by default font will be rendered with color 255
 	consoleInitDefault((u16*)SCREEN_BASE_BLOCK_SUB(31), (u16*)CHAR_BASE_BLOCK_SUB(0), 16);
+
+	strpcmSetVolume16(16);
+  
+	IPC3->strpcmLBuf=NULL;
+	IPC3->strpcmRBuf=NULL;
 
     pIMFS = new CIMFS();
     if(pIMFS->InitIMFS()==false) 
@@ -104,57 +107,32 @@ int main(void)
 	strpcmSetVolume16(16);
 	DD_Init(EDDST_FAT);
 	
-	{
-		TiniForSuperCard *ForSuperCard=&GlobalINI.ForSuperCard;
-		SetARM9_REG_ROM1stAccessCycleControl=ForSuperCard->ROM1stAccessCycleControl;
-		SetARM9_REG_ROM2stAccessCycleControl=ForSuperCard->ROM2stAccessCycleControl;
-		SetARM9_REG_WaitCR();
-	}
+    extmem_Init();
 
 	pPB = (TPluginBody*)safemalloc(sizeof(TPluginBody));
 	MIDPlugin = &MIDIINI.MIDPlugin;
 
+	InitInterrupts();
+	
 	int file_handle = 0;
 	file_handle = Shell_OpenFile("Dancing_Queen.mid");
-
-	iprintf("Function Start\n");
 	
 	if(Start(file_handle) == false)
 	{
       iprintf("midi plugin start error.\n");
       return 0;
     }
-
-	// If you examining GetChannelCount(void) in original plugin source, 
-	// then you can find out just constant 2
-	iprintf("Function strpcmStart\n");
 	
-	ExecMode=EM_MSPSound;
+	ExecMode = EM_MSPSound;
 
 	EstrpcmFormat SPF = GetOversamplingFactorFromSampleRate(MIDPlugin->SampleRate);
 	strpcmStart(false, MIDPlugin->SampleRate, SamplePerFrame, 2, SPF);
+	
+	iprintf("IPC3->strpcmFormat is %d\n", IPC3->strpcmFormat);
 
-	iprintf("enter strpcmUpdate_mainloop\n");
-	bool resLoop = true;
-	
-	iprintf("begin strpcmUpdate_mainloop\n");	
-	
 	while(strpcmUpdate_mainloop()==true)
 		;
 
-	iprintf("end strpcmUpdate_mainloop\n");
-
-	/*
-	// while(resLoop)	
-	while(1)	
-	{
-		touchXY = touchReadXY();
-		iprintf("\x1b[10;0HTouch x = %04X, %04X\n", touchXY.x, touchXY.px);
-		iprintf("Touch y = %04X, %04X\n", touchXY.y, touchXY.py);
-
-		swiWaitForVBlank();
-	}
-	*/
 	return 0;
 }
 
@@ -216,7 +194,7 @@ void selFree(void)
  }
  
  if((pSM_Track==NULL)||(trklen==0)){
-   iprintf("Fatal error.\n");
+   // iprintf("Fatal error.\n");
  }
  
  int LastClock=0;
@@ -252,7 +230,7 @@ bool Start_InitStackBuf(void)
    for(sidx=0;sidx<StackCount;sidx++){
      pStackBuf[ch][sidx]=(s32*)safemalloc((MaxSamplePerFrame+1)*2*4);
      if(pStackBuf[ch][sidx]==NULL){
-       iprintf("pStackBuf: Memory overflow.\n");
+       // iprintf("pStackBuf: Memory overflow.\n");
        return(false);
      }
      MemSet32CPU(0,pStackBuf[ch][sidx],(MaxSamplePerFrame+1)*2*4);
@@ -278,7 +256,7 @@ bool Start(int FileHandle)
  InitINI();
  LoadINI(GetINIData(pPB),GetINISize(pPB));
  
- iprintf("stage1 is passed\n");
+ // iprintf("stage1 is passed\n");
  if(Start_InitStackBuf()==false) 
 	 return(false);
  
@@ -291,7 +269,7 @@ bool Start(int FileHandle)
    if(SamplePerFrame<16) SamplePerFrame=16;  
  }
  
- iprintf("stage2 is passed\n");
+ // iprintf("stage2 is passed\n");
  {
    u32 samples=SamplePerFrame+16;
    pReserve[0]=safemalloc(samples*8*2);
@@ -306,7 +284,7 @@ bool Start(int FileHandle)
  
  DeflateBuf=(u8*)safemalloc(DeflateSize);
  
- iprintf("deflatesize is %d\n", DeflateSize);
+ // iprintf("deflatesize is %d\n", DeflateSize);
  if(DeflateBuf==NULL) 
 	 return(false);
  
@@ -315,7 +293,7 @@ bool Start(int FileHandle)
  int res_binfilehandle = GetBINFileHandle(pPB);
  if(res_binfilehandle == 0)
  {
-   iprintf("not found sound font file. 'midrcp.bin'\n");
+   // iprintf("not found sound font file. 'midrcp.bin'\n");
    
    if(DeflateBuf!=NULL)
    {
@@ -326,13 +304,13 @@ bool Start(int FileHandle)
    return(false);
  }
  
- iprintf("stage3 is passed, from now on what will happen here?\n");
+ // iprintf("stage3 is passed, from now on what will happen here?\n");
  PCH_SetProgramMap(res_binfilehandle);
  
- iprintf("SampleRate is %d\n", MIDPlugin->SampleRate);
- iprintf("SamplePerFrame is %d\n", SamplePerFrame);
- iprintf("MaxVoiceCount is %d\n", MIDPlugin->MaxVoiceCount);
- iprintf("MIDPlugin is %d\n", MIDPlugin->GenVolume);
+ // iprintf("SampleRate is %d\n", MIDPlugin->SampleRate);
+ // iprintf("SamplePerFrame is %d\n", SamplePerFrame);
+ // iprintf("MaxVoiceCount is %d\n", MIDPlugin->MaxVoiceCount);
+ // iprintf("MIDPlugin is %d\n", MIDPlugin->GenVolume);
 
  selSetParam(DeflateBuf,MIDPlugin->SampleRate,SamplePerFrame,MIDPlugin->MaxVoiceCount,MIDPlugin->GenVolume);
  
@@ -341,7 +319,7 @@ bool Start(int FileHandle)
    return(false);
  }
  
- iprintf("stage4 is passed\n");
+ // iprintf("stage4 is passed\n");
 
  TotalClock=0;
  CurrentClock=0;
@@ -349,12 +327,12 @@ bool Start(int FileHandle)
  Start_smidlibDetectTotalClock();
  
  if(TotalClock==0){
-   iprintf("Detect TotalClock equal Zero.\n");
+   // iprintf("Detect TotalClock equal Zero.\n");
    Free();
    return(false);
  }
  
- iprintf("stage5 is passed\n");
+ // iprintf("stage5 is passed\n");
 
  selFree();
  selStart();
@@ -455,8 +433,6 @@ u32 Update(s16 *lbuf,s16 *rbuf)
    
   int ProcClock=0;
   
-  iprintf("update: Stage 1\n");
-
   {
     u32 SamplePerFrameFix16=SamplePerFrame*0x10000;
     u32 SamplePerClockFix16=sel_GetSamplePerClockFix16();
@@ -467,8 +443,6 @@ u32 Update(s16 *lbuf,s16 *rbuf)
     ClockCur-=SamplePerFrame*0x10000;
   }
   
-  iprintf("update: Stage 2\n");
-
   while(ProcClock!=0){
     int DecClock=selGetNearClock();
     if(ProcClock<DecClock) DecClock=ProcClock;
@@ -476,8 +450,6 @@ u32 Update(s16 *lbuf,s16 *rbuf)
     CurrentClock+=DecClock;
     if(selNextClock(MIDPlugin->ShowEventMessage,true,DecClock)==false) break;
   }
-  
-  iprintf("update: Stage 3\n");
 
   PCH_NextClock();
   
@@ -626,8 +598,6 @@ u32 Update(s16 *lbuf,s16 *rbuf)
       : "r0","r1","r2","r3","r4","r5","r6","r7", "r8","r9"
     );
   }
-  
-  iprintf("update: Stage 4\n");
 
   PCH_RenderEnd();
     
@@ -650,40 +620,31 @@ bool strpcmUpdate_mainloop(void)
   
   REG_IME=1;
   
-  iprintf("strpcmRingBufBitMask : %d\n", strpcmRingBufBitMask);
-  iprintf("strpcmRingBufWriteIndex : %d\n", strpcmRingBufWriteIndex);
-  iprintf("strpcmRingBufReadIndex : %d\n", strpcmRingBufReadIndex);
-
+  // Why these things happen!
   if(CurIndex==PlayIndex) 
   {
-	iprintf("CurIndex is %d\n", CurIndex);
-	iprintf("PlayIndex is %d\n", PlayIndex);
-	PrintFreeMem();
-  
-	return (false);
+	// iprintf("CurIndex and PlayIndex are the same\n");	
+	// return (false);
   }
 	  
   if(EmptyFlag==true)
-  	iprintf("strpcm:CPU overflow.\n");
+  	// iprintf("strpcm:CPU overflow.\n");
  
   if((strpcmRingLBuf==NULL)||(strpcmRingRBuf==NULL)) 
   {
-	  iprintf("mainloop Buffer problem\n");
+	  // iprintf("mainloop Buffer problem\n");
 	  return (false);
   }
 
   s16 *ldst=&strpcmRingLBuf[BaseSamples*CurIndex];
   s16 *rdst=&strpcmRingRBuf[BaseSamples*CurIndex];
   
-  iprintf("mainloop: Stage 1\n");
-
   if(strpcmRequestStop==true)
   { 
     Samples=0;
   }
   else
   { 
-	// iprintf("strpcmRequestStop is false\n");
     switch(ExecMode)
 	{ 
       case EM_MSPSound: 
@@ -692,13 +653,7 @@ bool strpcmUpdate_mainloop(void)
         if(strpcmDoubleSpeedFlag==true)
 			Update(NULL,NULL);
         
-
-		iprintf("begin update\n");
         Samples = Update(ldst,rdst);
-		iprintf("end update\n");
-
-		iprintf("Samples is %d\n", Samples);
-
       } break;
     }
     
@@ -706,8 +661,6 @@ bool strpcmUpdate_mainloop(void)
 		strpcmRequestStop=true;
   }
   
-  iprintf("mainloop: Stage 2\n");
-
   if(Samples<BaseSamples)
   { 
     for(u32 idx=Samples;idx<BaseSamples;idx++)
@@ -723,7 +676,7 @@ bool strpcmUpdate_mainloop(void)
   
   if(Samples==0) 
   {
-	  iprintf("samples is %d, and return false\n", Samples);
+	  // iprintf("samples is %d, and return false\n", Samples);
 	  return(false);
   }
 

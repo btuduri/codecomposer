@@ -7,14 +7,11 @@
 #include "Emulator.h"
 #include "filesys.h"
 #include "strpcm.h"
-#include "../../ipc3.h"
 
 static volatile bool strpcmPause;
 
 volatile u32 VsyncPassedCount=0;
-
 volatile bool strpcmRequestStop;
-
 volatile bool strpcmRingEmptyFlag;
 volatile u32 strpcmRingBufReadIndex;
 volatile u32 strpcmRingBufWriteIndex;
@@ -23,56 +20,14 @@ s16 *strpcmRingLBuf=NULL;
 s16 *strpcmRingRBuf=NULL;
 
 static void strpcmUpdate(void);
-/*
+
 #include "tcmstart.h"
 void InterruptHandler_Vsync(void)
 {
-  extern u16 KEYS_Stack;
-  KEYS_Stack|=(~REG_KEYINPUT)&0x3ff;
-  
-  u64 SyncSamples=DPGAudioStream_SyncSamples;
-  
-  if(IPC3->MP2PauseFlag==false) SyncSamples+=DPGAudioStream_PregapSamples;
-  DPGAudioStream_SyncSamples=SyncSamples;
-  u16 *pbuf=FrameCache_ReadStart(SyncSamples);
-  
-  if(pbuf!=NULL){
-    if(reqflip!=0){
-      if(reqflip==3) pScreenMain->Flip(false);
-      pScreenMain->SetBlendLevel(16);
-      reqflip=0;
-    }
-    
-    u16 *pVRAMBuf=pScreenMain->GetVRAMBuf(ScrMainID_Back);
-    
-    u32 len=FrameCache_GetBufferSizeByte();
-    
-    while((DMA0_CR & DMA_BUSY)||(DMA1_CR & DMA_BUSY)||(DMA2_CR & DMA_BUSY)||(DMA3_CR & DMA_BUSY));
-    //DC_FlushRangeOverrun(pbuf,len);
-    DMA0_SRC = (uint32)pbuf;
-    DMA0_DEST = (uint32)pVRAMBuf;
-    DMA0_CR = DMA_ENABLE | DMA_SRC_INC | DMA_DST_INC | DMA_32_BIT | (len>>2);
-    
-    reqflip=3;
-    
-    FrameCache_ReadEnd();
-  }
-  
-  if(reqflip!=0){
-    if(reqflip==3){
-      pScreenMain->Flip(false);
-      pScreenMain->SetBlendLevel(6);
-      }else{
-      if(reqflip==2){
-        pScreenMain->SetBlendLevel(11);
-        }else{
-        pScreenMain->SetBlendLevel(16);
-      }
-    }
-    reqflip--;
-  }
+
 }
 #include "tcmend.h"
+
 
 #include "tcmstart.h"
 void InterruptHandler_VBlank(void)
@@ -82,8 +37,7 @@ void InterruptHandler_VBlank(void)
   VsyncPassedCount++;
 }
 #include "tcmend.h"
-*/
-// ------------------------------------------
+
 
 #define CACHE_LINE_SIZE (32)
 
@@ -98,33 +52,19 @@ void ins_DC_FlushRangeOverrun(void *v,u32 size)
 }
 #include "tcmend.h"
 
-extern void IRQSYNC_MP2_flash(void);
-extern void IRQSYNC_OGG_flash(void);
-
-extern void IRQSYNC_MP2_fread(void);
-
-extern void IRQSYNC_OGG_fread(void);
-extern void IRQSYNC_OGG_fseek(void);
-
-extern vu64 DPGAudioStream_SyncSamples;
-vu64 DPGAudioStream_SyncSamples;
-extern u32 DPGAudioStream_PregapSamples;
-u32 DPGAudioStream_PregapSamples;
-
 #include "tcmstart.h"
-
 void InterruptHandler_IPC_SYNC(void)
 {  
+//  iprintf("!sync%d,%x,%d,%d,%d!\n",IPC3->IR,(u32)IPC3->IR_readbuf,IPC3->IR_readsize,IPC3->IR_readbufsize,IPC3->IR_flash);
+  
   switch(IPC3->IR){
     case IR_NULL: {
-		// iprintf("IR_NULL\n");
     } break;
     case IR_NextSoundData: {
-		// iprintf("IR_NextSoundData\n");
       DC_FlushAll();
       
       strpcmUpdate();
-      
+
       const u32 Samples=IPC3->strpcmSamples;
       const u32 Channels=IPC3->strpcmChannels;
       
@@ -150,12 +90,10 @@ void InitInterrupts(void)
   irqEnable(IRQ_IPC_SYNC);
   
   irqSet(IRQ_IPC_SYNC, InterruptHandler_IPC_SYNC);
-  
+
   REG_IPC_SYNC=IPC_SYNC_IRQ_ENABLE;
   REG_IME = 1;
 }
-
-// #include "plugin/plug_dpg.h"
 
 void strpcmStart(bool FastStart,u32 SampleRate,u32 SamplePerBuf,u32 ChannelCount,EstrpcmFormat strpcmFormat)
 {  
@@ -181,8 +119,6 @@ void strpcmStart(bool FastStart,u32 SampleRate,u32 SamplePerBuf,u32 ChannelCount
     }else{
     strpcmRingBufWriteIndex=1;
   }
-
-  iprintf("strpcm: Stage 2\n");  
   
   strpcmRingLBuf=(s16*)safemalloc(RingSamples*2);
   strpcmRingRBuf=(s16*)safemalloc(RingSamples*2);
@@ -194,29 +130,22 @@ void strpcmStart(bool FastStart,u32 SampleRate,u32 SamplePerBuf,u32 ChannelCount
   IPC3->strpcmChannels=ChannelCount;
   IPC3->strpcmFormat=strpcmFormat;
   
-  // ------
-  
   IPC3->strpcmLBuf=(s16*)safemalloc(Samples*2);
   IPC3->strpcmRBuf=(s16*)safemalloc(Samples*2);
   MemSet16DMA3(0,IPC3->strpcmLBuf,Samples*2);
   MemSet16DMA3(0,IPC3->strpcmRBuf,Samples*2);
-  
-  // ------
-  
-  iprintf("strpcm: Stage 3\n");
+   
   DC_FlushAll();
   IPC3->strpcmControl=strpcmControl_Play;
-  
+   
   while(IPC3->strpcmControl!=strpcmControl_NOP)
+  {
     swiWaitForIRQ();
+  }
 }
 
 void strpcmStop(void)
 {
-#ifdef notuseSound
-  return;
-#endif
-  
   strpcmRequestStop=true;
   
   DC_FlushAll();
@@ -321,9 +250,11 @@ void strpcmUpdate(void)
   s16 *ldst=IPC3->strpcmLBuf;
   s16 *rdst=IPC3->strpcmRBuf;
   
-  if((ldst==NULL)||(rdst==NULL)) return;
+  if((ldst==NULL)||(rdst==NULL)) 
+	  return;
   
-  if((strpcmRingLBuf==NULL)||(strpcmRingRBuf==NULL)){
+  if((strpcmRingLBuf==NULL)||(strpcmRingRBuf==NULL))
+  {
     ins_MemSet16DMA2(0,ldst,Samples*2);
     if(Channels==2) ins_MemSet16DMA2(0,rdst,Samples*2);
     return;
@@ -332,25 +263,32 @@ void strpcmUpdate(void)
   bool IgnoreFlag=false;
   
   u32 CurIndex=(strpcmRingBufReadIndex+1) & strpcmRingBufBitMask;
-  
+
   s16 *lsrc=&strpcmRingLBuf[Samples*CurIndex];
   s16 *rsrc=&strpcmRingRBuf[Samples*CurIndex];
   
-  if(strpcmPause==true) IgnoreFlag=true;
+  if(strpcmPause==true) 
+	  IgnoreFlag=true;
   
   if(CurIndex==strpcmRingBufWriteIndex){
     strpcmRingEmptyFlag=true;
     IgnoreFlag=true;
   }
   
+  // iprintf("strpcmRingBufWriteIndex is %d\n", strpcmRingBufWriteIndex);
+  // iprintf("strpcmRingBufReadIndex is %d\n", strpcmRingBufReadIndex);
+
   if(IgnoreFlag==true){
     ins_MemSet16DMA2(0,ldst,Samples*2);
-    if(Channels==2) ins_MemSet16DMA2(0,rdst,Samples*2);
+
+    if(Channels==2) 
+		ins_MemSet16DMA2(0,rdst,Samples*2);	
     return;
   }
   
   ins_MemCopy16DMA2(lsrc,ldst,Samples*2);
-  if(Channels==2) ins_MemCopy16DMA2(rsrc,rdst,Samples*2);
+  if(Channels==2) 
+	  ins_MemCopy16DMA2(rsrc,rdst,Samples*2);
   
   strpcmRingBufReadIndex=CurIndex;
 }
