@@ -89,6 +89,11 @@ typedef struct {
 } TiniGMEPlugin;
 
 typedef struct {
+  bool SC_EnabledDRAM;
+  u32 EZ4_PSRAMSizeMByte;
+} TiniAdapterConfig;
+
+typedef struct {
   TiniCustom Custom;
   TiniSystem System;
   TiniForSuperCard ForSuperCard;
@@ -105,8 +110,8 @@ typedef struct {
   TiniClockPlugin ClockPlugin;
   TiniOverrideWindowRect OverrideWindowRect;
   TiniGMEPlugin GMEPlugin;
-  TiniAdapterConfig AdapterConfig;
   */
+  TiniAdapterConfig AdapterConfig;
 } TGlobalINI;
 
 extern TGlobalINI GlobalINI;

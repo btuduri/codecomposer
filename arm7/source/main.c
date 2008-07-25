@@ -1,9 +1,3 @@
-//////////////////////////////////////////////////////////////////////
-// Simple ARM7 stub (sends RTC, TSC, and X/Y data to the ARM 9)
-// -- joat
-// -- modified by Darkain and others
-//////////////////////////////////////////////////////////////////////
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <nds.h>
@@ -13,8 +7,6 @@
 #include "memtoolARM7.h"
 #include "a7sleep.h"
 
-
-#pragma Ospace
 static u32 LastLCDPowerControl=LCDPC_ON_BOTH;
 static bool LCDPowerApplyFlag=true;
 static u32 strpcmCursorFlag=0;
@@ -22,16 +14,14 @@ static u32 strpcmSamples,strpcmChannels;
 static EstrpcmFormat strpcmFormat;
 static s16 *strpcmLBuf=NULL,*strpcmRBuf=NULL;
 static s16 *strpcmL0=NULL,*strpcmL1=NULL,*strpcmR0=NULL,*strpcmR1=NULL;
-#undef SOUND_FREQ
 
+#undef SOUND_FREQ
 #define SOUND_FREQ(n)	(0x10000 - (16777216 / (n)))
 
 static void strpcmPlay()
 {
   REG_IME=0;
   
-  // The following member does not exist anywhere in the project!
-  // IPC3->dummy=0;
   IPC3->IR=IR_NULL;
   
   strpcmCursorFlag=0;
@@ -58,11 +48,13 @@ static void strpcmPlay()
   strpcmSamples=IPC3->strpcmSamples;
   strpcmChannels=IPC3->strpcmChannels;
   
+  /*
   iprintf("strpcmSamples=%d\n",strpcmSamples);
   iprintf("strpcmChannels=%d\n",strpcmChannels);
   iprintf("strpcmFormat=%d\n",strpcmFormat);
   iprintf("Multiple=%d\n",Multiple);
-  
+  */
+
   strpcmL0=(s16*)safemalloc(strpcmSamples*Multiple*2);
   strpcmL1=(s16*)safemalloc(strpcmSamples*Multiple*2);
   strpcmR0=(s16*)safemalloc(strpcmSamples*Multiple*2);
@@ -116,10 +108,7 @@ static void strpcmStop()
   IPC3->IR=IR_NULL;
 }
 
-#pragma Otime
 #include "main_irq_timer.h"
-#pragma Ospace
-
 #include "main_vsync.h"
 #include "main_init.h"
 #include "main_boot_gbamp.h"
@@ -154,7 +143,6 @@ int main(void)
     
     if(IPC3->strpcmControl!=strpcmControl_NOP)
 	{
-      // IPC3->dummy=0;
       REG_IME=0;    
 	  main_Proc_strpcmControl();
       REG_IME=1;

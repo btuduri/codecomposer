@@ -64,11 +64,11 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath=".\arm7\source\_const.h"
+				RelativePath=".\arm9\source\_const.h"
 				>
 			</File>
 			<File
-				RelativePath=".\arm9\source\_const.h"
+				RelativePath=".\arm7\source\_const.h"
 				>
 			</File>
 			<File
@@ -105,6 +105,10 @@
 			</File>
 			<File
 				RelativePath=".\arm9\source\emulator.h"
+				>
+			</File>
+			<File
+				RelativePath=".\arm9\source\extmem.h"
 				>
 			</File>
 			<File
@@ -204,11 +208,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\arm7\source\memtool.h"
+				RelativePath=".\arm9\source\memtool.h"
 				>
 			</File>
 			<File
-				RelativePath=".\arm9\source\memtool.h"
+				RelativePath=".\arm7\source\memtool.h"
 				>
 			</File>
 			<File
@@ -300,6 +304,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\arm9\source\extmem.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\arm9\source\filesys.cpp"
 				>
 			</File>
@@ -361,10 +369,6 @@
 			</File>
 			<File
 				RelativePath=".\arm9\source\strtool.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\arm7\source\template.c"
 				>
 			</File>
 			<File
