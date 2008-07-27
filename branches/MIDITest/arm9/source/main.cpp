@@ -1,6 +1,5 @@
-#include "nds.h"
-
-#include <nds/arm9/console.h> 
+#include <nds.h>
+#include <nds/arm9/console.h>
 #include <stdio.h>
 #include <string.h>
 
@@ -9,9 +8,8 @@
 #include "smidlib.h"
 #include "smidlib_pch.h"
 #include "smidlib_sm.h"
-
+#include "smidlib_mtrk.h"
 #include "setarm9_reg_waitcr.h"
-
 #include "_const.h"
 #include "memtool.h"
 #include "filesys.h"
@@ -23,72 +21,77 @@
 #include "strpcm.h"
 #include "extmem.h"
 
-#define ChannelsCount (16)
-#define MaxSampleRate (32768)
-#define MinFramePerSecond (120)
-#define MaxSamplePerFrame (MaxSampleRate/MinFramePerSecond)
-#define MaxStackCount (12)
-#define ReserveCount (4)
+#include "smidproc.h"
 
-u8 *DeflateBuf = 0;
-u32 DeflateSize;
-u32 SamplePerFrame;
-int TotalClock,CurrentClock;
-u32 ClockCur;
-ALIGNED_VAR_IN_DTCM s32 DTCM_tmpbuf[MaxSamplePerFrame*2];
-ALIGNED_VAR_IN_DTCM s32 DTCM_dstbuf[MaxSamplePerFrame*2];
-u32 SetARM9_REG_ROM1stAccessCycleControl=0,SetARM9_REG_ROM2stAccessCycleControl=0;
-u32 StackIndex;
-u32 StackCount;
-s32 *pStackBuf[ChannelsCount][MaxStackCount];
-s32 StackLastCount[ChannelsCount];
-void *pReserve[ReserveCount];
-u32 SoundFontLoadTimeus;
-TPluginBody *pPB;
-TiniMIDPlugin *MIDPlugin;
-enum EExecMode {EM_None=1,EM_NDSROM,EM_FPK,EM_Text,EM_BinView,EM_MSPImage,EM_MSPSound,EM_MP3Boot,EM_DPG,EM_GME};
-static volatile bool strpcmDoubleSpeedFlag=false;
-static EExecMode LastExecMode=EM_None;
-EExecMode ExecMode=EM_None;
+// files from DSMI
+#include "keyboard.raw.h"
+#include "keyboard.pal.h"
+#include "keyboard.map.h"
+#include "keyb_hit.h"
+#include "bg_main.h"
+#include "bg_sub.h"
+#include "font_8x11.h"
+#include "fontchars.h"
+
+extern u8 *DeflateBuf;
+extern u32 DeflateSize;
+extern u32 SamplePerFrame;
+extern int TotalClock,CurrentClock;
+extern u32 ClockCur;
+extern ALIGNED_VAR_IN_DTCM s32 DTCM_tmpbuf[MaxSamplePerFrame*2];
+extern ALIGNED_VAR_IN_DTCM s32 DTCM_dstbuf[MaxSamplePerFrame*2];
+extern u32 SetARM9_REG_ROM1stAccessCycleControl;
+extern u32 SetARM9_REG_ROM2stAccessCycleControl;
+extern u32 StackIndex;
+extern u32 StackCount;
+extern s32 *pStackBuf[ChannelsCount][MaxStackCount];
+extern s32 StackLastCount[ChannelsCount];
+extern void *pReserve[ReserveCount];
+extern u32 SoundFontLoadTimeus;
+extern TPluginBody *pPB;
+extern TiniMIDPlugin *MIDPlugin;
 extern s16 *strpcmRingLBuf;
 extern s16 *strpcmRingRBuf;
 
-void selSetParam(u8 *data,u32 SampleRate,u32 SampleBufCount,u32 MaxChannelCount,u32 GenVolume);
-bool selStart(void);
-void selFree(void);
-int selGetNearClock(void);
-bool selNextClock(bool ShowEventMessage,bool EnableNote,int DecClock);
-void selAllSoundOff(void);
-bool sel_isAllTrackEOF(void);
-u32 sel_GetSamplePerClockFix16(void);
-void Start_smidlibDetectTotalClock();
-bool Start_InitStackBuf(void);
-bool Start(int FileHandle);
-void Free(void);
-u32 Update(s16 *lbuf,s16 *rbuf);
-s32 GetPosMax(void);
-s32 GetPosOffset(void);
-void SetPosOffset(s32 ofs);
-u32 Update(s16 *lbuf,s16 *rbuf);
-bool strpcmUpdate_mainloop(void);
+// macros and variables from DSMI
+#define PEN_DOWN (~IPC->buttons & (1 << 6))
+#define TICKS_PER_ROW	200
+#define N_ROWS		28
+
+u16 row = 0;
+u16 tick = 0;
+u8 notes[] = {2, 255, 5, 255, 7, 255, 255, 2, 255, 5, 255, 8, 7, 255, 255, 255, 2, 255, 5, 255, 7, 255, 255, 5, 255, 2, 255, 255};
+u8 keyb_xpos = 2, keyb_ypos = 10, keyb_width = 28, keyb_height = 5;
+uint16* map = (uint16*)SCREEN_BASE_BLOCK(8);
+u8 lastnote = 0;
+touchPosition touch;
+int touch_was_down = 0;
+u8 halftones[] = {1, 3, 6, 8, 10, 13, 15, 18, 20, 22};
+u8 channel = 0;
+u8 baseOctave = 2;
+u8 pm_x0 = 0, pm_y0 = 0;
+u16 currnote = 0;
+u16 *main_vram = (u16*)BG_BMP_RAM(2);
+
+// declaration from DSMI
+void play(u8 note);
+void stop(u8 note);
+void pitchChange(s16 value);
+void pressureChange(u8 value);
+u8 isHalfTone(u8 note);
+void setKeyPal(u8 note);
+void resetPals(void);
+void Smoke(void);
+void drawFullBox(u8 tx, u8 ty, u8 tw, u8 th, u16 col);
+void drawString(const char* str, u8 tx, u8 ty);
+void displayOctave(u8 chn);
+void displayChannel(u8 chn);
+void VblankHandler();
 
 // refer to this site: http://dldi.drunkencoders.com/index.php?title=GBA_NDS_FAT
-
-int main(void) 
+int main(void)
 {
-	REG_IME=0;
-  
-	touchPosition touchXY;
-	
-	videoSetMode(0);	//not using the main screen
-	videoSetModeSub(MODE_0_2D | DISPLAY_BG0_ACTIVE);	//sub bg 0 will be used to print text
-	vramSetBankC(VRAM_C_SUB_BG);
-
-	SUB_BG0_CR = BG_MAP_BASE(31);
-
-	BG_PALETTE_SUB[255] = RGB15(31,31,31);	//by default font will be rendered with color 255
-	consoleInitDefault((u16*)SCREEN_BASE_BLOCK_SUB(31), (u16*)CHAR_BASE_BLOCK_SUB(0), 16);
-
+	powerON(POWER_ALL);	
 	strpcmSetVolume16(16);
   
 	IPC3->strpcmLBuf=NULL;
@@ -108,12 +111,98 @@ int main(void)
 	DD_Init(EDDST_FAT);
 	
     extmem_Init();
-
-	pPB = (TPluginBody*)safemalloc(sizeof(TPluginBody));
-	MIDPlugin = &MIDIINI.MIDPlugin;
-
 	InitInterrupts();
+
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	lcdMainOnBottom();
 	
+	// Set modes
+	videoSetMode(MODE_5_2D | DISPLAY_BG0_ACTIVE | DISPLAY_BG2_ACTIVE);
+	videoSetModeSub(MODE_5_2D | DISPLAY_BG0_ACTIVE | DISPLAY_BG3_ACTIVE);
+	
+	// Set banks
+	vramSetMainBanks(VRAM_A_MAIN_BG_0x06000000, VRAM_B_MAIN_BG_0x06020000, VRAM_C_SUB_BG_0x06200000 , VRAM_D_LCD);
+	
+	// sub display
+	SUB_BG3_CR = BG_BMP16_256x256  | BG_BMP_BASE(2);
+	SUB_BG3_XDX = 1 << 8;
+	SUB_BG3_XDY = 0;
+	SUB_BG3_YDX = 0;
+	SUB_BG3_YDY = 1 << 8;
+	
+	// Text bg on sub
+	SUB_BG0_CR = BG_MAP_BASE(4) | BG_TILE_BASE(0) | BG_PRIORITY(0);
+	BG_PALETTE_SUB[255] = RGB15(31,0,31);
+	consoleInitDefault((u16*)SCREEN_BASE_BLOCK_SUB(4), (u16*)CHAR_BASE_BLOCK_SUB(0), 16);
+	
+	// The main display is for graphics.
+	// Set up an extended rotation background for background gfx
+	BG2_CR = BG_BMP16_256x256 | BG_BMP_BASE(2);
+	BG2_XDX = 1 << 8;
+	BG2_XDY = 0;
+	BG2_YDX = 0;
+	BG2_YDY = 1 << 8;
+	
+	// Set up tile mode for the keyboard
+	BG0_CR = BG_COLOR_16 | BG_32x32 | BG_MAP_BASE(8) | BG_TILE_BASE(0);
+	
+	// Clear tile mem
+	u32 i;
+	for(i=0; i<(32*1024); ++i) {
+		((u16*)BG_BMP_RAM(0))[i] = 0;
+	}
+	
+	// Copy tiles and palettes
+	dmaCopy((uint16*)keyboard_Palette, (uint16*)BG_PALETTE, 32);
+	dmaCopy((uint16*)keyboard_fullnotehighlight_Palette, (uint16*)BG_PALETTE+16, 32);
+	dmaCopy((uint16*)keyboard_halfnotehighlight_Palette, (uint16*)BG_PALETTE+32, 32);
+	dmaCopy((uint16*)keyboard_Tiles, (uint16*)CHAR_BASE_BLOCK(0), 736);
+	
+	// Fill screen with empty tiles
+	for(i=0;i<768;++i)
+		map[i] = 28;
+	
+	// Draw the backgrounds
+	for(i=0; i<192*256; ++i) {
+		((uint16*)BG_BMP_RAM(2))[i] = ((uint16*)bg_main)[i];
+	}
+	
+	for(i=0; i<192*256; ++i) {
+		((uint16*)BG_BMP_RAM_SUB(2))[i] = ((uint16*)bg_sub)[i];
+	}
+	
+	displayChannel(channel);
+	displayOctave(baseOctave);
+
+	u8 x, y;
+	for(y=0; y<5; ++y) {
+		for(x=0; x<28; ++x) {
+			map[32*(y+keyb_ypos)+(x+keyb_xpos)] = keyboard_Map[29*y+x+1];
+		}
+	}
+
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	if(!initSmidlib())
+	{
+		iprintf("failed to initialize midi sound system\n");
+		return false;
+	}
+
+	EstrpcmFormat SPF = GetOversamplingFactorFromSampleRate(MIDPlugin->SampleRate);
+	strpcmStart(false, MIDPlugin->SampleRate, SamplePerFrame, 2, SPF);
+	
+	
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	while(1)
+	{
+		VblankHandler();
+		strpcmUpdate_mainloop();
+		swiWaitForVBlank();
+	}
+
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	/*
 	int file_handle = 0;
 	file_handle = Shell_OpenFile("Dancing_Queen.mid");
 	
@@ -122,563 +211,301 @@ int main(void)
       iprintf("midi plugin start error.\n");
       return 0;
     }
-	
-	ExecMode = EM_MSPSound;
-
-	EstrpcmFormat SPF = GetOversamplingFactorFromSampleRate(MIDPlugin->SampleRate);
-	strpcmStart(false, MIDPlugin->SampleRate, SamplePerFrame, 2, SPF);
-	
-	iprintf("IPC3->strpcmFormat is %d\n", IPC3->strpcmFormat);
-
-	while(strpcmUpdate_mainloop()==true)
-		;
+	*/
 
 	return 0;
 }
 
-void selSetParam(u8 *data,u32 SampleRate,u32 SampleBufCount,u32 MaxChannelCount,u32 GenVolume)
+
+void InitInterrupts(void)
 {
-	smidlibSetParam(DeflateBuf,SampleRate,SampleBufCount,MaxChannelCount,GenVolume);
-}
-
-bool selStart(void)
-{
-	return(smidlibStart());
-}
-
-void selFree(void)
-{
-	smidlibFree(); 
-}
-
- int selGetNearClock(void)
-{
-	return(smidlibGetNearClock());
-}
-
- bool selNextClock(bool ShowEventMessage,bool EnableNote,int DecClock)
-{
-	return(smidlibNextClock(ShowEventMessage,EnableNote,DecClock));
-}
-
- void selAllSoundOff(void)
-{
-	smidlibAllSoundOff();
-}
-
- bool sel_isAllTrackEOF(void)
-{
-	return(SM_isAllTrackEOF());
-}
-
- u32 sel_GetSamplePerClockFix16(void)
-{
-	return(SM_GetSamplePerClockFix16());
-}
-
- void Start_smidlibDetectTotalClock()
-{
- TSM_Track *pSM_Track=NULL;
- u32 trklen=0;
- 
- {
-   u32 idx=0;
-   for(idx=0;idx<StdMIDI.SM_Chank.Track;idx++){
-     TSM_Track *pCurSM_Track=&StdMIDI.SM_Tracks[idx];
-     u32 ctrklen=(u32)pCurSM_Track->DataEnd-(u32)pCurSM_Track->Data;
-     if(trklen<ctrklen){
-       trklen=ctrklen;
-       pSM_Track=pCurSM_Track;
-     }
-   }
- }
- 
- if((pSM_Track==NULL)||(trklen==0)){
-   // iprintf("Fatal error.\n");
- }
- 
- int LastClock=0;
- int PrevDiv=StdMIDI.SM_Chank.TimeRes*8;
- 
- while(1){
-   if(PrevDiv<(TotalClock-LastClock)){
-     LastClock=TotalClock;
-     u32 lastlen=(u32)pSM_Track->DataEnd-(u32)pSM_Track->Data;
-   }
-
-   int DecClock=smidlibGetNearClock();
-   if(smidlibNextClock(false,false,DecClock)==false) break;
-   TotalClock+=DecClock;
- }
-}
-
-bool Start_InitStackBuf(void)
-{
- u32 ch=0;
- u32 sidx=0;
- for(ch=0;ch<ChannelsCount;ch++){
-   for(sidx=0;sidx<MaxStackCount;sidx++){
-     pStackBuf[ch][sidx]=NULL;
-   }
- }
- 
- StackCount=MIDIINI.MIDPlugin.DelayStackSize;
- if(StackCount==0) StackCount=1;
- if(MaxStackCount<StackCount) StackCount=MaxStackCount;
- 
- for(ch=0;ch<ChannelsCount;ch++){
-   for(sidx=0;sidx<StackCount;sidx++){
-     pStackBuf[ch][sidx]=(s32*)safemalloc((MaxSamplePerFrame+1)*2*4);
-     if(pStackBuf[ch][sidx]==NULL){
-       // iprintf("pStackBuf: Memory overflow.\n");
-       return(false);
-     }
-     MemSet32CPU(0,pStackBuf[ch][sidx],(MaxSamplePerFrame+1)*2*4);
-   }
-   StackLastCount[ch]=0;
- }
- 
- StackIndex=0;
- 
- return(true);
-}
-
-
-
-bool Start(int FileHandle)
-{
- pPB->INIData=NULL;
- pPB->INISize=0;
- pPB->BINFileHandle=0;
- pPB->BINData=NULL;
- pPB->BINSize=0;
-
- InitINI();
- LoadINI(GetINIData(pPB),GetINISize(pPB));
- 
- // iprintf("stage1 is passed\n");
- if(Start_InitStackBuf()==false) 
-	 return(false);
- 
- {
-   if(MaxSampleRate<MIDPlugin->SampleRate) MIDPlugin->SampleRate=MaxSampleRate;
-   
-   SamplePerFrame=MIDPlugin->SampleRate/MIDPlugin->FramePerSecond;
-   if(MaxSamplePerFrame<SamplePerFrame) SamplePerFrame=MaxSamplePerFrame;
-   SamplePerFrame&=~15;
-   if(SamplePerFrame<16) SamplePerFrame=16;  
- }
- 
- // iprintf("stage2 is passed\n");
- {
-   u32 samples=SamplePerFrame+16;
-   pReserve[0]=safemalloc(samples*8*2);
-   pReserve[1]=safemalloc(samples*8*2);
-   pReserve[2]=safemalloc(samples*2);
-   pReserve[3]=safemalloc(samples*2);
- }
- 
- FileSys_fseek(FileHandle,0,SEEK_END);
- DeflateSize= FileSys_ftell(FileHandle);
- FileSys_fseek(FileHandle,0,SEEK_SET);
- 
- DeflateBuf=(u8*)safemalloc(DeflateSize);
- 
- // iprintf("deflatesize is %d\n", DeflateSize);
- if(DeflateBuf==NULL) 
-	 return(false);
- 
- FileSys_fread(DeflateBuf,1,DeflateSize, FileHandle);
- 
- int res_binfilehandle = GetBINFileHandle(pPB);
- if(res_binfilehandle == 0)
- {
-   // iprintf("not found sound font file. 'midrcp.bin'\n");
-   
-   if(DeflateBuf!=NULL)
-   {
-     safefree(DeflateBuf); 
-	 DeflateBuf=NULL;
-   }
-
-   return(false);
- }
- 
- // iprintf("stage3 is passed, from now on what will happen here?\n");
- PCH_SetProgramMap(res_binfilehandle);
- 
- // iprintf("SampleRate is %d\n", MIDPlugin->SampleRate);
- // iprintf("SamplePerFrame is %d\n", SamplePerFrame);
- // iprintf("MaxVoiceCount is %d\n", MIDPlugin->MaxVoiceCount);
- // iprintf("MIDPlugin is %d\n", MIDPlugin->GenVolume);
-
- selSetParam(DeflateBuf,MIDPlugin->SampleRate,SamplePerFrame,MIDPlugin->MaxVoiceCount,MIDPlugin->GenVolume);
- 
- if(selStart()==false){
-   Free();
-   return(false);
- }
- 
- // iprintf("stage4 is passed\n");
-
- TotalClock=0;
- CurrentClock=0;
- 
- Start_smidlibDetectTotalClock();
- 
- if(TotalClock==0){
-   // iprintf("Detect TotalClock equal Zero.\n");
-   Free();
-   return(false);
- }
- 
- // iprintf("stage5 is passed\n");
-
- selFree();
- selStart();
- 
- ClockCur=selGetNearClock();
- selNextClock(MIDPlugin->ShowEventMessage,true,selGetNearClock());
- 
- u32 idx=0;
- for(idx=0;idx<ReserveCount;idx++){
-   if(pReserve[idx]!=NULL){
-     safefree(pReserve[idx]); pReserve[idx]=NULL;
-   }
- }
- 
- return(true);
-}
-
-void Free(void)
-{
- u32 idx=0;
- for(idx=0;idx<ReserveCount;idx++){
-   if(pReserve[idx]!=NULL){
-     safefree(pReserve[idx]); pReserve[idx]=NULL;
-   }
- }
- 
- selFree();
- 
- PCH_FreeProgramMap();
- 
- u32 ch=0;
- u32 sidx=0;
-
- for(ch=0;ch<ChannelsCount;ch++){
-   for(sidx=0;sidx<MaxStackCount;sidx++){
-     if(pStackBuf[ch][sidx]!=NULL){
-       safefree(pStackBuf[ch][sidx]); pStackBuf[ch][sidx]=NULL;
-     }
-   }
- }
- 
- if(DeflateBuf!=NULL){
-   safefree(DeflateBuf); DeflateBuf=NULL;
- }
-}
-
-
-s32 GetPosMax(void)
-{
- return(TotalClock);
-}
-
-s32 GetPosOffset(void)
-{
- return(CurrentClock);
-}
-
-void SetPosOffset(s32 ofs)
-{
- if(ofs<CurrentClock){
-   selFree();
-   selStart();
-   CurrentClock=0;
-   }else{
-   selAllSoundOff();
- }
- 
- while(CurrentClock<=ofs){
-   int DecClock=selGetNearClock();
-   if(selNextClock(false,false,DecClock)==false) break;
-   CurrentClock+=DecClock;
- }
- 
- ClockCur=0;
-}
-
-u32 GetChannelCount(void)
-{
- return(2);
-}
-
-u32 GetSampleRate(void)
-{
- TiniMIDPlugin *MIDPlugin=&MIDIINI.MIDPlugin;
- 
- return(MIDPlugin->SampleRate);
-}
-
-u32 GetSamplePerFrame(void)
-{
- return(SamplePerFrame);
-}
-
-u32 Update(s16 *lbuf,s16 *rbuf)
-{
-  if(sel_isAllTrackEOF()==true) 
-	  return(0);
-   
-  int ProcClock=0;
+  REG_IME = 0;
   
-  {
-    u32 SamplePerFrameFix16=SamplePerFrame*0x10000;
-    u32 SamplePerClockFix16=sel_GetSamplePerClockFix16();
-    while(ClockCur<SamplePerFrameFix16){
-      ProcClock++;
-      ClockCur+=SamplePerClockFix16;
-    }
-    ClockCur-=SamplePerFrame*0x10000;
-  }
+  irqInit();
   
-  while(ProcClock!=0){
-    int DecClock=selGetNearClock();
-    if(ProcClock<DecClock) DecClock=ProcClock;
-    ProcClock-=DecClock;
-    CurrentClock+=DecClock;
-    if(selNextClock(MIDPlugin->ShowEventMessage,true,DecClock)==false) break;
-  }
-
-  PCH_NextClock();
+  irqEnable(IRQ_VBLANK);
+  irqEnable(IRQ_IPC_SYNC);
   
-  PCH_RenderStart(SamplePerFrame);
-  
-  if((lbuf!=NULL)&&(rbuf!=NULL)){
-    MemSet32CPU(0,DTCM_dstbuf,SamplePerFrame*2*4);
-    
-    StackIndex++;
-    if(StackIndex==StackCount) StackIndex=0;
-    
-    for(u32 ch=0;ch<ChannelsCount;ch++){
-      bool reqproc=false;
-      bool reqrender=false;
-      if(StackLastCount[ch]!=0) reqproc=true;
-      if(PCH_RequestRender(ch)==true){
-        reqproc=true;
-        reqrender=true;
-      }
-      
-      if(reqproc==true){
-        s32 *ptmpbuf=DTCM_tmpbuf;
-        
-        MemSet32CPU(0,ptmpbuf,SamplePerFrame*2*4);
-        
-        if(reqrender==true){
-          PCH_Render(ch,ptmpbuf,SamplePerFrame);
-          StackLastCount[ch]=StackCount*4;
-          }else{
-          StackLastCount[ch]--;
-        }
-        
-        s32 *pstackbuf=pStackBuf[ch][StackIndex];
-        
-        {
-          s32 *p=&pstackbuf[(SamplePerFrame-1)*2];
-          asm volatile(
-            "ldmia %0!,{r0,r1} \n"
-            "stmia %0,{r0,r1} \n"
-            "sub %0,#2*4 \n"
-            : : "r"(p)
-            : "r0","r1"
-          );
-        }
-        
-        s32 *pdstbuf=DTCM_dstbuf;
-        
-        u32 ReverbFactor;
-        
-        if(PCH_isDrumMap(ch)==true){
+  irqSet(IRQ_IPC_SYNC, InterruptHandler_IPC_SYNC);
+  irqSet(IRQ_TIMER3, Smoke);
+  irqEnable(IRQ_TIMER3);
 
-          ReverbFactor = MIDPlugin->ReverbFactor_DrumMap;
-          }else{
-          ReverbFactor = MIDPlugin->ReverbFactor_ToneMap;
-        }
-        
-        vu32 Reverb=PCH_GetReverb(ch)*ReverbFactor; // 127*127=14bit
-        Reverb+=16*128;
-        Reverb<<=1; // 14bit -> 15bit
-        if(0x6000<Reverb) Reverb=0x6000; // limited
-        
-        asm volatile(
-          // %0=SamplePerFrame
-          // %1=pstackbuf
-          // %2=ptmpbuf
-          // %3=Reverb
-          // %4=pdstbuf
-          
-          // r0,r1,r2,r3=pstackbuf l/r/l/r
-          // r4,r5=ptmpbuf l/r
-          // r10=SamplePerFrame-1
-          
-          "mov r10,%0 \n"
-          
-          "reverb_loop: \n"
-          
-          "ldmia %1,{r0,r1,r2,r3} \n"
-          "ldmia %2!,{r4,r5} \n"
-          
-          "add r0,r2 \n"
-          "smulwb r2,r0,%3 \n"
-          "add r1,r3 \n"
-          "smulwb r3,r1,%3 \n"
-          "add r1,r2,r5 \n"
-          "add r0,r3,r4 \n"
-          
-          "stmia %1!,{r0,r1} \n"
-          
-          "ldmia %4,{r4,r5} \n"
-          "add r4,r0 \n"
-          "add r5,r1 \n"
-          "stmia %4!,{r4,r5} \n"
-          
-          "subs %0,#1 \n"
-          "bne reverb_loop \n"
-          
-          "mov r10,%0 \n"
-          
-          "sub %1,r10,lsl #3 \n"
-          "sub %2,r10,lsl #3 \n"
-          "sub %4,r10,lsl #3 \n"
-          
-          : : "r"(SamplePerFrame),"r"(pstackbuf),"r"(ptmpbuf),"r"(Reverb),"r"(pdstbuf)
-          : "r0","r1","r2","r3","r4","r5","r10"
-        );
-      }
-    }
-    
-    asm volatile(
-      "push {%0} \n"
-      
-      "ldr r8,=-0x8000 \n"
-      "ldr r9,=0xffff \n"
-      
-      "copybuffer_stereo: \n"
-      
-      "ldmia %1!,{r0,r1,r2,r3,r4,r5,r6,r7} \n"
-      
-      "cmps r0,r8 \n movlt r0,r8 \n cmps r0,r9,lsr #1 \n movgt r0,r9,lsr #1 \n"
-      "cmps r1,r8 \n movlt r1,r8 \n cmps r1,r9,lsr #1 \n movgt r1,r9,lsr #1 \n"
-      "cmps r2,r8 \n movlt r2,r8 \n cmps r2,r9,lsr #1 \n movgt r2,r9,lsr #1 \n"
-      "cmps r3,r8 \n movlt r3,r8 \n cmps r3,r9,lsr #1 \n movgt r3,r9,lsr #1 \n"
-      "cmps r4,r8 \n movlt r4,r8 \n cmps r4,r9,lsr #1 \n movgt r4,r9,lsr #1 \n"
-      "cmps r5,r8 \n movlt r5,r8 \n cmps r5,r9,lsr #1 \n movgt r5,r9,lsr #1 \n"
-      "cmps r6,r8 \n movlt r6,r8 \n cmps r6,r9,lsr #1 \n movgt r6,r9,lsr #1 \n"
-      "cmps r7,r8 \n movlt r7,r8 \n cmps r7,r9,lsr #1 \n movgt r7,r9,lsr #1 \n"
-      
-      "and r0,r9 \n"
-      "orr r0,r0,r2,lsl #16 \n"
-      "and r4,r9 \n"
-      "orr r4,r4,r6,lsl #16 \n"
-      "stmia %2!,{r0,r4} \n"
-      
-      "and r1,r9 \n"
-      "orr r1,r1,r3,lsl #16 \n"
-      "and r5,r9 \n"
-      "orr r5,r5,r7,lsl #16 \n"
-      "stmia %3!,{r1,r5} \n"
-      
-      "subs %0,#4 \n"
-      "bne copybuffer_stereo \n"
-      
-      "pop {%0} \n"
-      
-      : : "r"(SamplePerFrame),"r"(DTCM_dstbuf),"r"(lbuf),"r"(rbuf)
-      : "r0","r1","r2","r3","r4","r5","r6","r7", "r8","r9"
-    );
-  }
-
-  PCH_RenderEnd();
-    
-  return(SamplePerFrame);
+  REG_IPC_SYNC=IPC_SYNC_IRQ_ENABLE;
+  REG_IME = 1;
 }
 
-bool strpcmUpdate_mainloop(void)
-{ 
-  u32 BaseSamples=IPC3->strpcmSamples;
-  u32 Samples=0;
-  
-  REG_IME=0;
-  
-  u32 CurIndex=(strpcmRingBufWriteIndex+1) & strpcmRingBufBitMask;
-  u32 PlayIndex=strpcmRingBufReadIndex;
-  bool EmptyFlag;
 
-  EmptyFlag=strpcmRingEmptyFlag;
-  strpcmRingEmptyFlag = false;
-  
-  REG_IME=1;
-  
-  // Why these things happen!
-  if(CurIndex==PlayIndex) 
-  {
-	// iprintf("CurIndex and PlayIndex are the same\n");	
-	// return (false);
-  }
-	  
-  if(EmptyFlag==true)
-  	// iprintf("strpcm:CPU overflow.\n");
- 
-  if((strpcmRingLBuf==NULL)||(strpcmRingRBuf==NULL)) 
-  {
-	  // iprintf("mainloop Buffer problem\n");
-	  return (false);
-  }
+// functions from DSMI
+void play(u8 note)
+{
+	MTRK_NoteOn(0x90 | channel, 0, note+12*baseOctave, 127);
 
-  s16 *ldst=&strpcmRingLBuf[BaseSamples*CurIndex];
-  s16 *rdst=&strpcmRingRBuf[BaseSamples*CurIndex];
-  
-  if(strpcmRequestStop==true)
-  { 
-    Samples=0;
-  }
-  else
-  { 
-    switch(ExecMode)
-	{ 
-      case EM_MSPSound: 
-	  case EM_MP3Boot: 
-	  { 
-        if(strpcmDoubleSpeedFlag==true)
-			Update(NULL,NULL);
-        
-        Samples = Update(ldst,rdst);
-      } break;
-    }
-    
-	if(Samples!=BaseSamples) 
-		strpcmRequestStop=true;
-  }
-  
-  if(Samples<BaseSamples)
-  { 
-    for(u32 idx=Samples;idx<BaseSamples;idx++)
-	{ 
-      ldst[idx]=0;
-      rdst[idx]=0;
-    }
-  }
-    
-  REG_IME=0;
-  strpcmRingBufWriteIndex=CurIndex;
-  REG_IME=1;
-  
-  if(Samples==0) 
-  {
-	  // iprintf("samples is %d, and return false\n", Samples);
-	  return(false);
-  }
+	/*
+	while(strpcmUpdateNoteon(0x90 | channel, note+12*baseOctave, 127) == true)
+		;
+	*/
+}
 
-  return(true);
+void stop(u8 note)
+{
+	MTRK_NoteOff(0x80 | channel, note+12*baseOctave, 0);
+	// dsmi_write(0x80 | channel, note+12*baseOctave, 0);
+}
+
+void pitchChange(s16 value)
+{
+	s16 newvalue = value;
+	
+	// Clamp to [-64, 64]
+	if(newvalue < -64) newvalue = -64;
+	if(newvalue > 63) newvalue = 63;
+	
+	// Make positive
+	newvalue += 64;
+	
+	// Scale to interval [0,2^14]
+	u16 uvalue = newvalue * 128;
+	
+	// Split into lower and higher 7 bit
+	u8 ls7b = uvalue & 0x7F;
+	uvalue >>= 7;
+	u8 ms7b = uvalue & 0x7F;
+	
+	// dsmi_write(0xE0+channel, ls7b, ms7b);
+}
+
+void pressureChange(u8 value)
+{
+	u8 newvalue = value;
+	
+	// Clamp
+	if(newvalue > 127) newvalue = 127;
+	
+	// dsmi_write(0xB0+channel, 0, newvalue);
+}
+
+// 1 for halftones, 0 for fulltones
+u8 isHalfTone(u8 note)
+{
+	u8 i;
+	for(i=0;i<10;++i) {
+		if(note==halftones[i])
+			return 1;
+	}
+	return 0;
+}
+
+// Set the key corresp. to note to use the palette corresp. to pal_idx
+void setKeyPal(u8 note)
+{
+	u8 x, y, hit_row, pal_idx;
+
+	if(isHalfTone(note)) {
+		hit_row = 0;
+		pal_idx = 2;
+	} else {
+		hit_row = 4;
+		pal_idx = 1;
+	}
+
+	for(x=0; x<28; ++x) {
+		if(keyb_hit[hit_row][x] == note) {
+			for(y=0; y<5; ++y) {
+				map[32*(y+keyb_ypos)+(x+keyb_xpos)] &= ~(3 << 12); // Clear bits 12 and 13 (from the left)
+				map[32*(y+keyb_ypos)+(x+keyb_xpos)] |= (pal_idx << 12); // Write the pal index to bits 12 and 13
+			}
+		}
+	}
+}
+
+// Reset keyboard colors to normal
+void resetPals(void)
+{
+	u8 x,y;
+	for(x=0; x<28; ++x) {
+		for(y=0; y<5; ++y) {
+			map[32*(y+keyb_ypos)+(x+keyb_xpos)] &= ~(3 << 12); // Clear bits 12 and 13 (from the left)
+		}
+	}
+}
+
+void Smoke(void)
+{
+	if(tick==0) {
+		if(notes[row]!=255) {
+			play(notes[row]);
+		}
+		row++;
+	}
+	if(row==N_ROWS) {
+		TIMER3_CR = 0;
+		irqDisable(IRQ_TIMER3);
+	}
+
+	tick++;
+	tick%=TICKS_PER_ROW;
+}
+
+void drawFullBox(u8 tx, u8 ty, u8 tw, u8 th, u16 col)
+{
+	u8 i,j;
+	for(i=0;i<tw;++i) {
+		for(j=0;j<th;++j) {
+			*(main_vram+SCREEN_WIDTH*(ty+j)+i+tx) = col;
+		}
+	}
+}
+
+void drawString(const char* str, u8 tx, u8 ty)
+{
+	// Draw text
+	u8 pos=0, charidx, i, j;
+	u16 drawpos = 0; u8 col;
+	char *charptr;
+	
+	while(pos<strlen(str))
+	{
+		charptr = strchr(fontchars, str[pos]);
+		if(charptr==0) {
+			charidx = 39; // '_'
+		} else {
+			charidx = charptr - fontchars;
+		}
+		
+		for(j=0;j<11;++j) {
+			for(i=0;i<8;++i) {
+				// Print a character from the bitmap font
+				// each char is 8 pixels wide, and 8 pixels
+				// are in a byte.
+				col = font_8x11[64*j+charidx];
+				if(col & BIT(i)) {
+					*(main_vram+SCREEN_WIDTH*(j+ty)+(i+tx+drawpos)) = RGB15(0,0,0) | BIT(15);
+				}
+			}
+		}
+		
+		drawpos += charwidths_8x11[charidx]+1;
+		pos++;
+	}
+}
+
+void displayOctave(u8 chn)
+{
+	char cstr[3] = {0, 0, 0};
+	sprintf(cstr, "%u", chn);
+	drawFullBox(102, 155, 14, 9, RGB15(26, 26, 26) | BIT(15));
+	drawString(cstr, 102, 155);
+}
+
+void displayChannel(u8 chn)
+{
+	char cstr[3] = {0, 0, 0};
+	sprintf(cstr, "%u", chn);
+	drawFullBox(206, 155, 14, 9, RGB15(26, 26, 26) | BIT(15));
+	drawString(cstr, 206, 155);
+}
+
+void VblankHandler()
+{
+	scanKeys();
+	touch=touchReadXY();
+	
+	if(!touch_was_down && PEN_DOWN)
+	{
+		touch_was_down = 1;
+		
+		pm_x0 = touch.px;
+		pm_y0 = touch.py;
+		
+		// Is the pen on the keyboard?
+		if(     (touch.px > 8*keyb_xpos) && (touch.py > 8*keyb_ypos)
+			&& (touch.px < 8*(keyb_xpos+keyb_width)) && (touch.py < 8*(keyb_ypos+keyb_height)) ) {
+			
+			// Look up the note in the hit-array
+			u8 kbx, kby;
+			kbx = touch.px/8 - keyb_xpos;
+			kby = touch.py/8 - keyb_ypos;
+
+			u8 note = keyb_hit[kby][kbx];
+			currnote = note + 12*baseOctave;
+			lastnote = note;
+			setKeyPal(note);
+			
+			// Play the note
+			play(note);
+		}
+	}
+	else if(touch_was_down && !PEN_DOWN)
+	{
+		touch_was_down = 0;
+		resetPals();
+		stop(lastnote);
+		pitchChange(0);
+	}
+	
+	if(touch_was_down && PEN_DOWN)
+	{
+		s16 dx, dy;
+		dx = touch.px - pm_x0;
+		if(dx<0) dx = 0;
+		dy = touch.py - pm_y0;
+
+		pitchChange(-dy);
+		pressureChange(dx);
+	}
+	
+	u16 keys = keysDown();
+	
+	if(keys & KEY_X) {
+		pitchChange(0);
+	}
+	
+	if(keys & KEY_Y) {
+		pressureChange(0);
+	}
+	
+	if(keys & KEY_RIGHT)
+	{
+		if(baseOctave < 9)
+			baseOctave++;
+		
+		displayOctave(baseOctave);
+		iprintf("base octave %u\n", baseOctave);
+	}
+	
+	if(keys & KEY_LEFT)
+	{
+		if(baseOctave > 0)
+			baseOctave--;
+		
+		displayOctave(baseOctave);
+		iprintf("base octave %u\n", baseOctave);
+	}
+	
+	if(keys & KEY_UP)
+	{
+		if(channel < 15)
+			channel++;
+		
+		displayChannel(channel);
+		iprintf("using midi channel %u\n", channel);
+	}
+	
+	if(keys & KEY_DOWN)
+	{
+		if(channel > 0)
+			channel--;
+		
+		displayChannel(channel);
+		iprintf("using midi channel %u\n", channel);
+	}
+	
+	if(keys & KEY_B) {
+		TIMER1_DATA = TIMER_FREQ_64(1000);
+		TIMER1_CR = TIMER_ENABLE | TIMER_DIV_64 | TIMER_IRQ_REQ;
+		row=0;
+		tick=0;
+	}
+	
+	keys = keysUp();
 }

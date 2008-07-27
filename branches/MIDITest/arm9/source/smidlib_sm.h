@@ -44,6 +44,7 @@ extern void SM_Free(void);
 extern void SM_ProcMetaEvent(TSM_Track *pSM_Track);
 extern bool SM_isAllTrackEOF(void);
 extern void SM_LoadStdMIDI(u8 *FilePtr,u32 SampleRate);
+extern void SM_ProcMetaEvent_InitTempo(void);
 extern int SM_GetDeltaTime(TSM_Track *pSM_Track);
 extern void SM_ProcStdMIDI(bool ShowMessage,bool EnableNote,TSM_Track *pSM_Track);
 

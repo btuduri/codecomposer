@@ -379,7 +379,7 @@ static void SM_ProcSysExEventF7(bool ShowMessage,TSM_Track *pSM_Track)
   }
 }
 
-static void SM_ProcMetaEvent_InitTempo(void)
+void SM_ProcMetaEvent_InitTempo(void)
 {
   // default tempo=120
   

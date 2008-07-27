@@ -64,11 +64,11 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath=".\arm9\source\_const.h"
+				RelativePath=".\arm7\source\_const.h"
 				>
 			</File>
 			<File
-				RelativePath=".\arm7\source\_const.h"
+				RelativePath=".\arm9\source\_const.h"
 				>
 			</File>
 			<File
@@ -77,6 +77,14 @@
 			</File>
 			<File
 				RelativePath=".\arm7\source\a7sleep.h"
+				>
+			</File>
+			<File
+				RelativePath=".\arm9\source\bg_main.h"
+				>
+			</File>
+			<File
+				RelativePath=".\arm9\source\bg_sub.h"
 				>
 			</File>
 			<File
@@ -113,6 +121,14 @@
 			</File>
 			<File
 				RelativePath=".\arm9\source\filesys.h"
+				>
+			</File>
+			<File
+				RelativePath=".\arm9\source\font_8x11.h"
+				>
+			</File>
+			<File
+				RelativePath=".\arm9\source\fontchars.h"
 				>
 			</File>
 			<File
@@ -172,7 +188,19 @@
 				>
 			</File>
 			<File
-				RelativePath=".\arm9\source\ipc3.h"
+				RelativePath=".\arm9\source\keyb_hit.h"
+				>
+			</File>
+			<File
+				RelativePath=".\arm9\source\keyboard.map.h"
+				>
+			</File>
+			<File
+				RelativePath=".\arm9\source\keyboard.pal.h"
+				>
+			</File>
+			<File
+				RelativePath=".\arm9\source\keyboard.raw.h"
 				>
 			</File>
 			<File
@@ -208,11 +236,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\arm9\source\memtool.h"
+				RelativePath=".\arm7\source\memtool.h"
 				>
 			</File>
 			<File
-				RelativePath=".\arm7\source\memtool.h"
+				RelativePath=".\arm9\source\memtool.h"
 				>
 			</File>
 			<File
@@ -245,6 +273,10 @@
 			</File>
 			<File
 				RelativePath=".\arm9\source\smidlib_sm.h"
+				>
+			</File>
+			<File
+				RelativePath=".\arm9\source\smidproc.h"
 				>
 			</File>
 			<File
@@ -292,6 +324,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\arm9\source\bg_main.c"
+				>
+			</File>
+			<File
+				RelativePath=".\arm9\source\bg_sub.c"
+				>
+			</File>
+			<File
 				RelativePath=".\arm9\source\cimfs.cpp"
 				>
 			</File>
@@ -312,6 +352,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\arm9\source\font_8x11.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\arm9\source\fontchars.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\arm9\source\FontPro.cpp"
 				>
 			</File>
@@ -321,6 +369,22 @@
 			</File>
 			<File
 				RelativePath=".\arm9\source\inifile.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\arm9\source\keyb_hit.c"
+				>
+			</File>
+			<File
+				RelativePath=".\arm9\source\keyboard.map.c"
+				>
+			</File>
+			<File
+				RelativePath=".\arm9\source\keyboard.pal.c"
+				>
+			</File>
+			<File
+				RelativePath=".\arm9\source\keyboard.raw.c"
 				>
 			</File>
 			<File
@@ -364,6 +428,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\arm9\source\smidproc.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\arm9\source\strpcm.cpp"
 				>
 			</File>
@@ -376,6 +444,10 @@
 				>
 			</File>
 		</Filter>
+		<File
+			RelativePath=".\Dancing_Queen.mid"
+			>
+		</File>
 		<File
 			RelativePath=".\arm9\source\io_dldi.s"
 			>

@@ -7,6 +7,11 @@
 #include "memtoolARM7.h"
 #include "a7sleep.h"
 
+#define abs(x)	((x)>=0?(x):-(x))
+
+int vcount;
+touchPosition first,tempPos;
+
 static u32 LastLCDPowerControl=LCDPC_ON_BOTH;
 static bool LCDPowerApplyFlag=true;
 static u32 strpcmCursorFlag=0;
@@ -108,6 +113,84 @@ static void strpcmStop()
   IPC3->IR=IR_NULL;
 }
 
+static void VcountHandler() {
+	static int lastbut = -1;
+	
+	uint16 but=0, x=0, y=0, xpx=0, ypx=0, z1=0, z2=0;
+
+	but = REG_KEYXY;
+
+	if (!( (but ^ lastbut) & (1<<6))) {
+ 
+		tempPos = touchReadXY();
+
+		x = tempPos.x;
+		y = tempPos.y;
+		xpx = tempPos.px;
+		ypx = tempPos.py;
+		z1 = tempPos.z1;
+		z2 = tempPos.z2;
+		
+	} else {
+		lastbut = but;
+		but |= (1 <<6);
+	}
+
+	if ( vcount == 80 ) {
+		first = tempPos;
+	} else {
+		if (	abs( xpx - first.px) > 10 || abs( ypx - first.py) > 10 ||
+				(but & ( 1<<6)) ) {
+
+			but |= (1 <<6);
+			lastbut = but;
+
+		} else {
+			IPC->mailBusy = 1;
+			IPC->touchX			= x;
+			IPC->touchY			= y;
+			IPC->touchXpx		= xpx;
+			IPC->touchYpx		= ypx;
+			IPC->touchZ1		= z1;
+			IPC->touchZ2		= z2;
+			IPC->mailBusy = 0;
+		}
+	}
+	IPC->buttons		= but;
+	vcount ^= (80 ^ 130);
+	SetYtrigger(vcount);
+}
+
+static void VblankHandler()
+{
+	uint16 but=0, x=0, y=0, xpx=0, ypx=0, z1=0, z2=0, batt=0, aux=0;
+	
+	// Read the X/Y buttons and the /PENIRQ line
+	
+	but = REG_KEYXY;
+	if (!(but & 0x40)) {
+		// Read the touch screen
+		touchPosition tempPos = touchReadXY();
+
+		x = tempPos.x;
+		y = tempPos.y;
+		xpx = tempPos.px;
+		ypx = tempPos.py;
+	}
+	
+	// Update the IPC struct
+	
+	IPC->buttons   = but;
+	IPC->touchX    = x;
+	IPC->touchY    = y;
+	IPC->touchXpx  = xpx;
+	IPC->touchYpx  = ypx;
+	IPC->touchZ1   = z1;
+	IPC->touchZ2   = z2;
+	IPC->battery   = batt;
+	IPC->aux       = aux;
+}
+
 #include "main_irq_timer.h"
 #include "main_vsync.h"
 #include "main_init.h"
@@ -129,6 +212,8 @@ int main(void)
   // Keep the ARM7 out of main RAM
   while (1)
   {
+	VblankHandler();
+
     if(VsyncPassed==false) 
 		swiWaitForVBlank();
     

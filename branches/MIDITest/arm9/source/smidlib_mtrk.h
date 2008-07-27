@@ -15,4 +15,3 @@ extern void MTRK_NoteOff(u32 trk,u32 Note,u32 Vel);
 extern void MTRK_SetExMap(u32 trk,u32 mode);
 
 #endif
-
