@@ -103,14 +103,6 @@ static void PCH_FreeProgramMap_Free_Patch(TProgramPatch *pPrgPatch)
 {
   if(pPrgPatch->pPrg==NULL) return;
   
-/*
-  for(u32 patidx=0;patidx<pPrgPatch->PatchCount;patidx++){
-    TProgram *pPrg=&pPrgPatch->pPrg[patidx];
-    if(pPrg->pData!=NULL){
-      safefree(pPrg->pData); pPrg->pData=NULL;
-    }
-  }
-*/
   pPrgPatch->PatchCount=0;
   safefree(pPrgPatch->pPrg); pPrgPatch->pPrg=NULL;
 }

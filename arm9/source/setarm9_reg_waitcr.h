@@ -1,3 +1,6 @@
+#ifndef setarm9_reg9_h
+#define setarm9_reg9_h
+
 #include "_const.h"
 
 #define _REG_WAIT_CR (*(vuint16*)0x04000204)
@@ -29,3 +32,4 @@ static inline void SetARM9_REG_WaitCR(void)
 }
 
 #undef _REG_WAIT_CR
+#endif

@@ -32,11 +32,20 @@ static inline void load_PersonalData() {
 static inline void main_InitIRQ(void)
 {
   REG_IME = 0;
+
   irqInit();
-  
+  irqEnable(IRQ_VBLANK);
+	
+  swiWaitForVBlank();
+
+  SetYtrigger(80);
+  vcount = 80;
+	
   irqSet(IRQ_TIMER1, InterruptHandler_Timer_Null);
+  irqSet(IRQ_VCOUNT, VcountHandler);
   irqSet(IRQ_VBLANK, InterruptHandler_VBlank);
 
+  irqEnable(IRQ_VCOUNT);
   REG_IME = 1;
 }
 
@@ -101,7 +110,6 @@ static inline void main_InitAll(void)
   IPC3->RequestShotDown=false;
   
   IPC3->RESET=RESET_NULL;
-  
   IPC3->IR=IR_NULL;
   
   // Reset the clock if needed

@@ -20,25 +20,6 @@ s16 *strpcmRingLBuf=NULL;
 s16 *strpcmRingRBuf=NULL;
 
 static void strpcmUpdate(void);
-
-#include "tcmstart.h"
-void InterruptHandler_Vsync(void)
-{
-
-}
-#include "tcmend.h"
-
-
-#include "tcmstart.h"
-void InterruptHandler_VBlank(void)
-{
-  InterruptHandler_Vsync();
-  
-  VsyncPassedCount++;
-}
-#include "tcmend.h"
-
-
 #define CACHE_LINE_SIZE (32)
 
 #include "tcmstart.h"
@@ -55,8 +36,6 @@ void ins_DC_FlushRangeOverrun(void *v,u32 size)
 #include "tcmstart.h"
 void InterruptHandler_IPC_SYNC(void)
 {  
-//  iprintf("!sync%d,%x,%d,%d,%d!\n",IPC3->IR,(u32)IPC3->IR_readbuf,IPC3->IR_readsize,IPC3->IR_readbufsize,IPC3->IR_flash);
-  
   switch(IPC3->IR){
     case IR_NULL: {
     } break;
@@ -77,23 +56,7 @@ void InterruptHandler_IPC_SYNC(void)
   
   IPC3->IR=IR_NULL;
 }
-
 #include "tcmend.h"
-
-void InitInterrupts(void)
-{
-  REG_IME = 0;
-  
-  irqInit();
-  
-  irqEnable(IRQ_VBLANK);
-  irqEnable(IRQ_IPC_SYNC);
-  
-  irqSet(IRQ_IPC_SYNC, InterruptHandler_IPC_SYNC);
-
-  REG_IPC_SYNC=IPC_SYNC_IRQ_ENABLE;
-  REG_IME = 1;
-}
 
 void strpcmStart(bool FastStart,u32 SampleRate,u32 SamplePerBuf,u32 ChannelCount,EstrpcmFormat strpcmFormat)
 {  
@@ -251,7 +214,10 @@ void strpcmUpdate(void)
   s16 *rdst=IPC3->strpcmRBuf;
   
   if((ldst==NULL)||(rdst==NULL)) 
+  {
+	  iprintf("strpcmUpdate: ldst, rdst is null\n");
 	  return;
+  }
   
   if((strpcmRingLBuf==NULL)||(strpcmRingRBuf==NULL))
   {
@@ -270,7 +236,8 @@ void strpcmUpdate(void)
   if(strpcmPause==true) 
 	  IgnoreFlag=true;
   
-  if(CurIndex==strpcmRingBufWriteIndex){
+  if(CurIndex==strpcmRingBufWriteIndex)
+  {
     strpcmRingEmptyFlag=true;
     IgnoreFlag=true;
   }

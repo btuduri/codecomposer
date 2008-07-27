@@ -19,15 +19,14 @@ extern volatile u32 strpcmRingBufWriteIndex;
 extern s16 *strpcmRingLBuf;
 extern s16 *strpcmRingRBuf;
 
-extern void InitInterrupts_Splash(void);
-extern void InitInterrupts(void);
-
 extern void strpcmStart(bool FastStart,u32 SampleRate,u32 SamplePerBuf,u32 ChannelCount,EstrpcmFormat strpcmFormat);
 extern void strpcmStop(void);
 
 extern void strpcmSetVolume16(int v);
 extern void strpcmSetPause(bool v);
 extern bool strpcmGetPause(void);
+
+extern void InterruptHandler_IPC_SYNC(void);
 
 extern EstrpcmFormat GetOversamplingFactorFromSampleRate(u32 SampleRate);
 

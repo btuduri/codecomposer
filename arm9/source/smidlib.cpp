@@ -13,6 +13,11 @@ static u32 bGenVolume;
 void smidlibSetParam(u8 *data,u32 SampleRate,u32 SampleBufCount,u32 MaxChannelCount,u32 GenVolume)
 {
   bdata=data;
+  smidlibSetSoundParam(SampleRate, SampleBufCount, MaxChannelCount, GenVolume);
+}
+
+void smidlibSetSoundParam(u32 SampleRate,u32 SampleBufCount,u32 MaxChannelCount,u32 GenVolume)
+{
   bSampleRate=SampleRate;
   bSampleBufCount=SampleBufCount;
   bMaxChannelCount=MaxChannelCount;
