@@ -241,9 +241,6 @@ void strpcmUpdate(void)
     strpcmRingEmptyFlag=true;
     IgnoreFlag=true;
   }
-  
-  // iprintf("strpcmRingBufWriteIndex is %d\n", strpcmRingBufWriteIndex);
-  // iprintf("strpcmRingBufReadIndex is %d\n", strpcmRingBufReadIndex);
 
   if(IgnoreFlag==true){
     ins_MemSet16DMA2(0,ldst,Samples*2);

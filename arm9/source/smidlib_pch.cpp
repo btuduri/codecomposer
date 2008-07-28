@@ -820,7 +820,7 @@ void PCH_NextClock(void)
 void PCH_ChangeVolume(u32 trk,u32 v)
 {
   if(ChannelInfoCount<=trk){
-    iprintf("Channel overflow. ch=%d",trk);
+	  iprintf("PCH_ChangeVolume : Channel overflow. ch=%d\n",trk);
     return;
   }
   
@@ -849,7 +849,7 @@ void PCH_ChangeVolume(u32 trk,u32 v)
 void PCH_ChangeExpression(u32 trk,u32 e)
 {
   if(ChannelInfoCount<=trk){
-    iprintf("Channel overflow. ch=%d",trk);
+	  iprintf("PCH_ChangeExpression: Channel overflow. ch=%d",trk);
     return;
   }
   
@@ -893,7 +893,7 @@ static inline u32 FreqTransAddFix16(u32 basefreq,u32 powval,u32 SrcSampleRate,u3
 void PCH_ChangePitchBend(u32 trk,s32 Pitch)
 {
   if(ChannelInfoCount<=trk){
-    iprintf("Channel overflow. ch=%d",trk);
+	  iprintf("PCH_ChangePitchBend: Channel overflow. ch=%d",trk);
     return;
   }
   
@@ -943,7 +943,7 @@ void PCH_ChangePitchBend(u32 trk,s32 Pitch)
 void PCH_ChangePanpot(u32 trk,u32 p)
 {
   if(ChannelInfoCount<=trk){
-    iprintf("Channel overflow. ch=%d",trk);
+	  iprintf("PCH_ChangePanpot: Channel overflow. ch=%d",trk);
     return;
   }
     
@@ -1139,7 +1139,7 @@ static int PCH_FindDisableChannel(u32 PlayChOnly)
 void PCH_NoteOn(u32 trk,u32 GT,s32 Note,s32 Pitch,u32 Vol,u32 Exp,u32 Vel,u32 var,u32 prg,u32 panpot,u32 reverb,bool DrumMode,u32 ModLevel)
 {
   if(ChannelInfoCount<=trk){
-    iprintf("Channel overflow. ch=%d",trk);
+	  iprintf("PCH_NoteOn: Channel overflow. ch=%d\n",trk);
     return;
   }
   
@@ -1322,7 +1322,7 @@ void PCH_NoteOff(u32 trk,u32 Note,bool DrumMode)
   if(DrumMode==true) return;
   
   if(ChannelInfoCount<=trk){
-    iprintf("Channel overflow. ch=%d",trk);
+	  iprintf("PCH_NoteOff: Channel overflow. ch=%d",trk);
     return;
   }
   
@@ -1355,7 +1355,7 @@ void PCH_NoteOff(u32 trk,u32 Note,bool DrumMode)
 void PCH_PedalOn(u32 trk)
 {
   if(ChannelInfoCount<=trk){
-    iprintf("Channel overflow. ch=%d",trk);
+	  iprintf("PCH_PedalOn: Channel overflow. ch=%d",trk);
     return;
   }
   
@@ -1369,7 +1369,7 @@ void PCH_PedalOn(u32 trk)
 void PCH_PedalOff(u32 trk)
 {
   if(ChannelInfoCount<=trk){
-    iprintf("Channel overflow. ch=%d",trk);
+	  iprintf("PedalOff: Channel overflow. ch=%d",trk);
     return;
   }
   

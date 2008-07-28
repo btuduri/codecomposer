@@ -380,9 +380,12 @@ u32 GetSamplePerFrame(void)
 
 u32 Update(s16 *lbuf,s16 *rbuf)
 {
+  /*
   if(sel_isAllTrackEOF()==true) 
 	  return(0);
-   
+  */
+
+  /*
   int ProcClock=0;
   
   {
@@ -402,7 +405,7 @@ u32 Update(s16 *lbuf,s16 *rbuf)
     CurrentClock+=DecClock;
     if(selNextClock(MIDPlugin->ShowEventMessage,true,DecClock)==false) break;
   }
-
+  */
   PCH_NextClock();
 
   PCH_RenderStart(SamplePerFrame);
@@ -562,30 +565,30 @@ bool strpcmUpdate_mainloop(void)
   u32 Samples=0;
   
   REG_IME=0;
-  
   u32 CurIndex=(strpcmRingBufWriteIndex+1) & strpcmRingBufBitMask;
   u32 PlayIndex=strpcmRingBufReadIndex;
   bool EmptyFlag;
 
   EmptyFlag=strpcmRingEmptyFlag;
   strpcmRingEmptyFlag = false;
-  
   REG_IME=1;
   
   // Why these things happen!
   if(CurIndex==PlayIndex) 
   {
 	iprintf("CurIndex and PlayIndex are the same\n");	
-	// return (false);
+	return (false);
   }
-	  
+	
+  /*
   if(EmptyFlag==true)
-  	iprintf("strpcm:CPU overflow.\n");
- 
+  	 iprintf("strpcm:CPU overflow.\n");
+  */
+
   if((strpcmRingLBuf==NULL)||(strpcmRingRBuf==NULL)) 
   {
 	  iprintf("mainloop Buffer problem\n");
-	  // return (false);
+	  return (false);
   }
 
   s16 *ldst=&strpcmRingLBuf[BaseSamples*CurIndex];
@@ -601,6 +604,13 @@ bool strpcmUpdate_mainloop(void)
     
 	if(Samples!=BaseSamples) 
 		strpcmRequestStop=true;
+
+	// 현재 Lbuf와 Rbuf가 0으로 나오는것을 봐서 버퍼에 내용이 복사가 안되므로 소리가 안나는것 같습니다.
+	iprintf("Samples is %d\n", Samples);
+	iprintf("strpcmRingBufWriteIndex is %d\n", strpcmRingBufWriteIndex);
+    iprintf("strpcmRingBufReadIndex is %d\n", strpcmRingBufReadIndex);
+	iprintf("Lbuf : %d\n", strpcmRingLBuf[BaseSamples*CurIndex]);
+    iprintf("Rbuf : %d\n", strpcmRingRBuf[BaseSamples*CurIndex]);
   }
   
   if(Samples<BaseSamples)
@@ -618,8 +628,8 @@ bool strpcmUpdate_mainloop(void)
   
   if(Samples==0) 
   {
-	  // iprintf("samples is %d, and return false\n", Samples);
-	  // return(false);
+	  iprintf("samples is %d, and return false\n", Samples);
+	  return(false);
   }
 
   return(true);
