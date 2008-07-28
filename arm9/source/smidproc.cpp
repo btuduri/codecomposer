@@ -45,6 +45,9 @@ extern s16 *strpcmRingRBuf;
 // functions from moonshell
 bool initSmidlib()
 {
+ pPB = (TPluginBody*)safemalloc(sizeof(TPluginBody));
+ MIDPlugin = &MIDIINI.MIDPlugin;
+
  pPB->INIData=NULL;
  pPB->INISize=0;
  pPB->BINFileHandle=0;
@@ -74,15 +77,13 @@ bool initSmidlib()
    pReserve[3]=safemalloc(samples*2);
  }
 
- pPB = (TPluginBody*)safemalloc(sizeof(TPluginBody));
- MIDPlugin = &MIDIINI.MIDPlugin;
+ if(!loadSoundSource(pPB))
+	 return false;
 
  SM_Init();
  SM_ProcMetaEvent_InitTempo();
  PCH_Init(MIDPlugin->SampleRate,SamplePerFrame,MIDPlugin->MaxVoiceCount,MIDPlugin->GenVolume);
  MTRKCC_Init();
-
- loadSoundSource(pPB);
 
  u32 idx=0;
  for(idx=0;idx<ReserveCount;idx++){
@@ -406,6 +407,7 @@ u32 Update(s16 *lbuf,s16 *rbuf)
     if(selNextClock(MIDPlugin->ShowEventMessage,true,DecClock)==false) break;
   }
   */
+
   PCH_NextClock();
 
   PCH_RenderStart(SamplePerFrame);
@@ -432,6 +434,9 @@ u32 Update(s16 *lbuf,s16 *rbuf)
         
         if(reqrender==true){
           PCH_Render(ch,ptmpbuf,SamplePerFrame);
+		  
+		  iprintf("ptmpbuf is %d\n", *ptmpbuf);
+
           StackLastCount[ch]=StackCount*4;
           }else{
           StackLastCount[ch]--;
@@ -580,10 +585,8 @@ bool strpcmUpdate_mainloop(void)
 	return (false);
   }
 	
-  /*
   if(EmptyFlag==true)
   	 iprintf("strpcm:CPU overflow.\n");
-  */
 
   if((strpcmRingLBuf==NULL)||(strpcmRingRBuf==NULL)) 
   {

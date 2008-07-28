@@ -51,6 +51,8 @@ void PCH_SetProgramMap_Load(TProgramMap *pPrgMap, int FileHandle,u32 FileOffset)
 
 void PCH_SetProgramMap(int FileHandle)
 {
+  iprintf("PCH_SetProgramMap: FileHandle is %d\n", FileHandle);
+
   int prg=0;
   MemSet32CPU(0,&VarMap_Tone,sizeof(TVariationMap));
   MemSet32CPU(0,&VarMap_Drum,sizeof(TVariationMap));
@@ -67,16 +69,19 @@ void PCH_SetProgramMap(int FileHandle)
   FileSys_fread(&ID,1,4, FileHandle);
   
   for(prg=0;prg<128;prg++){
-    FileSys_fread(&ToneOffset[prg],1,4,FileHandle);
+	FileSys_fread(&ToneOffset[prg],1,4,FileHandle);
   }
+
   for(prg=0;prg<128;prg++){
     FileSys_fread(&DrumOffset[prg],1,4,FileHandle);
   }
   
   FileSys_fread(&PCMFileOffset,1,4, FileHandle);
   
+  iprintf("Load VarMap_Tone\n");
   for(prg=0;prg<128;prg++){
     if(ToneOffset[prg]!=0){
+	  iprintf("ToneOffset[%d] is %d\n", prg, ToneOffset[prg]);
       VarMap_Tone.pPrgMaps[prg]=(TProgramMap*)safemalloc(sizeof(TProgramMap));
       PCH_SetProgramMap_Load(VarMap_Tone.pPrgMaps[prg],FileHandle,ToneOffset[prg]);
     }
@@ -84,6 +89,7 @@ void PCH_SetProgramMap(int FileHandle)
   
   for(prg=0;prg<128;prg++){
     if(DrumOffset[prg]!=0){
+	  iprintf("DrumOffset[%d] is %d\n", prg, DrumOffset[prg]);
       VarMap_Drum.pPrgMaps[prg]=(TProgramMap*)safemalloc(sizeof(TProgramMap));
       PCH_SetProgramMap_Load(VarMap_Drum.pPrgMaps[prg],FileHandle,DrumOffset[prg]);
     }
@@ -203,9 +209,21 @@ static u32 GetVariationNumber(TVariationMap *pVarMap,u32 VarNum,u32 PrgNum,bool 
 
 static TProgramPatch *GetProgramPatchPtr(TVariationMap *pVarMap,u32 VarNum,u32 PrgNum,bool DrumMode)
 {
-  if(128<=VarNum) return(NULL);
-  if(128<=PrgNum) return(NULL);
-  
+  iprintf("VarNum is %d\n", VarNum);
+  iprintf("PrgNum is %d\n", PrgNum);
+
+  if(128<=VarNum) 
+  {
+	  iprintf("GetProgramPatchPtr: VarNum is above 128\n");
+	  return(NULL);
+  }
+
+  if(128<=PrgNum) 
+  {
+	  iprintf("GetProgramPatchPtr: PrgNum is above 128\n");
+	  return(NULL);
+  }
+
   for(;VarNum!=0;VarNum--){
     if(pVarMap->pPrgMaps[VarNum]!=NULL){
       TProgramMap *pPrgMap=pVarMap->pPrgMaps[VarNum];
@@ -221,17 +239,33 @@ static TProgramPatch *GetProgramPatchPtr(TVariationMap *pVarMap,u32 VarNum,u32 P
   
   {
     TProgramMap *pPrgMap=pVarMap->pPrgMaps[VarNum];
-    if(pPrgMap!=NULL){
-      if(DrumMode==false){
-        if(pPrgMap->ppData[PrgNum]!=NULL) return(pPrgMap->ppData[PrgNum]);
-        PrgNum&=~7; // find captital tone
-        if(pPrgMap->ppData[PrgNum]!=NULL) return(pPrgMap->ppData[PrgNum]);
-        }else{
-        if(pPrgMap->ppData[PrgNum]!=NULL) return(pPrgMap->ppData[PrgNum]);
+    if(pPrgMap!=NULL)
+	{
+	  iprintf("GetProgramPatchPtr: pPrgMap is not Null\n");
+    
+	  if(DrumMode==false)
+	  {
+        if(pPrgMap->ppData[PrgNum]!=NULL) 
+			return(pPrgMap->ppData[PrgNum]);
+        
+		PrgNum&=~7; // find captital tone
+        
+		if(pPrgMap->ppData[PrgNum]!=NULL) 
+			return(pPrgMap->ppData[PrgNum]);
+      }
+	  else
+	  {
+        if(pPrgMap->ppData[PrgNum]!=NULL) 
+			return(pPrgMap->ppData[PrgNum]);
       }
     }
+	else
+	{
+		iprintf("GetProgramPatchPtr: pPrgMap is Null\n");
+	}
   }
   
+  iprintf("GetProgramPatchPtr: Kind of Exception\n");
   return(NULL);
 }
 
@@ -284,9 +318,18 @@ static TProgram *GetProgramFromPatchPtr(TProgramPatch *pPrgPatch,s32 Note,bool D
 
 bool PCH_LoadProgram(s32 Note,u32 var,u32 prg,bool DrumMode)
 {
-  if(MemoryOverflowFlag==true) return(false);
+  if(MemoryOverflowFlag==true) 
+  {
+	  iprintf("PCH_LoadProgram: MemoryOverflowFlag is true\n");
+	  return(false);
+  }	  
   
-  if(Note==0) return(false);
+  if(Note==0) 
+  {
+	  iprintf("PCH_LoadProgram: Note = 0\n");
+	  return(false);
+  }
+	  
   
   TVariationMap *pVarMap;
   u32 VarNum,PrgNum;
@@ -302,11 +345,19 @@ bool PCH_LoadProgram(s32 Note,u32 var,u32 prg,bool DrumMode)
   }
   
   VarNum=GetVariationNumber(pVarMap,VarNum,PrgNum,DrumMode);
-  if(VarNum==(u32)-1) return(false);
-  
+  if(VarNum==(u32)-1) 
+  {
+	  iprintf("PCH_LoadProgram: GetVariationNumber problem\n");
+	  return(false);
+  }
+
   TProgramMap *pPrgMap=pVarMap->pPrgMaps[VarNum];
-  if(pPrgMap==NULL) return(false);
-  
+  if(pPrgMap==NULL) 
+  {
+	  iprintf("PCH_LoadProgram: pPrgMap is null\n");
+	  return(false);
+  }
+
   if(pPrgMap->ppData[PrgNum]!=NULL) return(true); // already loaded.
   
   u32 ofs=pPrgMap->DataOffset[PrgNum];
@@ -436,7 +487,7 @@ bool PCH_LoadProgram(s32 Note,u32 var,u32 prg,bool DrumMode)
             memoryoverflow=true;
             break;
           }
-//          iprintf("DecodeTTAC8bit. %dbytes %dsamples\n",CodeBufSize,SourceSamplesCount);
+          iprintf("DecodeTTAC8bit. %dbytes %dsamples\n",CodeBufSize,SourceSamplesCount);
           TTAC_Decode_8bit_asm(pCodeBuf,pSourceSamples,SourceSamplesCount);
 //          TTAC_Decode_6bit_asm(pCodeBuf,pSourceSamples,SourceSamplesCount);
           pPrg->pData=pSourceSamples;
@@ -449,7 +500,7 @@ bool PCH_LoadProgram(s32 Note,u32 var,u32 prg,bool DrumMode)
             memoryoverflow=true;
             break;
           }
-//          iprintf("DecodeTTAC16bit. %dbytes %dsamples\n",CodeBufSize,SourceSamplesCount);
+          iprintf("DecodeTTAC16bit. %dbytes %dsamples\n",CodeBufSize,SourceSamplesCount);
           TTAC_Decode_16bit_asm(pCodeBuf,pSourceSamples,SourceSamplesCount);
 //          TTAC_Decode_12bit_asm(pCodeBuf,pSourceSamples,SourceSamplesCount);
           pPrg->pData=pSourceSamples;
@@ -1149,6 +1200,8 @@ void PCH_NoteOn(u32 trk,u32 GT,s32 Note,s32 Pitch,u32 Vol,u32 Exp,u32 Vel,u32 va
       TPCH1 *_pPCH1=&PCH1[EqualCh];
       TPCH2 *_pPCH2=&PCH2[EqualCh];
       _pPCH1->GT=GT;
+
+	  iprintf("PCH_NoteOn: EqualCh is not -1\n");
       return;
     }
   }
@@ -1170,9 +1223,18 @@ void PCH_NoteOn(u32 trk,u32 GT,s32 Note,s32 Pitch,u32 Vol,u32 Exp,u32 Vel,u32 va
   
   {
     TProgramPatch *pPrgPatch=GetProgramPatchPtr(pVarMap,VarNum,PrgNum,DrumMode);
-    if(pPrgPatch==NULL) return;
+    if(pPrgPatch==NULL) 
+	{
+	    iprintf("PCH_NoteOn: pPrgPatch is NULL\n");
+		return;
+	}
+		
     pPrg=GetProgramFromPatchPtr(pPrgPatch,Note,DrumMode);
-    if(pPrg==NULL) return;
+    if(pPrg==NULL) 
+	{
+	    iprintf("PCH_NoteOn: pPrg is NULL\n");
+		return;
+	}
   }
   
   int ch=PCH_FindDisableChannel(false);
@@ -1804,6 +1866,9 @@ static __attribute__ ((noinline)) void PCH_Render_Bulk(int ch,u32 FreqAddFix16,s
   _pPCH2->PrgPos=PrgPos;
 }
 
+
+
+// 이게 왜 False를 돌려줄까요?
 bool PCH_RequestRender(u32 TagChannel)
 {
   u32 ch=0;
@@ -1811,12 +1876,17 @@ bool PCH_RequestRender(u32 TagChannel)
     TPCH1 *_pPCH1=&PCH1[ch];
     TPCH2 *_pPCH2=&PCH2[ch];
     if(_pPCH1->ChannelNum==TagChannel){
+	  // 아래 iprintf를 찍어보니 FreqAddFix16이 0입니다 ㅠ
+      // iprintf("channel is %d\n", TagChannel);
+	  // iprintf("FreqAddFix16 is %d\n", _pPCH2->FreqAddFix16);
       if((_pPCH1->pPrg!=NULL)&&(_pPCH2->FreqAddFix16!=0)){
         return(true);
       }
     }
   }
   
+  // iprintf("PCH_RequestRender returns false\n");
+
   return(false);
 }
 

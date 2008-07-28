@@ -70,7 +70,7 @@ int GetBINFileHandle(TPluginBody *pCurrentPluginBody)
   TPluginBody *pPB = pCurrentPluginBody;
   pPB->BINFileHandle=Shell_OpenFile(fn);
 
-  iprintf("before bin handle is %d\n", pPB->BINFileHandle);
+  iprintf("bin handle is %d\n", pPB->BINFileHandle);
 
   if(pPB->BINFileHandle==0)
   {
@@ -83,9 +83,9 @@ int GetBINFileHandle(TPluginBody *pCurrentPluginBody)
     FileSys_fseek(pPB->BINFileHandle,0,SEEK_END);
     pPB->BINSize=FileSys_ftell(pPB->BINFileHandle);
     FileSys_fseek(pPB->BINFileHandle,0,SEEK_SET);
-  }
 
-  iprintf("after bin handle is %d\n", pPB->BINFileHandle);
+	iprintf("pPB->BINSize is %d\n", pPB->BINSize);
+  }
 
   return(pPB->BINFileHandle);
 }
