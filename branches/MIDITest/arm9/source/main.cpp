@@ -73,6 +73,9 @@ u8 pm_x0 = 0, pm_y0 = 0;
 u16 currnote = 0;
 u16 *main_vram = (u16*)BG_BMP_RAM(2);
 
+// added by KHS
+int flagLoadProgram = 0;
+
 // declaration from DSMI
 void play(u8 note);
 void stop(u8 note);
@@ -124,7 +127,10 @@ int main(void)
 	strpcmSetVolume16(16);
 	DD_Init(EDDST_FAT);
 	
-    extmem_Init();
+	flagLoadProgram = 0;
+	iprintf("main: flagLoadProgram is %d\n", flagLoadProgram);
+
+    // extmem_Init();
 
 	// DSMI의 UI는 일단 막아놨습니다, 하지만 그래도 터치스크린 작동은 되므로 테스트할 수 있습니다.
 	// 주석만 풀면 바로 사용이 가능합니다.
@@ -205,6 +211,17 @@ int main(void)
 		return false;
 	}
 
+	/*
+	int file_handle = 0;
+	file_handle = Shell_OpenFile("Dancing_Queen.mid");
+	
+	if(Start(file_handle) == false)
+	{
+      iprintf("midi plugin start error.\n");
+      return 0;
+    }
+	*/
+
 	EstrpcmFormat SPF = GetOversamplingFactorFromSampleRate(MIDPlugin->SampleRate);
 	strpcmStart(false, MIDPlugin->SampleRate, SamplePerFrame, 2, SPF);
 	
@@ -216,17 +233,6 @@ int main(void)
 		swiWaitForVBlank();
 	}
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-	/*
-	int file_handle = 0;
-	file_handle = Shell_OpenFile("Dancing_Queen.mid");
-	
-	if(Start(file_handle) == false)
-	{
-      iprintf("midi plugin start error.\n");
-      return 0;
-    }
-	*/
 
 	return 0;
 }
@@ -260,7 +266,18 @@ void play(u8 note)
 
 	iprintf("channel is %d, baseOctave is %d\n", channel, baseOctave);
 	iprintf("NoteOn: v1: %d, v2: %d, v3 :%d\n", value1, value2, value3);
-	MTRK_NoteOn(value1, 0, value2, value3);
+	
+	if(flagLoadProgram == 0)
+	{
+		// iprintf("play: flagLoadProgram is false\n");
+		flagLoadProgram = 1;
+		MTRK_NoteOn_LoadProgram(value1, value2, value3);
+	}
+	else
+	{
+		// iprintf("play: flagLoadProgram is true\n");
+		MTRK_NoteOn(value1, 0, value2, value3);
+	}
 
 	strpcmUpdate_mainloop();
 }
@@ -274,9 +291,12 @@ void stop(u8 note)
 
 	iprintf("channel is %d, baseOctave is %d\n", channel, baseOctave);
 	iprintf("NoteOff: v1: %d, v2: %d, v3 :%d\n", value1, value2, value3);
-	MTRK_NoteOff(value1, value2, value3);
 
-	strpcmUpdate_mainloop();
+	if(flagLoadProgram = true)
+	{
+		MTRK_NoteOff(value1, value2, value3);
+		strpcmUpdate_mainloop();
+	}
 }
 
 void pitchChange(s16 value)
