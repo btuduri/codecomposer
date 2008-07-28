@@ -90,8 +90,22 @@ void VblankHandler();
 
 // refer to this site: http://dldi.drunkencoders.com/index.php?title=GBA_NDS_FAT
 int main(void)
-{
-	powerON(POWER_ALL);	
+{	
+	InitInterrupts();
+
+	videoSetMode(0);	//not using the main screen
+	videoSetModeSub(MODE_0_2D | DISPLAY_BG0_ACTIVE);	//sub bg 0 will be used to print text
+	vramSetBankC(VRAM_C_SUB_BG);
+
+	SUB_BG0_CR = BG_MAP_BASE(31);
+
+	BG_PALETTE_SUB[255] = RGB15(31,31,31);	//by default font will be rendered with color 255
+
+	//consoleInit() is a lot more flexible but this gets you up and running quick
+	consoleInitDefault((u16*)SCREEN_BASE_BLOCK_SUB(31), (u16*)CHAR_BASE_BLOCK_SUB(0), 16);
+
+	iprintf("sibal\n");
+
 	strpcmSetVolume16(16);
   
 	IPC3->strpcmLBuf=NULL;
@@ -111,8 +125,10 @@ int main(void)
 	DD_Init(EDDST_FAT);
 	
     extmem_Init();
-	InitInterrupts();
 
+	// DSMI의 UI는 일단 막아놨습니다, 하지만 그래도 터치스크린 작동은 되므로 테스트할 수 있습니다.
+	// 주석만 풀면 바로 사용이 가능합니다.
+	/*
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	lcdMainOnBottom();
 	
@@ -132,9 +148,9 @@ int main(void)
 	
 	// Text bg on sub
 	SUB_BG0_CR = BG_MAP_BASE(4) | BG_TILE_BASE(0) | BG_PRIORITY(0);
-	BG_PALETTE_SUB[255] = RGB15(31,0,31);
-	consoleInitDefault((u16*)SCREEN_BASE_BLOCK_SUB(4), (u16*)CHAR_BASE_BLOCK_SUB(0), 16);
-	
+	BG_PALETTE_SUB[255] = RGB15(31,31,31);
+	consoleInitDefault((u16*)SCREEN_BASE_BLOCK_SUB(31), (u16*)CHAR_BASE_BLOCK_SUB(0), 16);
+
 	// The main display is for graphics.
 	// Set up an extended rotation background for background gfx
 	BG2_CR = BG_BMP16_256x256 | BG_BMP_BASE(2);
@@ -170,7 +186,7 @@ int main(void)
 	for(i=0; i<192*256; ++i) {
 		((uint16*)BG_BMP_RAM_SUB(2))[i] = ((uint16*)bg_sub)[i];
 	}
-	
+
 	displayChannel(channel);
 	displayOctave(baseOctave);
 
@@ -180,6 +196,7 @@ int main(void)
 			map[32*(y+keyb_ypos)+(x+keyb_xpos)] = keyboard_Map[29*y+x+1];
 		}
 	}
+	*/
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	if(!initSmidlib())
@@ -191,15 +208,13 @@ int main(void)
 	EstrpcmFormat SPF = GetOversamplingFactorFromSampleRate(MIDPlugin->SampleRate);
 	strpcmStart(false, MIDPlugin->SampleRate, SamplePerFrame, 2, SPF);
 	
-	
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 	while(1)
 	{
 		VblankHandler();
-		strpcmUpdate_mainloop();
 		swiWaitForVBlank();
 	}
-
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	/*
@@ -238,18 +253,30 @@ void InitInterrupts(void)
 // functions from DSMI
 void play(u8 note)
 {
-	MTRK_NoteOn(0x90 | channel, 0, note+12*baseOctave, 127);
+	// u32 value1 = 0x90 | (u32)channel;
+	u32 value1 = (u32)channel;
+	u32 value2 = (u32)note+12* (u32)baseOctave;
+	u32 value3 = 127;
 
-	/*
-	while(strpcmUpdateNoteon(0x90 | channel, note+12*baseOctave, 127) == true)
-		;
-	*/
+	iprintf("channel is %d, baseOctave is %d\n", channel, baseOctave);
+	iprintf("NoteOn: v1: %d, v2: %d, v3 :%d\n", value1, value2, value3);
+	MTRK_NoteOn(value1, 0, value2, value3);
+
+	strpcmUpdate_mainloop();
 }
 
 void stop(u8 note)
 {
-	MTRK_NoteOff(0x80 | channel, note+12*baseOctave, 0);
-	// dsmi_write(0x80 | channel, note+12*baseOctave, 0);
+	// u32 value1 = 0x90 | (u32)channel;
+	u32 value1 = (u32)channel;
+	u32 value2 = (u32)note+12* (u32)baseOctave;
+	u32 value3 = 0;
+
+	iprintf("channel is %d, baseOctave is %d\n", channel, baseOctave);
+	iprintf("NoteOff: v1: %d, v2: %d, v3 :%d\n", value1, value2, value3);
+	MTRK_NoteOff(value1, value2, value3);
+
+	strpcmUpdate_mainloop();
 }
 
 void pitchChange(s16 value)
