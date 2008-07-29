@@ -310,15 +310,12 @@ void pitchChange(s16 value)
 	// Make positive
 	newvalue += 64;
 	
-	// Scale to interval [0,2^14]
-	u16 uvalue = newvalue * 128;
-	
-	// Split into lower and higher 7 bit
-	u8 ls7b = uvalue & 0x7F;
-	uvalue >>= 7;
-	u8 ms7b = uvalue & 0x7F;
-	
-	// dsmi_write(0xE0+channel, ls7b, ms7b);
+	if(flagLoadProgram == 1)
+	{
+	  iprintf("pitchChange value is %d\n", newvalue);
+	  MTRK_ChangePitchBend((u32)channel, (s32)newvalue);
+	  strpcmUpdate_mainloop();
+	}
 }
 
 void pressureChange(u8 value)
@@ -328,7 +325,12 @@ void pressureChange(u8 value)
 	// Clamp
 	if(newvalue > 127) newvalue = 127;
 	
-	// dsmi_write(0xB0+channel, 0, newvalue);
+	if(flagLoadProgram == 1)
+	{	
+		iprintf("pressureChange value is %d\n", newvalue);
+		MTRKCC_Proc((u32)channel, 0, newvalue);
+		strpcmUpdate_mainloop();
+	}
 }
 
 // 1 for halftones, 0 for fulltones
