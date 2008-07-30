@@ -578,6 +578,11 @@ bool strpcmUpdate_mainloop(void)
   strpcmRingEmptyFlag = false;
   REG_IME=1;
   
+  iprintf("strpcmRingBufWriteIndex is %d\n", strpcmRingBufWriteIndex);
+  iprintf("strpcmRingBufReadIndex is %d\n", strpcmRingBufReadIndex);
+  iprintf("loop:IR is %d\n", IPC3->IR);
+  iprintf("loop:strpcmWriteRequest is %d\n", IPC3->strpcmWriteRequest);
+
   // Why these things happen!
   if(CurIndex==PlayIndex) 
   {
@@ -608,12 +613,12 @@ bool strpcmUpdate_mainloop(void)
 	if(Samples!=BaseSamples) 
 		strpcmRequestStop=true;
 
+	/*
 	// 현재 Lbuf와 Rbuf가 0으로 나오는것을 봐서 버퍼에 내용이 복사가 안되므로 소리가 안나는것 같습니다.
 	iprintf("Samples is %d\n", Samples);
-	iprintf("strpcmRingBufWriteIndex is %d\n", strpcmRingBufWriteIndex);
-    iprintf("strpcmRingBufReadIndex is %d\n", strpcmRingBufReadIndex);
 	iprintf("Lbuf : %d\n", strpcmRingLBuf[BaseSamples*CurIndex]);
     iprintf("Rbuf : %d\n", strpcmRingRBuf[BaseSamples*CurIndex]);
+	*/
   }
   
   if(Samples<BaseSamples)

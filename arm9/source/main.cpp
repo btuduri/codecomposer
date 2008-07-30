@@ -107,8 +107,6 @@ int main(void)
 	//consoleInit() is a lot more flexible but this gets you up and running quick
 	consoleInitDefault((u16*)SCREEN_BASE_BLOCK_SUB(31), (u16*)CHAR_BASE_BLOCK_SUB(0), 16);
 
-	iprintf("sibal\n");
-
 	strpcmSetVolume16(16);
   
 	IPC3->strpcmLBuf=NULL;
@@ -246,12 +244,13 @@ void InitInterrupts(void)
   
   irqEnable(IRQ_VBLANK);
   irqEnable(IRQ_IPC_SYNC);
-  
-  irqSet(IRQ_IPC_SYNC, InterruptHandler_IPC_SYNC);
-  irqSet(IRQ_TIMER3, Smoke);
   irqEnable(IRQ_TIMER3);
 
+  irqSet(IRQ_IPC_SYNC, InterruptHandler_IPC_SYNC);
+  irqSet(IRQ_TIMER3, Smoke);
+
   REG_IPC_SYNC=IPC_SYNC_IRQ_ENABLE;
+
   REG_IME = 1;
 }
 
@@ -259,7 +258,7 @@ void InitInterrupts(void)
 // functions from DSMI
 void play(u8 note)
 {
-	// u32 value1 = 0x90 | (u32)channel;
+	TStdMIDI *_StdMIDI=&StdMIDI;
 	u32 value1 = (u32)channel;
 	u32 value2 = (u32)note+12* (u32)baseOctave;
 	u32 value3 = 127;
@@ -279,7 +278,7 @@ void play(u8 note)
 		MTRK_NoteOn(value1, 0, value2, value3);
 	}
 
-	strpcmUpdate_mainloop();
+    _StdMIDI->FastNoteOn=true;
 }
 
 void stop(u8 note)
@@ -293,10 +292,7 @@ void stop(u8 note)
 	iprintf("NoteOff: v1: %d, v2: %d, v3 :%d\n", value1, value2, value3);
 
 	if(flagLoadProgram = true)
-	{
 		MTRK_NoteOff(value1, value2, value3);
-		strpcmUpdate_mainloop();
-	}
 }
 
 void pitchChange(s16 value)
@@ -314,7 +310,6 @@ void pitchChange(s16 value)
 	{
 	  iprintf("pitchChange value is %d\n", newvalue);
 	  MTRK_ChangePitchBend((u32)channel, (s32)newvalue);
-	  strpcmUpdate_mainloop();
 	}
 }
 
@@ -329,7 +324,6 @@ void pressureChange(u8 value)
 	{	
 		iprintf("pressureChange value is %d\n", newvalue);
 		MTRKCC_Proc((u32)channel, 0, newvalue);
-		strpcmUpdate_mainloop();
 	}
 }
 
@@ -461,6 +455,7 @@ void VblankHandler()
 	
 	if(!touch_was_down && PEN_DOWN)
 	{
+		iprintf("case #1\n");
 		touch_was_down = 1;
 		
 		pm_x0 = touch.px;
@@ -482,35 +477,46 @@ void VblankHandler()
 			
 			// Play the note
 			play(note);
+			strpcmUpdate_mainloop();
 		}
 	}
 	else if(touch_was_down && !PEN_DOWN)
 	{
+		iprintf("case #2\n");
 		touch_was_down = 0;
 		resetPals();
 		stop(lastnote);
+		strpcmUpdate_mainloop();
+
 		pitchChange(0);
+		strpcmUpdate_mainloop();
 	}
 	
 	if(touch_was_down && PEN_DOWN)
 	{
+		iprintf("case #3\n");
 		s16 dx, dy;
 		dx = touch.px - pm_x0;
 		if(dx<0) dx = 0;
 		dy = touch.py - pm_y0;
 
 		pitchChange(-dy);
+		strpcmUpdate_mainloop();
+
 		pressureChange(dx);
+		strpcmUpdate_mainloop();
 	}
 	
 	u16 keys = keysDown();
 	
 	if(keys & KEY_X) {
 		pitchChange(0);
+		strpcmUpdate_mainloop();
 	}
 	
 	if(keys & KEY_Y) {
 		pressureChange(0);
+		strpcmUpdate_mainloop();
 	}
 	
 	if(keys & KEY_RIGHT)
@@ -550,8 +556,8 @@ void VblankHandler()
 	}
 	
 	if(keys & KEY_B) {
-		TIMER1_DATA = TIMER_FREQ_64(1000);
-		TIMER1_CR = TIMER_ENABLE | TIMER_DIV_64 | TIMER_IRQ_REQ;
+		TIMER3_DATA = TIMER_FREQ_64(1000);
+		TIMER3_CR = TIMER_ENABLE | TIMER_DIV_64 | TIMER_IRQ_REQ;
 		row=0;
 		tick=0;
 	}
