@@ -95,7 +95,7 @@ void VblankHandler();
 int main(void)
 {	
 	InitInterrupts();
-
+/*
 	videoSetMode(0);	//not using the main screen
 	videoSetModeSub(MODE_0_2D | DISPLAY_BG0_ACTIVE);	//sub bg 0 will be used to print text
 	vramSetBankC(VRAM_C_SUB_BG);
@@ -106,7 +106,7 @@ int main(void)
 
 	//consoleInit() is a lot more flexible but this gets you up and running quick
 	consoleInitDefault((u16*)SCREEN_BASE_BLOCK_SUB(31), (u16*)CHAR_BASE_BLOCK_SUB(0), 16);
-
+*/
 	strpcmSetVolume16(16);
   
 	IPC3->strpcmLBuf=NULL;
@@ -132,7 +132,6 @@ int main(void)
 
 	// DSMI의 UI는 일단 막아놨습니다, 하지만 그래도 터치스크린 작동은 되므로 테스트할 수 있습니다.
 	// 주석만 풀면 바로 사용이 가능합니다.
-	/*
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	lcdMainOnBottom();
 	
@@ -200,7 +199,6 @@ int main(void)
 			map[32*(y+keyb_ypos)+(x+keyb_xpos)] = keyboard_Map[29*y+x+1];
 		}
 	}
-	*/
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	if(!initSmidlib())
@@ -556,10 +554,14 @@ void VblankHandler()
 	}
 	
 	if(keys & KEY_B) {
+		/*
 		TIMER3_DATA = TIMER_FREQ_64(1000);
 		TIMER3_CR = TIMER_ENABLE | TIMER_DIV_64 | TIMER_IRQ_REQ;
 		row=0;
 		tick=0;
+		*/
+		iprintf("force to chance strpcmWriteRequest\n");
+		IPC3->strpcmWriteRequest=0;
 	}
 	
 	keys = keysUp();

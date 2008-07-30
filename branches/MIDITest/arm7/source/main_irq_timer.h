@@ -129,6 +129,7 @@ __attribute__((noinline)) static void InterruptHandler_Timer1_OverSampling(u32 M
 
 static void InterruptHandler_Timer1_PCM(void)
 {
+  REG_IME = 0;
   InterruptHandler_Timer1_SetSwapChannel();
   
   s16 *lbuf,*rbuf;
@@ -179,6 +180,7 @@ static void InterruptHandler_Timer1_PCM(void)
     
     InterruptHandler_Timer1_OverSampling(Multiple,lbuf,rbuf,Samples);
   }
+  REG_IME = 1;
 }
 
 static void InterruptHandler_Timer1_MP2(void)
