@@ -105,7 +105,7 @@ void MTRKCC_Proc(u32 trk,u8 data0,u8 data1)
     case 1: {
       _Track->ccModulation=data1;
       PCH_ChangeModLevel(trk,_Track->ccModulation);
-//      iprintf("ccModulation(%x):%d\n",trk,_Track->ccModulation);
+      iprintf("ccModulation(%x):%d\n",trk,_Track->ccModulation);
     } break;
     case 6: {
       if((_Track->ccMSB==0)&&(_Track->ccLSB==0)){

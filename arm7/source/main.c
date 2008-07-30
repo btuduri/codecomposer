@@ -25,7 +25,7 @@ static s16 *strpcmL0=NULL,*strpcmL1=NULL,*strpcmR0=NULL,*strpcmR1=NULL;
 
 static void strpcmPlay()
 {
-  REG_IME=0;
+  // REG_IME=0;
   
   IPC3->IR=IR_NULL;
   
@@ -52,13 +52,6 @@ static void strpcmPlay()
     
   strpcmSamples=IPC3->strpcmSamples;
   strpcmChannels=IPC3->strpcmChannels;
-  
-  /*
-  iprintf("strpcmSamples=%d\n",strpcmSamples);
-  iprintf("strpcmChannels=%d\n",strpcmChannels);
-  iprintf("strpcmFormat=%d\n",strpcmFormat);
-  iprintf("Multiple=%d\n",Multiple);
-  */
 
   strpcmL0=(s16*)safemalloc(strpcmSamples*Multiple*2);
   strpcmL1=(s16*)safemalloc(strpcmSamples*Multiple*2);
@@ -92,11 +85,12 @@ static void strpcmPlay()
   
   IPC3->strpcmWriteRequest=0;
   
-  REG_IME=1;
+  // REG_IME=1;
 }
 
 static void strpcmStop()
 {
+  // REG_IME=0;
   TIMER0_CR = 0;
   TIMER1_CR = 0;
   
@@ -111,6 +105,7 @@ static void strpcmStop()
   safefree(strpcmR1); strpcmR1=NULL;
   
   IPC3->IR=IR_NULL;
+  // REG_IME=1;
 }
 
 static void VcountHandler() {

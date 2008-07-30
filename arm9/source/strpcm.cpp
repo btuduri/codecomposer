@@ -40,11 +40,11 @@ void InterruptHandler_IPC_SYNC(void)
     case IR_NULL: {
     } break;
     case IR_NextSoundData: {
-      DC_FlushAll();
+	  DC_FlushAll();
       
       strpcmUpdate();
-
-      const u32 Samples=IPC3->strpcmSamples;
+      
+	  const u32 Samples=IPC3->strpcmSamples;
       const u32 Channels=IPC3->strpcmChannels;
       
       ins_DC_FlushRangeOverrun(IPC3->strpcmLBuf,Samples*2);
@@ -221,6 +221,7 @@ void strpcmUpdate(void)
   {
     ins_MemSet16DMA2(0,ldst,Samples*2);
     if(Channels==2) ins_MemSet16DMA2(0,rdst,Samples*2);
+	iprintf("strpcmUpdate: buffer is null\n");
     return;
   }
   
