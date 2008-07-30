@@ -34,8 +34,10 @@ static inline void main_InitIRQ(void)
   REG_IME = 0;
 
   irqInit();
+  
   irqEnable(IRQ_VBLANK);
-	
+  irqEnable(IRQ_VCOUNT);
+
   swiWaitForVBlank();
 
   SetYtrigger(80);
@@ -43,9 +45,7 @@ static inline void main_InitIRQ(void)
 	
   irqSet(IRQ_TIMER1, InterruptHandler_Timer_Null);
   irqSet(IRQ_VCOUNT, VcountHandler);
-  irqSet(IRQ_VBLANK, InterruptHandler_VBlank);
 
-  irqEnable(IRQ_VCOUNT);
   REG_IME = 1;
 }
 
@@ -83,7 +83,6 @@ static inline void main_InitSoundDevice(void)
   powerON(POWER_SOUND);
   SOUND_CR = SOUND_ENABLE | SOUND_VOL(0x7F);
   
-  // POWER_CR&=~POWER_UNKNOWN; // wifi power off
   REG_POWERCNT &= ~POWER_UNKNOWN; // wifi power off
 
   swiChangeSoundBias(1,0x400);
@@ -118,9 +117,6 @@ static inline void main_InitAll(void)
   REG_SPICNT = SPI_ENABLE|SPI_CONTINUOUS|SPI_DEVICE_NVRAM;
   load_PersonalData();
   REG_SPICNT = 0;
-  
-  // How this code works?.....
-  // IPC3->UserLanguage=PersonalData->language;
   
   _touchReadXY_AutoDetect();
   

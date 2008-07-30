@@ -205,13 +205,15 @@ int main(void)
   
   while(IPC3->heartbeat==0);
     
+  /*
   VsyncPassed=false;
-  
   bool LastCloseFlag=false;
-  
+  */
+
   // Keep the ARM7 out of main RAM
   while (1)
   {
+	/*
 	VblankHandler();
 
     if(VsyncPassed==false) 
@@ -219,20 +221,26 @@ int main(void)
     
 	VsyncPassed=false;
     
+
     if(IPC3->ReqVsyncUpdate!=0)
 	{
       main_Proc_VsyncUpdate();
       if(IPC3->ReqVsyncUpdate==1) 
 		  IPC3->ReqVsyncUpdate=0;
     }
-    
+    */
+
     if(IPC3->strpcmControl!=strpcmControl_NOP)
 	{
       REG_IME=0;    
 	  main_Proc_strpcmControl();
       REG_IME=1;
     }
+
+	VblankHandler();
+	swiWaitForVBlank();
     
+	/*
     bool CurrentCloseFlag;
   
 	if(REG_KEYXY==0x00FF)
@@ -289,6 +297,7 @@ int main(void)
       SCHANNEL_CR(6)=pep->CNT;
       IPC3->pExecPCM=NULL;
     }
+	*/
   }
   return 0;
 }

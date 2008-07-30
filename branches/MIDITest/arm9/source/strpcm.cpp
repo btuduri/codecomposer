@@ -62,8 +62,6 @@ void strpcmStart(bool FastStart,u32 SampleRate,u32 SamplePerBuf,u32 ChannelCount
 {  
   DC_FlushAll();
   
-  iprintf("strpcm: Stage 1\n");
-  
   while(IPC3->strpcmControl!=strpcmControl_NOP){
     swiWaitForVBlank();
   }

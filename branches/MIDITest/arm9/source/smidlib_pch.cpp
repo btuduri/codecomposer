@@ -1194,6 +1194,7 @@ void PCH_NoteOn(u32 trk,u32 GT,s32 Note,s32 Pitch,u32 Vol,u32 Exp,u32 Vel,u32 va
     return;
   }
   
+  // 이 부분이 발생하고 나면 리딩인덱스가 돌지 않고 있다; 왜 그럴까? 버튼으로 손쉽게 재현이 가능한긴한데..
   {
     int EqualCh=PCH_FindEqualChannel(trk,Note);
     if(EqualCh!=-1){
@@ -1201,7 +1202,7 @@ void PCH_NoteOn(u32 trk,u32 GT,s32 Note,s32 Pitch,u32 Vol,u32 Exp,u32 Vel,u32 va
       TPCH2 *_pPCH2=&PCH2[EqualCh];
       _pPCH1->GT=GT;
 
-	  iprintf("PCH_NoteOn: EqualCh is not -1\n");
+	  iprintf("PCH_NoteOn: EqualCh is not -1, %d\n", EqualCh);
       return;
     }
   }
