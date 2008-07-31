@@ -4,6 +4,7 @@
 	Version="8.00"
 	Name="CodeComposer"
 	ProjectGUID="{6526B6F2-F6EC-4249-935F-84A1458F62AB}"
+	RootNamespace="CodeComposer"
 	Keyword="MakeFileProj"
 	>
 	<Platforms>
@@ -64,11 +65,11 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath=".\arm7\source\_const.h"
+				RelativePath=".\arm9\source\_const.h"
 				>
 			</File>
 			<File
-				RelativePath=".\arm9\source\_const.h"
+				RelativePath=".\arm7\source\_const.h"
 				>
 			</File>
 			<File
@@ -236,11 +237,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\arm7\source\memtool.h"
+				RelativePath=".\arm9\source\memtool.h"
 				>
 			</File>
 			<File
-				RelativePath=".\arm9\source\memtool.h"
+				RelativePath=".\arm7\source\memtool.h"
 				>
 			</File>
 			<File

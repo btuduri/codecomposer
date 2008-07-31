@@ -73,6 +73,8 @@ u8 pm_x0 = 0, pm_y0 = 0;
 u16 currnote = 0;
 u16 *main_vram = (u16*)BG_BMP_RAM(2);
 
+u32 program = 41;
+
 // added by KHS
 int flagLoadProgram = 0;
 
@@ -95,7 +97,7 @@ void VblankHandler();
 int main(void)
 {	
 	InitInterrupts();
-/*
+
 	videoSetMode(0);	//not using the main screen
 	videoSetModeSub(MODE_0_2D | DISPLAY_BG0_ACTIVE);	//sub bg 0 will be used to print text
 	vramSetBankC(VRAM_C_SUB_BG);
@@ -106,7 +108,7 @@ int main(void)
 
 	//consoleInit() is a lot more flexible but this gets you up and running quick
 	consoleInitDefault((u16*)SCREEN_BASE_BLOCK_SUB(31), (u16*)CHAR_BASE_BLOCK_SUB(0), 16);
-*/
+
 	strpcmSetVolume16(16);
   
 	IPC3->strpcmLBuf=NULL;
@@ -133,6 +135,7 @@ int main(void)
 	// DSMI의 UI는 일단 막아놨습니다, 하지만 그래도 터치스크린 작동은 되므로 테스트할 수 있습니다.
 	// 주석만 풀면 바로 사용이 가능합니다.
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
 	lcdMainOnBottom();
 	
 	// Set modes
@@ -199,6 +202,7 @@ int main(void)
 			map[32*(y+keyb_ypos)+(x+keyb_xpos)] = keyboard_Map[29*y+x+1];
 		}
 	}
+	
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	if(!initSmidlib())
@@ -268,7 +272,7 @@ void play(u8 note)
 	{
 		// iprintf("play: flagLoadProgram is false\n");
 		flagLoadProgram = 1;
-		MTRK_NoteOn_LoadProgram(value1, value2, value3);
+		MTRK_NoteOn_LoadProgram(value1, value2, program);
 	}
 	else
 	{
@@ -443,7 +447,37 @@ void displayChannel(u8 chn)
 	char cstr[3] = {0, 0, 0};
 	sprintf(cstr, "%u", chn);
 	drawFullBox(206, 155, 14, 9, RGB15(26, 26, 26) | BIT(15));
+	drawFullBox(80, 180, 200, 9, RGB15(26, 26, 26) | BIT(15));
 	drawString(cstr, 206, 155);
+	if(chn == 0) {
+		drawString("Piano", 80, 180);
+	}
+	else if(chn == 1) {
+		drawString("Chromatic Percussion", 80, 180);
+	}
+	else if(chn == 2) {
+		drawString("Organ", 80, 180);
+	}
+	else if(chn == 3) {
+		drawString("Guitar", 80, 180);
+	}
+	else if(chn == 4) {
+		drawString("Bass", 80, 180);
+	}
+	else if(chn == 5) {
+		drawString("Strings/rchestra", 80, 180);
+	}
+	else if(chn == 6) {
+		drawString("Ensemble", 80, 180);
+	}
+	else if(chn == 7) {
+		drawString("Brass", 80, 180);
+	}
+	else {
+		drawString("Piano", 80, 180);
+	}
+
+
 }
 
 void VblankHandler()
@@ -537,18 +571,55 @@ void VblankHandler()
 	
 	if(keys & KEY_UP)
 	{
+		flagLoadProgram = 0;
 		if(channel < 15)
 			channel++;
 		
 		displayChannel(channel);
+		//MTRK_SetProgram(channel, 54);
+		if(channel == 1) {
+			// Chromatic Percussion 
+			MTRK_SetProgram(channel, 9);
+		}
+		else if(channel == 2) {
+			// Organ play
+			MTRK_SetProgram(channel, 17);
+		}
+		else if(channel == 3) {
+			// Guitar play
+			MTRK_SetProgram(channel, 25);
+		}
+		else if(channel == 4){
+			// Bass play
+			MTRK_SetProgram(channel, 33);
+		}
+		else if(channel == 5) {
+			// Strings/rchestra
+			MTRK_SetProgram(channel, 41);
+		}
+		else if(channel == 6) {
+			// Ensemble 
+			MTRK_SetProgram(channel, 49);
+		}
+		else if(channel == 7) {
+			// Brass
+			MTRK_SetProgram(channel, 57);
+		}
+		else {
+			MTRK_SetProgram(channel, 1);
+		}
+		program = MTRK_GetProgram(channel);
 		iprintf("using midi channel %u\n", channel);
+		iprintf("using program %u\n", program);
 	}
 	
 	if(keys & KEY_DOWN)
 	{
+		flagLoadProgram = 0;
 		if(channel > 0)
 			channel--;
 		
+		//MTRK_SetProgram(channel, 1);
 		displayChannel(channel);
 		iprintf("using midi channel %u\n", channel);
 	}

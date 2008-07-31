@@ -172,6 +172,20 @@ void MTRK_SetProgram(u32 trk,u32 v)
   _Track->Program=v;
 }
 
+u32 MTRK_GetProgram(u32 trk)
+{
+  TMTRK *_MTRK=&MTRK;
+  TMTRK_Track *_Track=&_MTRK->Track[trk];
+  
+  if(_Track->DrumMap!=0){
+    if(_Track->DrumMap==1) _Track=&DrumMap1;
+    if(_Track->DrumMap==2) _Track=&DrumMap2;
+  }
+  
+  return _Track->Program;
+}
+
+
 void MTRK_ChangePitchBend(u32 trk,s32 p)
 {
   TMTRK *_MTRK=&MTRK;
@@ -195,7 +209,7 @@ void MTRK_ChangePitchBend(u32 trk,s32 p)
   PCH_ChangePitchBend(trk,Pitch);
 }
 
-void MTRK_NoteOn_LoadProgram(u32 trk,u32 Note,u32 Vel)
+void MTRK_NoteOn_LoadProgram(u32 trk,u32 Note,u32 program)
 {
   TMTRK *_MTRK=&MTRK;
   TMTRK_Track *_Track=&_MTRK->Track[trk];
